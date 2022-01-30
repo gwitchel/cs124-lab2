@@ -3,6 +3,7 @@ body{
     background-color: #EDF2F4;
     color: #2B2D42;
     font-family: 'Times New Roman', Times, serif;
+    font-size: 75%;
 }
 
 
@@ -36,6 +37,10 @@ body{
     
     font-size: 75%;
 
+}
+
+.complete{
+    background-color: lightgreen;
 }
 
 .list-item > img{
