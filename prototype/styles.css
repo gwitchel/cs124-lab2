@@ -81,3 +81,81 @@ body{
     margin-right: 5px;
 
 }
+
+/*CSS for index.html*/
+.empty-list {
+    display: flex;
+    column-gap: 30px;
+}
+.empty-list > iframe {
+    border: 1px solid black
+}
+.empty-list > p {
+    font-size: medium;
+}
+
+.after-new-in-empty-list {
+    display: flex;
+    column-gap: 30px;
+}
+.after-new-in-empty-list > iframe {
+    border: 1px solid black
+}
+.after-new-in-empty-list > p {
+    font-size: medium;
+}
+
+.after-new-in-non-empty-list {
+    display: flex;
+    column-gap: 30px;
+}
+.after-new-in-non-empty-list > iframe {
+    border: 1px solid black
+}
+.after-new-in-non-empty-list > p {
+    font-size: medium;
+}
+
+.before-mark-completed {
+    display: flex;
+    column-gap: 30px;
+}
+.before-mark-completed > iframe {
+    border: 1px solid black
+}
+.before-mark-completed > p {
+    font-size: medium;
+}
+
+.after-mark-completed {
+    display: flex;
+    column-gap: 30px;
+}
+.after-mark-completed > iframe {
+    border: 1px solid black
+}
+.after-mark-completed > p {
+    font-size: medium;
+}
+
+.before-renaming {
+    display: flex;
+    column-gap: 30px;
+}
+.before-renaming > iframe {
+    border: 1px solid black
+}
+.before-renaming > p {
+    font-size: medium;
+}
+
+.after-renaming {
+    display: flex;
+    column-gap: 30px;
+}
+.after-renaming > iframe {
+    border: 1px solid black
+}
+.after-renaming > p {
+    font-size: medium;
+}
