@@ -35,14 +35,14 @@ body{
     /*justify-content: space-evenly;*/
     /*align-self: stretch;*/
     display: grid;
-    grid-template-columns: 25px 100px 30px 30px;
+    grid-template-columns: 25px 200px 30px 30px;
     
     font-size: 75%;
 
 }
 
 .complete{
-    background-color: lightgreen;
+    background-color: #809848;
 }
 
 .list-item > img{
