@@ -1,3 +1,36 @@
+# Design Decisions and Processes for Lab2
+# Our design decisions, rationale, and alternative designs considered
+Initially, we have thought about giving each task component a state information which includes “name” and “isCompleted”. However, we realized that it was inconvenient to manipulate and change the task information so we decided to only keep an array of tasks as a state for the list component. Based on the DRY Principle (Don’t Repeat Yourself Principle), we felt that the displayedTasks should not be a state either as it is calculated based on the tasks array. It is a repetition to keep the displayedTasks list (the filtered list for display) as another state information as if the tasks state is changed, the filtered list also needs to be changed. We should only have “one canonical truth” and one place to store the tasks without repetition. In case our list gets really long and re-calculating the displayedTasks list becomes inefficient, we can use the “UseMemo” hook to prevent unnecessary calculation, and only re- calculate the list if anything inside the list changes.
+
+In terms of the hierarchy of the components, we decided to have the to-do list app as the biggest parent. Inside the app, we have a menu bar component with two buttons component for “Hide Completed” and “Remove Completed”. We also have an input bar component with an input text field component for the user to enter the name of a new task and a plus button component for the user to create a new task. If the user enters nothing for the name of the new task, then the new task will not be created and an alert text will be displayed to remind the user to add a name for the new task. Inside the app component, there is also a list component with many row component. Each row component is designated for one task, with a checkbox, a task name, a clickable edit icon and a clickable delete icon.
+
+Each time when user clicks a checkbox to mark a task as completed or uncompleted, this “onClick”Information will be passed to its parent component, the list component which stores an array of tasks as a state, and re-calculate the displayedTasks property to update the UI display. Similarly, when the user clicks on the edit icon or the delete icon for a single task, this click information will be passed to the list component with the tasks state to update the displayedTasks property.
+
+In terms of the UI display, we have decided to align all the rows in the to-do list on both sides as it gives the user a sense of formality and order. We also use grid to align all the corresponding sub-component in each row, such as the checkboxes, the task names(left-aligned), the edit icon and the delete icon to give a sense of order and make it easy for the user when they are looking for a particular thing to click on.
+
+Explain and justify the arrangement of the menu bar, the input bar, and the heading IN DETAIL.
+Need more design processes for how the menu bar and the input bar interact with the tasks list!
+
+Introduce and justify the color usage.
+
+Need more design principles for UI!
+
+Additional features to consider:
+1. A search bar to enable search by task name.
+2. A text display of “Total tasks: 5” or something like “”Task(s) Completed: 2/5”.
+
+# User testing we did:
+
+# The final design, including screen images and the flow for each task:
+
+# Challenges we faced:
+
+# Parts of the design we're most proud of
+
+
+
+
+# Design Decisions and Processes for Lab1
 # Our design decisions, rationale, and alternative designs considered
 1. Have the list be a single div tag populated with list items as children.
 2. Have a menu bar with two buttons at the top, namely "Hide Finished" to hide all the completed items and "Delete Finished" to remove all the completed items. We chose to do it this way so that it would be easier to view at all times and because we thought it offered the best functionality.
