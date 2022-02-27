@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
+import { Typography } from '@mui/material';
 import Task from './Task';
 import Navbar from './Navbar';
 import './Tasks.css';
@@ -26,42 +27,27 @@ let initialData = [
 export default function Tasks(props) {
     const [taskList, setTaskList] = useState(initialData);
     const [showCompleted, setShowCompleted] = useState(true);
-    const [title, setTitle] = useState("");
-    const [newTaskDialogOpen, setNewTaskDialogOpen] = React.useState(false);
-
-    const handleNewTaskDialogOpen = () => {
-        setNewTaskDialogOpen(true);
-    };
-
-    const handleNewTaskDialogClose = () => {
-        setNewTaskDialogOpen(false);
-    };
-
-    const handleSetNewTitle = e => {
-        setTitle(e.target.value)
-    }
 
     function onToggleComplete(){
         setShowCompleted(!showCompleted)
 
-        console.log(`toggleCompleted called! new showCompleted: ${!showCompleted}` )
+        console.log(`onToggleComplete called! new showCompleted: ${!showCompleted}` )
     }
 
-    function deleteChild(id){
+    function deleteSingle(id){
         setTaskList(taskList.filter(task => task.id !== id));
 
-        console.log("deleteChild called! Task id:", id)
+        console.log("deleteSingle called! Task id:", id)
     }
 
-    function checkChild(id, checked) {
-        const newTaskList = taskList.map(task=>task.id===id ? {...task, completed:checked} : task)
+    function handleEditTask(id, field, value) {
+        const newTaskList = taskList.map(task=>task.id===id ? {...task, [field]:value} : task)
         setTaskList(newTaskList);
 
-        console.log(`checkChild called! Task id: ${id}, isChecked: ${checked}`)
+        console.log(`handleEditTask called! task id: ${id}, field: ${field}, value: ${value}`)
     }
 
-    function handleSubmit(e){
-        e.preventDefault();
+    function handleNewTaskSubmit(title){
         const taskId = generateUniqueID()
         setTaskList([
             ...taskList,
@@ -71,44 +57,48 @@ export default function Tasks(props) {
                 completed: false,
             }
         ]);
-        handleNewTaskDialogClose()
 
-        console.log(`onItemAdded called! task title: ${title}, taskId: ${taskId}`)
+        console.log(`handleNewTaskSubmit called! title: ${title}, taskId: ${taskId}`)
+    }
+
+    function handleDeleteFinished(){
+        setTaskList(taskList.filter(task => !task.completed))
+
+        console.log("handleDeleteFinished called!")
     }
 
     const TasksToDisplay = () => {
         let tasksToDisplay = showCompleted ? taskList : taskList.filter(task => !task.completed)
-        if (tasksToDisplay.length===0) {tasksToDisplay = 
-            [{
-                id: 0, 
-                title: "Create a new task now! :)", 
-                completed: false 
-            }]
-        }
+        tasksToDisplay.sort((a, b) => (a.completed > b.completed) ? 1 : -1)
 
         console.log("tasksToDisplay:")
         console.log(tasksToDisplay)
 
         return (
             <>
-            {tasksToDisplay.map(task => (
-                <Task key ={task.id} {...task} onDeleteTask={deleteChild} onCheckTask={checkChild}></Task>
-            ))}
+            {tasksToDisplay.length===0 && (
+                <Typography>No tasks for display :)</Typography>
+            )}
+            {tasksToDisplay.length!==0 && (
+                tasksToDisplay.map(task => (
+                <Task
+                    key ={task.id}
+                    {...task}
+                    deleteSingle={deleteSingle}
+                    handleEditTask={handleEditTask}
+                />
+            )))}
             </>
         )
     }
 
     return (
         <>
-            <Navbar 
-                newTaskDialogOpen={newTaskDialogOpen}
-                handleNewTaskDialogOpen={handleNewTaskDialogOpen}
-                handleNewTaskDialogClose={handleNewTaskDialogClose}
-                title={title}
-                handleSetNewTitle={handleSetNewTitle}
-                handleSubmit={handleSubmit}
+            <Navbar
+                handleNewTaskSubmit={handleNewTaskSubmit}
                 showCompleted={showCompleted}
                 onToggleComplete={onToggleComplete}
+                handleDeleteFinished={handleDeleteFinished}
             />
             <TasksToDisplay className='tasks'/>
         </>

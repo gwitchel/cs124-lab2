@@ -31,4 +31,9 @@ we cannot use hooks within class components
 # NavBar should be a child of Tasks
 and Tasks should have the state showCompleted 
 
+# Show uncompleted before completed
+so if we have a very very long list of tasks we can simply scroll
+# empty textfield after submit
+# red helper text of submitted empty title and the helper text disappears when enter something
+
 # (Add things in this md to design.md)
