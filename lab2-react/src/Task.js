@@ -63,7 +63,7 @@ export default function Task(props) {
           <DialogTitle>Edit A Task Title</DialogTitle>
           <DialogContent>
           <DialogContentText>
-              Please enter the new title of the task below.
+              Please enter the new title of the task below. (max 50 characters)
           </DialogContentText>
           <TextField
               autoFocus
@@ -73,6 +73,7 @@ export default function Task(props) {
               type="text"
               fullWidth
               variant="standard"
+              inputProps={{ maxLength: 50 }}
               value={title}
               onChange={handleSetTitle}
           />

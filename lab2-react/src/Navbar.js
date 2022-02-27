@@ -70,13 +70,13 @@ export default function Navbar(props) {
                 <AddCircleOutlineIcon />
             </IconButton>
             <Button onClick={props.onToggleComplete}>  {props.showCompleted? 'Hide Completed': 'Show Completed'} </Button>
-            <Button onClick={handleDialogOpenDelete}> Delete Finished </Button>
+            <Button onClick={handleDialogOpenDelete}> Delete Completed </Button>
         </div>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
             <DialogTitle>Create A New Task</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Please enter the title of the task below.
+                Please enter the title of the task below. (max 50 characters)
             </DialogContentText>
             <TextField
                 autoFocus
@@ -86,6 +86,7 @@ export default function Navbar(props) {
                 type="text"
                 fullWidth
                 variant="standard"
+                inputProps={{ maxLength: 50 }}
                 value={title}
                 onChange={handleSetTitle}
             />
@@ -97,10 +98,10 @@ export default function Navbar(props) {
             </DialogActions>
         </Dialog>
         <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
-            <DialogTitle>Delete All Finished Tasks</DialogTitle>
+            <DialogTitle>Delete All Completed Tasks</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Are you sure that you want to delete ALL finished tasks?
+                Are you sure that you want to delete ALL completed tasks?
             </DialogContentText>
             </DialogContent>
             <DialogActions>
