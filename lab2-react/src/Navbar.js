@@ -11,7 +11,6 @@ import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import './Navbar.css';
-import { red } from '@mui/material/colors';
 
 export default function Navbar(props) {
     const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -32,6 +31,7 @@ export default function Navbar(props) {
 
     const handleDialogClose = () => {
         setDialogOpen(false);
+        setShowAlert(false);
     };
 
     function onSubmit(e) {
