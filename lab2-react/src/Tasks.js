@@ -1,6 +1,9 @@
 import React from 'react';
+import {useState} from 'react';
+import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import Task from './Task';
 import Navbar from './Navbar';
+import './Tasks.css';
 
 let initialData = [
     {
@@ -20,66 +23,94 @@ let initialData = [
     }
 ]
 
-class Tasks extends React.Component {
-    constructor(props) {
-        super(props)
-        this.deleteChild = this.deleteChild.bind(this);
-        this.ToggleCompleted = this.ToggleCompleted.bind(this);
+export default function Tasks(props) {
+    const [taskList, setTaskList] = useState(initialData);
+    const [showCompleted, setShowCompleted] = useState(true);
+    const [title, setTitle] = useState("");
+    const [newTaskDialogOpen, setNewTaskDialogOpen] = React.useState(false);
 
-        this.state = {
-            taskList : initialData,
-            showCompleted : true
-        }
+    const handleNewTaskDialogOpen = () => {
+        setNewTaskDialogOpen(true);
+    };
+
+    const handleNewTaskDialogClose = () => {
+        setNewTaskDialogOpen(false);
+    };
+
+    const handleSetNewTitle = e => {
+        setTitle(e.target.value)
     }
 
-   deleteChild(id){
-       console.log("Delete child with id:", id)
-       let newTaskList = [] 
-       for (var i = 0; i < this.state.taskList.length; i++){
-            if(this.state.taskList[i].id !== id){
-                newTaskList.push(this.state.taskList[i])           
+    function onToggleComplete(){
+        setShowCompleted(!showCompleted)
+
+        console.log(`toggleCompleted called! new showCompleted: ${!showCompleted}` )
+    }
+
+    function deleteChild(id){
+        setTaskList(taskList.filter(task => task.id !== id));
+
+        console.log("deleteChild called! Task id:", id)
+    }
+
+    function checkChild(id, checked) {
+        const newTaskList = taskList.map(task=>task.id===id ? {...task, completed:checked} : task)
+        setTaskList(newTaskList);
+
+        console.log(`checkChild called! Task id: ${id}, isChecked: ${checked}`)
+    }
+
+    function handleSubmit(e){
+        e.preventDefault();
+        const taskId = generateUniqueID()
+        setTaskList([
+            ...taskList,
+            {
+                id: taskId,
+                title: title,
+                completed: false,
             }
-       }
-       this.setState({
-        taskList: newTaskList
-      });
-   }
+        ]);
+        handleNewTaskDialogClose()
 
-    ToggleCompleted(newShowCompleted){
-       console.log("toggling completed", this.state.showCompleted,newShowCompleted )
-       this.setState({
-        showCompleted: newShowCompleted
-      });
-   }
+        console.log(`onItemAdded called! task title: ${title}, taskId: ${taskId}`)
+    }
 
-    render() {
-        let tasksToDisplay; 
-        if (this.state.showCompleted){
-            console.log("Showing completed")
-            tasksToDisplay = this.state.taskList.map((task) => (
-                <Task key ={task.id} {...task} onDeleteChild = {this.deleteChild}></Task>
-            ));
-        } else {
-
-            let tempTasks = [] 
-            for (var i = 0; i < this.state.taskList.length; i++){
-                if(!this.state.taskList[i].completed) tempTasks.push(this.state.taskList[i]);
-            } 
-            
-            console.log("hiding completed", tempTasks)
-
-            tasksToDisplay = tempTasks.map((task) => (
-                <Task key ={task.id} {...task} onDeleteChild = {this.deleteChild}></Task>
-            ));
+    const TasksToDisplay = () => {
+        let tasksToDisplay = showCompleted ? taskList : taskList.filter(task => !task.completed)
+        if (tasksToDisplay.length===0) {tasksToDisplay = 
+            [{
+                id: 0, 
+                title: "Create a new task now! :)", 
+                completed: false 
+            }]
         }
+
+        console.log("tasksToDisplay:")
+        console.log(tasksToDisplay)
 
         return (
             <>
-            <Navbar onToggleCompleted = {this.ToggleCompleted}/>
-            {tasksToDisplay}
+            {tasksToDisplay.map(task => (
+                <Task key ={task.id} {...task} onDeleteTask={deleteChild} onCheckTask={checkChild}></Task>
+            ))}
             </>
         )
     }
-}
 
-export default Tasks
+    return (
+        <>
+            <Navbar 
+                newTaskDialogOpen={newTaskDialogOpen}
+                handleNewTaskDialogOpen={handleNewTaskDialogOpen}
+                handleNewTaskDialogClose={handleNewTaskDialogClose}
+                title={title}
+                handleSetNewTitle={handleSetNewTitle}
+                handleSubmit={handleSubmit}
+                showCompleted={showCompleted}
+                onToggleComplete={onToggleComplete}
+            />
+            <TasksToDisplay className='tasks'/>
+        </>
+    )
+}

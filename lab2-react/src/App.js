@@ -1,16 +1,11 @@
 import './App.css';
-import TaskBar from './Taskbar';
 import Tasks from './Tasks';
 
-
-
 function App() {
-
-
   return (
     <div>
+      <h1>To-Do List</h1>
       <Tasks />
-      <TaskBar/>
     </div>
   );
 }

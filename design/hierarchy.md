@@ -24,3 +24,11 @@
 
 
 ### we decided to use @material UI library to make everything prettier  
+
+# decision about using classes or functions (useEffect)
+we cannot use hooks within class components
+
+# NavBar should be a child of Tasks
+and Tasks should have the state showCompleted 
+
+# (Add things in this md to design.md)
