@@ -50,14 +50,16 @@ export default function Task(props) {
   }
 
   return (
-    <div>
-      <Paper sx={{ minWidth: 275 }} className="Task">
+    <div className='Task'>
+      <Paper sx={{display:"flex", justifyContent:"space-between"}}>
           <FormControlLabel
             label={props.title}
-            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} />}
+            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} sx={{ml:1.5}}/>}   
           />
-          <Edit onClick = {handleDialogOpen}/>
-          <Delete onClick = {deleteTask}/>
+          <div className='icons'>
+            <Edit onClick = {handleDialogOpen}/>
+            <Delete onClick = {deleteTask}/>
+          </div>
       </Paper>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle>Edit A Task Title</DialogTitle>

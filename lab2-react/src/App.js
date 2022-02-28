@@ -3,7 +3,7 @@ import Tasks from './Tasks';
 
 function App() {
   return (
-    <div>
+    <div className='app'>
       <h1>To-Do List</h1>
       <Tasks />
     </div>

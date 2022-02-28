@@ -100,7 +100,7 @@ export default function Tasks(props) {
                 onToggleComplete={onToggleComplete}
                 handleDeleteFinished={handleDeleteFinished}
             />
-            <TasksToDisplay className='tasks'/>
+            <TasksToDisplay sx={{ml:10}}/>
         </>
     )
 }

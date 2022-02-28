@@ -14,24 +14,34 @@ In addition, we chose to display uncompleted tasks before completed tasks becaus
 
 For error handling, if the user tries to create a new task with an empty name or to change a task name to an empty name, we will display a red color helper text to remind them to enter a non-empty name. The helper text disappears when the user enters something in the text input field or when the dialog is closed (canceled) so the helper text won't stay when the user opens the dialog again. We also empty the input text field after the user submits as we don't want the old name to appear again when the dialog is open next time. Additionally, the input text field has an upper limit of 50 characters to avoid very long task name and there is text to inform the user about this. We felt that to-do lists are usually for people to write down something quickly in simple words to remind themselves thus the task names are usually not long as people are not using it as notes or diaries.
 
-In terms of the UI display, we have decided to left align all the tasks in the to-do list as it gives the user a sense of formality and order. We decided not to align the right side as if one task has a very long name then there will be a lot of spaces left between task name and the icons for other tasks. We put the navigation bar below the heading and above the list of tasks as if the tasks list gets really long we don't need to scroll down to look for the navigation bar.
+In terms of the UI display, we have decided to left align the heading, the navigation bar, and the tasks list in the app, as it gives the user a sense of formality and order. We decided not to align the right side of these three components as they usually have very different lengths and it doesn't make sense to leave weird white space within each component in order to right align them. Inside the navigation bar, we used flex row to align them in a horizontal line so it is easy for users to look for and locate elements of the navigation bar. Also, we decided to cluster the add button, "Hide Completed" button and the "Delete Completed" button together in one row as by the Proximity Principle they are all used to manage the tasks list so they should be placed together. Inside the tasks list, we left aligned and right aligned each row as it looks neat and professional. We also aligned the checkboxes in one column, left aligned the task names, and aligned the edit and delete icons in two columns to give a sense of formality and order. We used space-between for the checkboxes and names group and the icons group as it sets a clear divide between the task names and icons to modify them. This also helps to right align the tasks rows. We put the navigation bar below the heading and above the list of tasks as if the tasks list gets really long we don't need to scroll a lot down to look for the navigation bar. We used the Material UI library that is often used together with React to make everything prettier. In terms of color choice, we used the classic black and white color to give a sense of formality and a calm blue color make the app more vibrant, and blue color usually helps to calm people down if they are stressed by having a lot of tasks to do for a day.
 
-We decided to use the Material UI library that is often used together with React to make everything prettier.
-
-Justify the color usage!
-Need more UI design principles and reasons!!!
-
-Additional features that we considered but didn't have enough time to implement:
+Additional features that we wanted to implement but didn't have enough time:
 1. A search bar to enable search by task name.
-2. A text display of something like “”Task(s) Completed: 2/5”.
+2. A text display of something like “Task(s) Completed: 2/5”.
 
 # User testing we did:
 
-# The final design, including screen images and the flow for each task:
+# The final design, including the flow for each task:
+The app consists of three major components, the heading, the navigation bar, and the tasks list. The navigation bar consists of three buttons, an add icon button for adding a new task, a "Hide Completed" button for hiding all completed tasks and a "Delete Completed" button for deleting all completed tasks. The tasks list comprises of rows of tasks. Each row is designated for a single task, and each row has a checkbox to check for completed task, a task name, an edit icon to change the task name and a delete icon to delete the task.
+
+To create a new task, the user clicks on the plus icon in the navigation bar and a dialog window pops up to ask the user to enter the name of the task. If the user clicks on "Submit", a new task with the input name will be added to the to-do list. If the user clicks "Cancel" or anywhere else, this process will be canceled. Note the the user is not allowed to create with an empty task name and if they do that, a red helper text will appear under the input text field to remind them. Also, there is a text reminder for the upper limit of the task name in the dialog window.
+
+To mark a task as completed, the user simply clicks on the checkbox before the task name and it is very intuitive.
+
+To rename a task, the user clicks on the edit icon for a task and a dialog window will pop up for them to enter the new name of the task. Same limitations for the name length and same clicking rules from the creating a new task process will apply as well.
+
+To show or hide all completed tasks, toggle the "Hide/Show Completed" button.
+
+To delete all completed tasks, the user clicks on the "Delete Completed" button and a dialog window will pop up to double confirm with them that they are very sure to delete all completed tasks.
 
 # Challenges we faced:
+It was difficult to decide and later modify the structure of the app and the relationship among different components, especially how we could pass to and back some important properties/state information among components. We didn't succeed on our first try but we continued to carefully reason about the logic and experiment with our subsequent design drafts and we finally made everything work!
 
 # Parts of the design we're most proud of
+We are proud of how we prompt the user with dialog windows and ask them for task names when they want to create a new task or edit a task name. We felt that this is very neat as it separates those two processes from the main page which displays all tasks. We are also proud of the design for marking a task as completed by simply checking a checkbox, and instead of using checkboxes to select tasks we used icons to enable actions that target at a single task. In addition, we are proud of how we added a confirmation window to ask the user if they really want to delete all completed tasks to avoid careless errors and unwanted loss of tasks.
+
+
 
 
 
