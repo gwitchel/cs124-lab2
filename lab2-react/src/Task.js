@@ -38,14 +38,10 @@ export default function Task(props) {
 
   function deleteTask(e) {
     props.deleteSingle(props.id);
-
-    console.log("deleteTask called!")
   }
 
   function handleCheckboxClick(e) {
     props.handleEditTask(props.id, "completed", e.target.checked)
-
-    console.log("handleCheckboxClick called!")
   }
 
   function onSubmit(e) {
@@ -55,8 +51,6 @@ export default function Task(props) {
         props.handleEditTask(props.id, "title", title)
         handleDialogClose();
         setTitle("")
-    
-        console.log("onSubmit called!")
     }
   }
 

@@ -35,21 +35,15 @@ export default function Tasks(props) {
 
     function onToggleComplete(){
         setShowCompleted(!showCompleted)
-
-        console.log(`onToggleComplete called! new showCompleted: ${!showCompleted}` )
     }
 
     function deleteSingle(id){
         setTaskList(taskList.filter(task => task.id !== id));
-
-        console.log("deleteSingle called! Task id:", id)
     }
 
     function handleEditTask(id, field, value) {
         const newTaskList = taskList.map(task=>task.id===id ? {...task, [field]:value} : task)
         setTaskList(newTaskList);
-
-        console.log(`handleEditTask called! task id: ${id}, field: ${field}, value: ${value}`)
     }
 
     function handleNewTaskSubmit(title){
@@ -62,22 +56,15 @@ export default function Tasks(props) {
                 completed: false,
             }
         ]);
-
-        console.log(`handleNewTaskSubmit called! title: ${title}, taskId: ${taskId}`)
     }
 
     function handleDeleteFinished(){
         setTaskList(taskList.filter(task => !task.completed))
-
-        console.log("handleDeleteFinished called!")
     }
 
     const TasksToDisplay = () => {
         let tasksToDisplay = showCompleted ? taskList : taskList.filter(task => !task.completed)
         tasksToDisplay.sort((a, b) => (a.completed > b.completed) ? 1 : -1)
-
-        console.log("tasksToDisplay:")
-        console.log(tasksToDisplay)
 
         return (
             <>

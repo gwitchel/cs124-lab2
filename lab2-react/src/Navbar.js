@@ -43,8 +43,6 @@ export default function Navbar(props) {
             props.handleNewTaskSubmit(title);
             handleDialogClose();
             setTitle("")
-        
-            console.log("onSubmit called!")
         }
     }
 
@@ -60,8 +58,6 @@ export default function Navbar(props) {
         e.preventDefault();
         props.handleDeleteFinished();
         handleDialogCloseDelete();
-    
-        console.log("onSubmitDelete called!")
     }
 
   return (
