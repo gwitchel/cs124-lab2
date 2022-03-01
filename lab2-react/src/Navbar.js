@@ -32,6 +32,7 @@ export default function Navbar(props) {
     const handleDialogClose = () => {
         setDialogOpen(false);
         setShowAlert(false);
+        setTitle("")
     };
 
     function onSubmit(e) {
@@ -69,14 +70,14 @@ export default function Navbar(props) {
             <IconButton onClick={handleDialogOpen} color="primary">
                 <AddCircleOutlineIcon />
             </IconButton>
-            <Button onClick={props.onToggleComplete}>  {props.showCompleted? 'Hide Completed': 'Show Completed'} </Button>
-            <Button onClick={handleDialogOpenDelete}> Delete Completed </Button>
+            <Button onClick={props.onToggleComplete} style={{textAlign:'left', marginLeft:'16px'}}>  {props.showCompleted? 'Hide Completed': 'Show Completed'} </Button>
+            <Button onClick={handleDialogOpenDelete} style={{textAlign:'left'}}> Delete Completed </Button>
         </div>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
             <DialogTitle>Create A New Task</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Please enter the title of the task below. (max 50 characters)
+                Please enter the title of the task below.
             </DialogContentText>
             <TextField
                 autoFocus
@@ -86,7 +87,7 @@ export default function Navbar(props) {
                 type="text"
                 fullWidth
                 variant="standard"
-                inputProps={{ maxLength: 50 }}
+                // inputProps={{ maxLength: 50 }}
                 value={title}
                 onChange={handleSetTitle}
             />

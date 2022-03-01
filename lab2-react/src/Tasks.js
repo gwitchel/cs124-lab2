@@ -9,17 +9,22 @@ import './Tasks.css';
 let initialData = [
     {
       id: 1, 
-      title: "call mom", 
+      title: "Call Mom", 
       completed: false 
     },
     {
       id: 2, 
-      title: "buy new book", 
+      title: "Buy new John Grisham book", 
       completed: false 
     },
     {
       id: 3, 
-      title: "assassinate the president", 
+      title: "this is a very very very very very very very very very very long name", 
+      completed: false 
+    },
+    {
+      id: 4, 
+      title: "Tell Mary that there's no class tomorrow", 
       completed: true 
     }
 ]

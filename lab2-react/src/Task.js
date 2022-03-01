@@ -11,18 +11,25 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import "./Task.css"
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [title, setTitle] = useState("");
+  const [showAlert, setShowAlert] = React.useState(false);
 
   const handleSetTitle = e => {
     setTitle(e.target.value)
+    if (e.target.value.length>0) {
+      setShowAlert(false);
+    }
   }
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+    setShowAlert(false);
+    setTitle("")
   };
 
   const handleDialogOpen = () => {
@@ -42,19 +49,23 @@ export default function Task(props) {
   }
 
   function onSubmit(e) {
-    e.preventDefault();
-    props.handleEditTask(props.id, "title", title)
-    setTitle("")
-
-    console.log("onSubmit called!")
+    if (title.length===0) {
+      setShowAlert(true);
+    }else{
+        props.handleEditTask(props.id, "title", title)
+        handleDialogClose();
+        setTitle("")
+    
+        console.log("onSubmit called!")
+    }
   }
 
   return (
     <div className='Task'>
       <Paper sx={{display:"flex", justifyContent:"space-between"}}>
           <FormControlLabel
-            label={props.title}
-            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} sx={{ml:1.5}}/>}   
+            label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
+            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} sx={{ml:1.5}}/>} 
           />
           <div className='icons'>
             <Edit onClick = {handleDialogOpen}/>
@@ -65,7 +76,7 @@ export default function Task(props) {
           <DialogTitle>Edit A Task Title</DialogTitle>
           <DialogContent>
           <DialogContentText>
-              Please enter the new title of the task below. (max 50 characters)
+              Please enter the new title of the task below.
           </DialogContentText>
           <TextField
               autoFocus
@@ -75,10 +86,11 @@ export default function Task(props) {
               type="text"
               fullWidth
               variant="standard"
-              inputProps={{ maxLength: 50 }}
+              // inputProps={{ maxLength: 50 }}
               value={title}
               onChange={handleSetTitle}
           />
+          {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
           </DialogContent>
           <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>
