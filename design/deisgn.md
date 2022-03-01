@@ -16,18 +16,32 @@ For error handling, if the user tries to create a new task with an empty name or
 
 In terms of the UI display, we have decided to left align the heading, the navigation bar, and the tasks list in the app, as it gives the user a sense of formality and order. We decided not to align the right side of these three components as they usually have very different lengths and it doesn't make sense to leave weird white space within each component (like the navigation bar) in order to right align them. Inside the navigation bar, we used flex row to align them in a horizontal line so it is easy for users to look for and locate elements in the navigation bar. Also, we decided to cluster the add button, "Hide Completed" button and the "Delete Completed" button together in one row as by the Proximity Principle they are all used to manage the tasks list so they should be placed together. Inside the tasks list, we left aligned and right aligned each row as it looks neat and professional. We also aligned the checkboxes in one column, left aligned the task names, and aligned the edit and delete icons in two columns to give a sense of formality and order. We used space-between for the checkboxes and names group and the icons group as it sets a clear divide between the task names and icons to modify them. This also helps to right align the tasks rows. We put the navigation bar below the heading and above the list of tasks as if the tasks list gets really long we don't need to scroll a lot down to look for the navigation bar. In addition, we used the Material UI library that is often used together with React to make everything prettier. In terms of color choice, we used the classic black and white color to give a sense of formality and a calm blue color make the app more vibrant, and blue color usually helps to calm people down if they are stressed by having a lot of tasks to do.
 
+After user testing, we modified one small feature. UserA mentioned that it is kind of inconvenient sometimes if clicking on the task name and the checkboxes both mark the task as completed as she might accidentally click on the task name and didn't notice that the task was marked as completed. We reflected on her feedback and decided to only mark a task as completed if the user clicks on the checkbox itself but not the task name.
+
 Additional features that we wanted to implement but didn't have enough time:
 1. A search bar to enable search by task name.
 2. A text display of something like “Task(s) Completed: 2/5”.
 
 # User testing we did:
+We did user testing with two people, UserA and UserB. We first give them a few minutes to play with the app and explore by themselves. Then, we asked them to perform a series of tasks:
+1. In the current list, create an item named "Buy apples".
+2. Mark the item named "Call Mom" completed.
+3. Mark the item named "Call Mom" uncompleted.
+4. Rename the item "Buy new John Grisham book" to "Buy Math textbook".
+5. Show only uncompleted items.
+6. Show only completed items.
+7. Delete all completed items.
+8. Create an item with a very long name (more than ten words).
+9. Delete all items.
+10. Mark all items as completed and hide all of them.
+By observing them performing the ten tasks listed above and provide no guidance, we felt that the app is pretty straight-forward and easy to use as both users could figure out the necessary steps to complete an instruction in a few seconds and they were not confused with any steps in the whole process. Afterwards, we interviewed them about how they felt about the app. They both mentioned that the app is "pretty clear" and "easy to use". UserA said that she was very used to using the ios Reminders designed by Apple and she felt that one nice feature that she would like to have in this app is the ability to sort the order of the tasks by dragging and moving a task up or down. She liked how she could mark a task as completed by checking the checkbox easily but she felt that clicking on the task name itself to mark the task completed is kind of inconvenient sometimes. We reflected on her feedback and decided to only mark a task as completed if the user clicks on the checkbox but not the task name. We also liked the idea of dragging and changing the task order and we would definitely implement that if we had more time. UserB mainly talked about how it would be great to have the ability of setting the due time and due date of a task (and remind the user before that) but we were sorry that the app is currently a simple version of the to-do list and we didn't have enough time to implement that. It is certainly a useful feature to have for a more complex to-do list.
 
 # The final design, including the flow for each task:
 The app consists of three major components, the heading, the navigation bar, and the tasks list. The navigation bar consists of three buttons, an add icon button for adding a new task, a "Hide Completed" button for hiding all completed tasks and a "Delete Completed" button for deleting all completed tasks. The tasks list comprises of rows of tasks. Each row is designated for a single task, and each row has a checkbox to check for completed task, a task name, an edit icon to change the task name and a delete icon to delete the task.
 
 To create a new task, the user clicks on the plus icon in the navigation bar and a dialog window pops up to ask the user to enter the name of the task. If the user clicks on "Submit", a new task with the input name will be added to the to-do list. If the user clicks "Cancel" or anywhere else, this process will be canceled. Note the the user is not allowed to create with an empty task name and if they do that, a red helper text will appear under the input text field to remind them, and the helper text will disappear as soon as they enter something in the input field.
 
-To mark a task as completed, the user simply clicks on the checkbox before the task name or the task name and it is very intuitive. The completed task will move down the list to be after uncompleted tasks.
+To mark a task as completed, the user simply clicks on the checkbox before the task name and it is very intuitive. The completed task will move down the list to be after uncompleted tasks.
 
 To rename a task, the user clicks on the edit icon for a task and a dialog window will pop up for them to enter the new name of the task. Same clicking rules from the creating a new task process apply.
 
@@ -41,7 +55,7 @@ It also took some time to implement good error handling.
 
 # Parts of the design we're most proud of
 We are proud of how we prompt the user with dialog windows and ask them for task names when they want to create a new task or edit a task name. We felt that this is very neat as it separates those two processes from the main page which displays all tasks.
-We are also proud of the design for marking a task as completed by simply checking a checkbox or on the task, and instead of using checkboxes to select tasks we used icons to enable actions that target at a single task.
+We are also proud of the design for marking a task as completed by simply checking a checkbox, and instead of using checkboxes to select tasks we used icons to enable actions that target at a single task.
 In addition, we are proud of how we added a confirmation window to ask the user if they really want to delete all completed tasks to avoid careless errors and unwanted loss of tasks.
 We also handled very long task names by wrapping the text into multiple lines, and we didn't allow empty task names. We chose to display red color helper message if the user submits on empty name but the message will disappear as soon as the user types something in the input field. Also, we made sure to clear the input field every time after the user clicks on "Submit", "Cancel" or anywhere else to close the dialog window because we don't want to display any old text when the dialog window opens next time.
 Additionally, if there is no task for display, which might happen if the user has deleted all tasks or if all tasks are completed and hidden, a friendly message "No tasks for display :)" will be displayed.

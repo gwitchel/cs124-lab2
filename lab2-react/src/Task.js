@@ -59,7 +59,8 @@ export default function Task(props) {
       <Paper sx={{display:"flex", justifyContent:"space-between"}}>
           <FormControlLabel
             label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} sx={{ml:1.5}}/>} 
+            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+            style={{ pointerEvents: "none" }}
           />
           <div className='icons'>
             <Edit onClick = {handleDialogOpen}/>
