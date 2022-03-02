@@ -30,7 +30,11 @@ let initialData = [
 ]
 
 export default function Tasks(props) {
+    console.log("initialData")
+    console.log(initialData)
     const [taskList, setTaskList] = useState(initialData);
+    console.log("taskList")
+    console.log(taskList)
     const [showCompleted, setShowCompleted] = useState(true);
 
     function onToggleComplete(){
