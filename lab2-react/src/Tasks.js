@@ -30,11 +30,7 @@ const initialData = [
 ]
 
 export default function Tasks(props) {
-    console.log("initialData")
-    console.log(initialData)
     const [taskList, setTaskList] = useState(initialData);
-    console.log("taskList")
-    console.log(taskList)
     const [showCompleted, setShowCompleted] = useState(true);
 
     function onToggleComplete(){
@@ -67,23 +63,21 @@ export default function Tasks(props) {
     }
 
     const TasksToDisplay = () => {
-        let tasksToDisplay = showCompleted ? taskList : taskList.filter(task => !task.completed)
-        
-        console.log("tasksToDisplay before sort")
-        console.log(tasksToDisplay)
+        let tasksToDisplay = [...taskList]
+        let completed = tasksToDisplay.filter(task => task.completed)
+        let uncompleted = tasksToDisplay.filter(task => !task.completed)
 
-        const sortedTasksToDisplay = [...tasksToDisplay].sort((a, b) => (a.completed > b.completed) ? 1 : -1)
+        tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
 
-        console.log("tasksToDisplay after sort")
-        console.log(tasksToDisplay)
+        tasksToDisplay.sort((a, b) => (a.completed > b.completed) ? 1 : -1)
 
         return (
             <>
-            {sortedTasksToDisplay.length===0 && (
+            {tasksToDisplay.length===0 && (
                 <Typography>No tasks for display :)</Typography>
             )}
-            {sortedTasksToDisplay.length!==0 && (
-                sortedTasksToDisplay.map(task => (
+            {tasksToDisplay.length!==0 && (
+                tasksToDisplay.map(task => (
                 <Task
                     key ={task.id}
                     {...task}
