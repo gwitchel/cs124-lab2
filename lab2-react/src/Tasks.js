@@ -6,7 +6,7 @@ import Task from './Task';
 import Navbar from './Navbar';
 import './Tasks.css';
 
-let initialData = [
+const initialData = [
     {
       id: 1, 
       title: "Call Mom", 
