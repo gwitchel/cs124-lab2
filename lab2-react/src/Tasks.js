@@ -72,18 +72,18 @@ export default function Tasks(props) {
         console.log("tasksToDisplay before sort")
         console.log(tasksToDisplay)
 
-        tasksToDisplay.sort((a, b) => (a.completed > b.completed) ? 1 : -1)
+        const sortedTasksToDisplay = [...tasksToDisplay].sort((a, b) => (a.completed > b.completed) ? 1 : -1)
 
         console.log("tasksToDisplay after sort")
         console.log(tasksToDisplay)
 
         return (
             <>
-            {tasksToDisplay.length===0 && (
+            {sortedTasksToDisplay.length===0 && (
                 <Typography>No tasks for display :)</Typography>
             )}
-            {tasksToDisplay.length!==0 && (
-                tasksToDisplay.map(task => (
+            {sortedTasksToDisplay.length!==0 && (
+                sortedTasksToDisplay.map(task => (
                 <Task
                     key ={task.id}
                     {...task}
