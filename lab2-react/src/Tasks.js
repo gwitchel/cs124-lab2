@@ -64,7 +64,14 @@ export default function Tasks(props) {
 
     const TasksToDisplay = () => {
         let tasksToDisplay = showCompleted ? taskList : taskList.filter(task => !task.completed)
+        
+        console.log("tasksToDisplay before sort")
+        console.log(tasksToDisplay)
+
         tasksToDisplay.sort((a, b) => (a.completed > b.completed) ? 1 : -1)
+
+        console.log("tasksToDisplay after sort")
+        console.log(tasksToDisplay)
 
         return (
             <>
