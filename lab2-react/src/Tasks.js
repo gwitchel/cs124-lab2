@@ -69,8 +69,6 @@ export default function Tasks(props) {
 
         tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
 
-        // tasksToDisplay.sort((a, b) => (a.completed > b.completed) ? 1 : -1)
-
         return (
             <>
             {tasksToDisplay.length===0 && (
