@@ -66,6 +66,7 @@ Last but not least, we decided to list all the completed tasks below the uncompl
 
 
 
+
 # Design Decisions and Processes for Lab1
 # Our design decisions, rationale, and alternative designs considered
 1. Have the list be a single div tag populated with list items as children.
