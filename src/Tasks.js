@@ -1,8 +1,8 @@
 import React from 'react';
 import {useState} from 'react';
 // import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
-// import { Typography } from '@mui/material';
-// import Task from './Task';
+import { Typography } from '@mui/material';
+import Task from './Task';
 import Navbar from './Navbar';
 import './Tasks.css';
 import { initializeApp } from 'firebase/app';
@@ -41,14 +41,14 @@ export default function Tasks(props) {
         setShowCompleted(!showCompleted)
     }
 
-    // function deleteSingle(id){
-    //     // setTaskList(taskList.filter(task => task.id !== id));
-    // }
+    function deleteSingle(id){
+        // setTaskList(taskList.filter(task => task.id !== id));
+    }
 
-    // function handleEditTask(id, field, value) {
-    //     // const newTaskList = taskList.map(task=>task.id===id ? {...task, [field]:value} : task)
-    //     // setTaskList(newTaskList);
-    // }
+    function handleEditTask(id, field, value) {
+        // const newTaskList = taskList.map(task=>task.id===id ? {...task, [field]:value} : task)
+        // setTaskList(newTaskList);
+    }
 
     function handleNewTaskSubmit(title){
         // const taskId = generateUniqueID()
@@ -66,31 +66,30 @@ export default function Tasks(props) {
         // setTaskList(taskList.filter(task => !task.completed))
     }
 
-    // const TasksToDisplay = () => {
-    //     let tasksToDisplay = [...taskList]
-    //     return
-    //     // let completed = tasksToDisplay.filter(task => task.completed)
-    //     // let uncompleted = tasksToDisplay.filter(task => !task.completed)
+    const TasksToDisplay = () => {
+        let tasksToDisplay = [...taskList]
+        // let completed = tasksToDisplay.filter(task => task.completed)
+        // let uncompleted = tasksToDisplay.filter(task => !task.completed)
 
-    //     // tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
+        // tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
 
-    //     // return (
-    //     //     <>
-    //     //     {tasksToDisplay.length===0 && (
-    //     //         <Typography>No tasks for display :)</Typography>
-    //     //     )}
-    //     //     {tasksToDisplay.length!==0 && (
-    //     //         tasksToDisplay.map(task => (
-    //     //         <Task
-    //     //             key ={task.id}
-    //     //             {...task}
-    //     //             deleteSingle={deleteSingle}
-    //     //             handleEditTask={handleEditTask}
-    //     //         />
-    //     //     )))}
-    //     //     </>
-    //     // )
-    // }
+        return (
+            <>
+            {tasksToDisplay.length===0 && (
+                <Typography>No tasks for display :)</Typography>
+            )}
+            {tasksToDisplay.length!==0 && (
+                tasksToDisplay.map(task => (
+                <Task
+                    key ={task.id}
+                    {...task}
+                    deleteSingle={deleteSingle}
+                    handleEditTask={handleEditTask}
+                />
+            )))}
+            </>
+        )
+    }
 
     if (loading) {
         return (
@@ -113,7 +112,8 @@ export default function Tasks(props) {
                     onToggleComplete={onToggleComplete}
                     handleDeleteFinished={handleDeleteFinished}
                 />
-                {/* <TasksToDisplay sx={{ml:10}}/> */}
+
+                <TasksToDisplay sx={{ml:10}}/>
             </>
         )
     }
