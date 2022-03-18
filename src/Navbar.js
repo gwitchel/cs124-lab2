@@ -10,6 +10,12 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import './Navbar.css';
 
 export default function Navbar(props) {
@@ -17,6 +23,51 @@ export default function Navbar(props) {
     const [title, setTitle] = useState("");
     const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
+
+    const sortOptions = ['title', 'creation date']
+    const [anchorElSort, setAnchorElSort] = React.useState(null);
+    const [selectedIndexSort, setSelectedIndexSort] = React.useState(0);
+    const openSort = Boolean(anchorElSort);
+
+    const showHideCompleted = props.showCompleted? 'Hide Completed': 'Show Completed'
+    const menuOptions = [
+        showHideCompleted,
+        'Delete Completed'
+    ];
+    const ITEM_HEIGHT = 48;
+    const [anchorElMenu, setAnchorElMenu] = React.useState(null);
+    const openMenu = Boolean(anchorElMenu);
+
+    const handleClickMenu = (event) => {
+        setAnchorElMenu(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorElMenu(null);
+    };
+
+    const handleMenuAction = (event, option) => {
+        if (option === showHideCompleted) {
+            props.onToggleComplete()
+        }else {
+            handleDialogOpenDelete()
+        }
+        setAnchorElMenu(null);
+    };
+
+    const handleClickListItemSort = (event) => {
+        setAnchorElSort(event.currentTarget);
+    };
+
+    const handleMenuItemClickSort = (event, index) => {
+        setSelectedIndexSort(index);
+        props.onChangeSortOption(index)
+        setAnchorElSort(null);
+    };
+
+    const handleCloseSort = () => {
+        setAnchorElSort(null);
+    };
 
     const handleSetTitle = e => {
         setTitle(e.target.value)
@@ -66,8 +117,82 @@ export default function Navbar(props) {
             <IconButton onClick={handleDialogOpen} color="primary">
                 <AddCircleOutlineIcon />
             </IconButton>
-            <Button onClick={props.onToggleComplete} style={{textAlign:'left', marginLeft:'16px'}}>  {props.showCompleted? 'Hide Completed': 'Show Completed'} </Button>
-            <Button onClick={handleDialogOpenDelete} style={{textAlign:'left'}}> Delete Completed </Button>
+            <IconButton
+                color="primary"
+                aria-label="more"
+                id="long-button"
+                aria-controls={openMenu ? 'long-menu' : undefined}
+                aria-expanded={openMenu ? 'true' : undefined}
+                aria-haspopup="true"
+                onClick={handleClickMenu}
+            >
+                <MenuIcon />
+            </IconButton>
+            <Menu
+                id="long-menu"
+                MenuListProps={{
+                'aria-labelledby': 'long-button',
+                }}
+                anchorEl={anchorElMenu}
+                open={openMenu}
+                onClose={handleCloseMenu}
+                PaperProps={{
+                style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: '20ch',
+                },
+                }}
+            >
+                {menuOptions.map((option) => (
+                <MenuItem key={option} onClick={(event) => handleMenuAction(event, option)}>
+                    {option}
+                </MenuItem>
+                ))}
+            </Menu>
+            <div>
+                <List
+                    component="nav"
+                    aria-label="Sort settings"
+                    sx={{ bgcolor: 'background.paper' }}
+                >
+                    <ListItem
+                    button
+                    id="sort-button"
+                    aria-haspopup="listbox"
+                    aria-controls="sort-menu"
+                    aria-label="Sort by"
+                    aria-expanded={openSort ? 'true' : undefined}
+                    onClick={handleClickListItemSort}
+                    >
+                        <ListItemText
+                            primary="Sort by"
+                            primaryTypographyProps={{ sx: { color: "primary.main" } }}
+                            secondary={sortOptions[selectedIndexSort]}
+                        />
+                    </ListItem>
+                </List>
+                <Menu
+                    id="sort-menu"
+                    anchorEl={anchorElSort}
+                    open={openSort}
+                    onClose={handleCloseSort}
+                    MenuListProps={{
+                    'aria-labelledby': 'sort-button',
+                    role: 'listbox',
+                    }}
+                >
+                    {sortOptions.map((option, index) => (
+                    <MenuItem
+                        key={option}
+                        disabled={index === selectedIndexSort}
+                        selected={index === selectedIndexSort}
+                        onClick={(event) => handleMenuItemClickSort(event, index)}
+                    >
+                        {option}
+                    </MenuItem>
+                    ))}
+                </Menu>
+            </div>
         </div>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
             <DialogTitle>Create A New Task</DialogTitle>

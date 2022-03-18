@@ -8,8 +8,7 @@ import './Tasks.css';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
-import { setDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
-// import { orderBy } from "firebase/firestore";
+import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
@@ -29,7 +28,9 @@ const db = getFirestore(app);
 const collectionName = "Tasks";
 
 export default function Tasks(props) {
-    const q = query(collection(db, collectionName));   
+    const sortOptions = ['title', 'created']
+    const [sortBy, setSortBy] = useState(sortOptions[0]);
+    const q = query(collection(db, collectionName), orderBy(sortBy));   
     const [taskList, loading, error] = useCollectionData(q);
     const [showCompleted, setShowCompleted] = useState(true);
 
@@ -37,19 +38,18 @@ export default function Tasks(props) {
         setShowCompleted(!showCompleted)
     }
 
+    function onChangeSortOption(index) {
+        setSortBy(sortOptions[index])
+    }
+
     function deleteSingle(id){
-        // selectedPeopleIds.forEach(id => deleteDoc(doc(db, collectionName, id)))
-        // setSelectedPeopleIds([]);
         deleteDoc(doc(db, collectionName, id))
-        // setTaskList(taskList.filter(task => task.id !== id));
     }
 
     function handleEditTask(id, field, value) {
         updateDoc(doc(db, collectionName, id), {
             [field]: value
         })
-        // const newTaskList = taskList.map(task=>task.id===id ? {...task, [field]:value} : task)
-        // setTaskList(newTaskList);
     }
 
     function handleNewTaskSubmit(title){
@@ -60,30 +60,23 @@ export default function Tasks(props) {
             completed: false,
             created: serverTimestamp()
         })
-        // const taskId = generateUniqueID()
-        // setTaskList([
-        //     ...taskList,
-        //     {
-        //         id: taskId,
-        //         title: title,
-        //         completed: false,
-        //     }
-        // ]);
     }
 
     function handleDeleteFinished(){
         let tasksToDisplay = [...taskList]
         let completed = tasksToDisplay.filter(task => task.completed)
         completed.forEach(task => deleteDoc(doc(db, collectionName, task.id)))
-        // setTaskList(taskList.filter(task => !task.completed))
     }
 
     const TasksToDisplay = () => {
-        let tasksToDisplay = [...taskList]
-        let completed = tasksToDisplay.filter(task => task.completed)
-        let uncompleted = tasksToDisplay.filter(task => !task.completed)
+        const allTasks = [...taskList]
+        const completed = allTasks.filter(task => task.completed)
+        const uncompleted = allTasks.filter(task => !task.completed)
 
-        tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
+        const tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
+
+        console.log("allTasks", allTasks)
+        console.log("sortBy", sortBy)
 
         return (
             <>
@@ -111,6 +104,7 @@ export default function Tasks(props) {
                     showCompleted={showCompleted}
                     onToggleComplete={onToggleComplete}
                     handleDeleteFinished={handleDeleteFinished}
+                    onChangeSortOption={onChangeSortOption}
                 />
                 <p>Loading</p>
             </>
@@ -123,6 +117,7 @@ export default function Tasks(props) {
                     showCompleted={showCompleted}
                     onToggleComplete={onToggleComplete}
                     handleDeleteFinished={handleDeleteFinished}
+                    onChangeSortOption={onChangeSortOption}
                 />
 
                 <TasksToDisplay sx={{ml:10}}/>
