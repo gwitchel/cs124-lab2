@@ -16,13 +16,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import "./Task.css"
+import Priority from "./Priority"
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [title, setTitle] = useState("");
   // const [showAlert, setShowAlert] = React.useState(false);
-  const priorityDic = {3: "!", 2: "!!", 1: "!!!"}
-  const priorityDic1 = {3: "low", 2: "medium", 1: "high"}
+  const priorityMap = {3: "low", 2: "medium", 1: "high"}
   const [priority, setPriority] = useState(props.priority);
   const [anchorElPriority, setAnchorElPriority] = React.useState(null);
   const openPriority = Boolean(anchorElPriority);
@@ -90,7 +90,7 @@ export default function Task(props) {
             style={{ pointerEvents: "none" }}
           />
           <div className='icons'>
-            <Typography>{priorityDic[props.priority]}</Typography>
+            <Priority priority = {props.priority}/>
             <Edit onClick = {handleDialogOpen}/>
             <Delete onClick = {deleteTask}/>
           </div>
@@ -123,7 +123,7 @@ export default function Task(props) {
               onClick={handleClickPriority}
               sx={{marginTop:2, textTransform: 'capitalize'}}
           >
-              <Typography variant='body'>Priority level: {priorityDic1[priority]}</Typography>
+              <Typography variant='body'>Priority level: {priorityMap[priority]}</Typography>
               <ExpandMoreIcon/>
           </Button>
           <Menu
