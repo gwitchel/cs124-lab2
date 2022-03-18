@@ -1,14 +1,15 @@
 import React from 'react';
 import {useState} from 'react';
-// import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
+import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
 import Task from './Task';
 import Navbar from './Navbar';
 import './Tasks.css';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
-// import { serverTimestamp } from "firebase/firestore";
-// import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import { setDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
+// import { orderBy } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
@@ -25,12 +26,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const collectionName = "tasks";
-
-// setDoc(doc(...),{
-//   ...
-//   created: serverTimestamp()
-// })
+const collectionName = "Tasks";
 
 export default function Tasks(props) {
     const q = query(collection(db, collectionName));   
@@ -42,15 +38,28 @@ export default function Tasks(props) {
     }
 
     function deleteSingle(id){
+        // selectedPeopleIds.forEach(id => deleteDoc(doc(db, collectionName, id)))
+        // setSelectedPeopleIds([]);
+        deleteDoc(doc(db, collectionName, id))
         // setTaskList(taskList.filter(task => task.id !== id));
     }
 
     function handleEditTask(id, field, value) {
+        updateDoc(doc(db, collectionName, id), {
+            [field]: value
+        })
         // const newTaskList = taskList.map(task=>task.id===id ? {...task, [field]:value} : task)
         // setTaskList(newTaskList);
     }
 
     function handleNewTaskSubmit(title){
+        const taskId = generateUniqueID()
+        setDoc(doc(db, collectionName, taskId), {
+            id: taskId,
+            title: title,
+            completed: false,
+            created: serverTimestamp()
+        })
         // const taskId = generateUniqueID()
         // setTaskList([
         //     ...taskList,
@@ -63,15 +72,18 @@ export default function Tasks(props) {
     }
 
     function handleDeleteFinished(){
+        let tasksToDisplay = [...taskList]
+        let completed = tasksToDisplay.filter(task => task.completed)
+        completed.forEach(task => deleteDoc(doc(db, collectionName, task.id)))
         // setTaskList(taskList.filter(task => !task.completed))
     }
 
     const TasksToDisplay = () => {
         let tasksToDisplay = [...taskList]
-        // let completed = tasksToDisplay.filter(task => task.completed)
-        // let uncompleted = tasksToDisplay.filter(task => !task.completed)
+        let completed = tasksToDisplay.filter(task => task.completed)
+        let uncompleted = tasksToDisplay.filter(task => !task.completed)
 
-        // tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
+        tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
 
         return (
             <>
