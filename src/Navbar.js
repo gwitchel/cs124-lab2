@@ -135,42 +135,10 @@ export default function Navbar(props) {
   return (
     <div>
         <div className='navBar'>
-            <IconButton
-                color="primary"
-                aria-label="more"
-                id="long-button"
-                aria-controls={openMenu ? 'long-menu' : undefined}
-                aria-expanded={openMenu ? 'true' : undefined}
-                aria-haspopup="true"
-                onClick={handleClickMenu}
-            >
-                <MenuIcon />
-            </IconButton>
-            <Menu
-                id="long-menu"
-                MenuListProps={{
-                'aria-labelledby': 'long-button',
-                }}
-                anchorEl={anchorElMenu}
-                open={openMenu}
-                onClose={handleCloseMenu}
-                PaperProps={{
-                style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: '20ch',
-                },
-                }}
-            >
-                {menuOptions.map((option) => (
-                <MenuItem key={option} onClick={(event) => handleMenuAction(event, option)}>
-                    {option}
-                </MenuItem>
-                ))}
-            </Menu>
-            <IconButton onClick={handleDialogOpen} color="primary">
-                <AddCircleOutlineIcon />
-            </IconButton>
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'row'}}>
+                <IconButton onClick={handleDialogOpen} color="primary">
+                    <AddCircleOutlineIcon />
+                </IconButton>
                 <List
                     component="nav"
                     aria-label="Sort settings"
@@ -214,6 +182,38 @@ export default function Navbar(props) {
                     ))}
                 </Menu>
             </div>
+            <IconButton
+                color="primary"
+                aria-label="more"
+                id="long-button"
+                aria-controls={openMenu ? 'long-menu' : undefined}
+                aria-expanded={openMenu ? 'true' : undefined}
+                aria-haspopup="true"
+                onClick={handleClickMenu}
+            >
+                <MenuIcon />
+            </IconButton>
+            <Menu
+                id="long-menu"
+                MenuListProps={{
+                'aria-labelledby': 'long-button',
+                }}
+                anchorEl={anchorElMenu}
+                open={openMenu}
+                onClose={handleCloseMenu}
+                PaperProps={{
+                style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: '20ch',
+                },
+                }}
+            >
+                {menuOptions.map((option) => (
+                <MenuItem key={option} onClick={(event) => handleMenuAction(event, option)}>
+                    {option}
+                </MenuItem>
+                ))}
+            </Menu>
         </div>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
             <DialogTitle>Create A New Task</DialogTitle>
