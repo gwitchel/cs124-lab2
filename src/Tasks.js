@@ -28,7 +28,7 @@ const db = getFirestore(app);
 const collectionName = "Tasks";
 
 export default function Tasks(props) {
-    const sortOptions = ['title', 'created']
+    const sortOptions = ['title', 'created', 'priority']
     const [sortBy, setSortBy] = useState(sortOptions[0]);
     const q = query(collection(db, collectionName), orderBy(sortBy));   
     const [taskList, loading, error] = useCollectionData(q);
@@ -52,13 +52,14 @@ export default function Tasks(props) {
         })
     }
 
-    function handleNewTaskSubmit(title){
+    function handleNewTaskSubmit(title, priority){
         const taskId = generateUniqueID()
         setDoc(doc(db, collectionName, taskId), {
             id: taskId,
             title: title,
             completed: false,
-            created: serverTimestamp()
+            created: serverTimestamp(),
+            priority: priority
         })
     }
 

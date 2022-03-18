@@ -16,15 +16,18 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './Navbar.css';
 
 export default function Navbar(props) {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
+    const priorityDic = {3: "low", 2: "medium", 1: "high"}
+    const [priority, setPriority] = useState(3);
     const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const sortOptions = ['title', 'creation date']
+    const sortOptions = ['title', 'creation date', 'priority']
     const [anchorElSort, setAnchorElSort] = React.useState(null);
     const [selectedIndexSort, setSelectedIndexSort] = React.useState(0);
     const openSort = Boolean(anchorElSort);
@@ -37,6 +40,67 @@ export default function Navbar(props) {
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
     const openMenu = Boolean(anchorElMenu);
+
+    const [anchorElPriority, setAnchorElPriority] = React.useState(null);
+    const openPriority = Boolean(anchorElPriority);
+
+    const handleSetTitle = e => {
+        setTitle(e.target.value)
+        if (e.target.value.length>0) {
+            setShowAlert(false);
+        }
+    }
+
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+        setShowAlert(false);
+        setTitle("")
+        setPriority(3)
+    };
+
+    function onSubmit(e) {
+        e.preventDefault();
+        if (title.length===0) {
+            setShowAlert(true);
+        }else{
+            props.handleNewTaskSubmit(title, priority);
+            handleDialogClose();
+            setTitle("")
+            setPriority(3)
+        }
+    }
+
+    const handleDialogOpenDelete = () => {
+        setDialogOpenDelete(true);
+    };
+
+    const handleDialogCloseDelete = () => {
+        setDialogOpenDelete(false);
+    };
+
+    function onSubmitDelete(e) {
+        e.preventDefault();
+        props.handleDeleteFinished();
+        handleDialogCloseDelete();
+    }
+
+    const handleClickListItemSort = (event) => {
+        setAnchorElSort(event.currentTarget);
+    };
+
+    const handleMenuItemClickSort = (event, index) => {
+        setSelectedIndexSort(index);
+        props.onChangeSortOption(index)
+        setAnchorElSort(null);
+    };
+
+    const handleCloseSort = () => {
+        setAnchorElSort(null);
+    };
 
     const handleClickMenu = (event) => {
         setAnchorElMenu(event.currentTarget);
@@ -55,68 +119,22 @@ export default function Navbar(props) {
         setAnchorElMenu(null);
     };
 
-    const handleClickListItemSort = (event) => {
-        setAnchorElSort(event.currentTarget);
+    const handleClickPriority = (event) => {
+        setAnchorElPriority(event.currentTarget);
+    };
+    
+    const handleClosePriority = () => {
+        setAnchorElPriority(null);
     };
 
-    const handleMenuItemClickSort = (event, index) => {
-        setSelectedIndexSort(index);
-        props.onChangeSortOption(index)
-        setAnchorElSort(null);
+    const handleChangePriority = (event, priority) => {
+        setPriority(priority)
+        setAnchorElPriority(null);
     };
-
-    const handleCloseSort = () => {
-        setAnchorElSort(null);
-    };
-
-    const handleSetTitle = e => {
-        setTitle(e.target.value)
-        if (e.target.value.length>0) {
-            setShowAlert(false);
-        }
-    }
-
-    const handleDialogOpen = () => {
-        setDialogOpen(true);
-    };
-
-    const handleDialogClose = () => {
-        setDialogOpen(false);
-        setShowAlert(false);
-        setTitle("")
-    };
-
-    function onSubmit(e) {
-        e.preventDefault();
-        if (title.length===0) {
-            setShowAlert(true);
-        }else{
-            props.handleNewTaskSubmit(title);
-            handleDialogClose();
-            setTitle("")
-        }
-    }
-
-    const handleDialogOpenDelete = () => {
-        setDialogOpenDelete(true);
-    };
-
-    const handleDialogCloseDelete = () => {
-        setDialogOpenDelete(false);
-    };
-
-    function onSubmitDelete(e) {
-        e.preventDefault();
-        props.handleDeleteFinished();
-        handleDialogCloseDelete();
-    }
 
   return (
     <div>
         <div className='navBar'>
-            <IconButton onClick={handleDialogOpen} color="primary">
-                <AddCircleOutlineIcon />
-            </IconButton>
             <IconButton
                 color="primary"
                 aria-label="more"
@@ -149,6 +167,9 @@ export default function Navbar(props) {
                 </MenuItem>
                 ))}
             </Menu>
+            <IconButton onClick={handleDialogOpen} color="primary">
+                <AddCircleOutlineIcon />
+            </IconButton>
             <div>
                 <List
                     component="nav"
@@ -165,7 +186,7 @@ export default function Navbar(props) {
                     onClick={handleClickListItemSort}
                     >
                         <ListItemText
-                            primary="Sort by"
+                            primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
                             primaryTypographyProps={{ sx: { color: "primary.main" } }}
                             secondary={sortOptions[selectedIndexSort]}
                         />
@@ -213,6 +234,31 @@ export default function Navbar(props) {
                 onChange={handleSetTitle}
             />
             {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
+            <Button
+                id="new-task-priority-button"
+                variant='outlined'
+                aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={openPriority ? 'true' : undefined}
+                onClick={handleClickPriority}
+                sx={{marginTop:2, textTransform: 'capitalize'}}
+            >
+                <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
+                <ExpandMoreIcon/>
+            </Button>
+            <Menu
+                id="new-task-priority-menu"
+                anchorEl={anchorElPriority}
+                open={openPriority}
+                onClose={handleClosePriority}
+                MenuListProps={{
+                'aria-labelledby': 'new-task-priority-button',
+                }}
+            >
+                <MenuItem onClick={(event) => handleChangePriority(event, 3)}>Low</MenuItem>
+                <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
+                <MenuItem onClick={(event) => handleChangePriority(event, 1)}>High</MenuItem>
+            </Menu>
             </DialogContent>
             <DialogActions>
             <Button onClick={handleDialogClose}>Cancel</Button>

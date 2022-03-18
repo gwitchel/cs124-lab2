@@ -12,24 +12,33 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import "./Task.css"
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [title, setTitle] = useState("");
-  const [showAlert, setShowAlert] = React.useState(false);
+  // const [showAlert, setShowAlert] = React.useState(false);
+  const priorityDic = {3: "!", 2: "!!", 1: "!!!"}
+  const priorityDic1 = {3: "low", 2: "medium", 1: "high"}
+  const [priority, setPriority] = useState(props.priority);
+  const [anchorElPriority, setAnchorElPriority] = React.useState(null);
+  const openPriority = Boolean(anchorElPriority);
 
   const handleSetTitle = e => {
     setTitle(e.target.value)
     if (e.target.value.length>0) {
-      setShowAlert(false);
+      // setShowAlert(false);
     }
   }
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setShowAlert(false);
+    // setShowAlert(false);
     setTitle("")
+    setPriority(props.priority)
   };
 
   const handleDialogOpen = () => {
@@ -46,13 +55,31 @@ export default function Task(props) {
 
   function onSubmit(e) {
     if (title.length===0) {
-      setShowAlert(true);
+      props.handleEditTask(props.id, "priority", priority)
+      handleDialogClose();
+      setTitle("")
+      setPriority(props.priority)
     }else{
         props.handleEditTask(props.id, "title", title)
+        props.handleEditTask(props.id, "priority", priority)
         handleDialogClose();
         setTitle("")
+        setPriority(props.priority)
     }
   }
+
+  const handleClickPriority = (event) => {
+      setAnchorElPriority(event.currentTarget);
+  };
+
+  const handleClosePriority = () => {
+      setAnchorElPriority(null);
+  };
+
+  const handleChangePriority = (event, priority) => {
+      setPriority(priority)
+      setAnchorElPriority(null);
+  };
 
   return (
     <div className='Task'>
@@ -63,6 +90,7 @@ export default function Task(props) {
             style={{ pointerEvents: "none" }}
           />
           <div className='icons'>
+            <Typography>{priorityDic[props.priority]}</Typography>
             <Edit onClick = {handleDialogOpen}/>
             <Delete onClick = {deleteTask}/>
           </div>
@@ -85,7 +113,32 @@ export default function Task(props) {
               value={title}
               onChange={handleSetTitle}
           />
-          {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
+          {/* {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>} */}
+          <Button
+              id="new-task-priority-button"
+              variant='outlined'
+              aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={openPriority ? 'true' : undefined}
+              onClick={handleClickPriority}
+              sx={{marginTop:2, textTransform: 'capitalize'}}
+          >
+              <Typography variant='body'>Priority level: {priorityDic1[priority]}</Typography>
+              <ExpandMoreIcon/>
+          </Button>
+          <Menu
+              id="new-task-priority-menu"
+              anchorEl={anchorElPriority}
+              open={openPriority}
+              onClose={handleClosePriority}
+              MenuListProps={{
+              'aria-labelledby': 'new-task-priority-button',
+              }}
+          >
+              <MenuItem onClick={(event) => handleChangePriority(event, 3)}>Low</MenuItem>
+              <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
+              <MenuItem onClick={(event) => handleChangePriority(event, 1)}>High</MenuItem>
+          </Menu>
           </DialogContent>
           <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>
