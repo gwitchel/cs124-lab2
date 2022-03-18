@@ -1,3 +1,17 @@
+# Changes in Design for Lab3
+
+1. We changed the design for the navigation bar by consolidating the "Show/Hide Completed" and "Delete Completed" buttons into one hamburger menu as it will make space for the sorting options menu. The final design consists of three components in a row: an add icon for adding a new task, a "Sort by xxx" menu to choose the sorting option, and a hamburger menu with "Show/Hide Completed" and "Delete Completed" options. The add icon is on the left most side aligned with the title and the left side of the task list. The hamburger menu icon is on the right most side aligned with the right side of the task list. The gives a sense of order and formality. We have thought about consolidating the adding a new task function into the hamburger menu but we felt that the add function is used much more frequently compared to other functions so it is more convenient to leave it as a separate button for easy access.
+
+2. For the "Sort by xxx" menu dropdown, we decided to display the current sorting criterion as a smaller grey text to provide useful information to the user without distracting the user by making it too prominent. When creating a new task or editing a new task, we decided to ask the user to choose the priority level from a dropdown and the default is low or the previously chosen level. in this way, each newly created task will always have a priority level and the user doesn't need to tap the menu if they are fine with the default level. The user is also allowed to edit a task with an empty new task name (only edit the priority level) which makes sense and is different from the previous design.
+
+3. In terms of the display to indicate different priority levels, we decided to use "!" for low priority, "!!" for medium priority and "!!!" for high priority. We have considered using numbers such as 1, 2, and 3, but it is not intuitively understandable which number represents the most urgent level(1 or 3). We have also considered displaying text but it would take too much space and it is not neat or compact. We also considered using icons but we didn't find satisfiable ones to distinguish between different priority levels and yet intuitively understandable. Thus, we decided that using different numbers of exclamation marks is intuitive, distinctive, and compact.
+
+4. User Testing.
+   (confirm that add function should be separate)
+
+
+
+
 # Design Decisions and Processes for Lab2
 # Our design decisions, rationale, and alternative designs considered
 Initially, we have thought about giving each task component a state information which includes “name” and “isCompleted”. However, we realized that it was inconvenient to manipulate and keep the task information so we decided to only keep an array of tasks as a state for the Tasks component. Based on the DRY Principle (Don’t Repeat Yourself Principle), we felt that the displayedTasks should not be a state either as it is calculated based on the tasks array. It is a repetition to keep the displayedTasks list (the filtered list for display) as another state information as if the tasks state is changed, the filtered list also needs to be changed. We should only have “one canonical truth” and one place to store the tasks without repetition. In case our list gets really long and re-calculating the displayedTasks list becomes inefficient, we can use the “UseMemo” hook to prevent unnecessary calculation, and only re-calculate the list if anything inside the list changes.
