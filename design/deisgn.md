@@ -6,7 +6,11 @@
 
 3. In terms of the display to indicate different priority levels, we decided to use "!" for low priority, "!!" for medium priority and "!!!" for high priority. We have considered using numbers such as 1, 2, and 3, but it is not intuitively understandable which number represents the most urgent level(1 or 3). We have also considered displaying text but it would take too much space and it is not neat or compact. We also considered using icons but we didn't find satisfiable ones to distinguish between different priority levels and yet intuitively understandable. Thus, we decided that using different numbers of exclamation marks is intuitive, distinctive, and compact.
 
-4. User Testing.
+4. We enabled changing sorting direction by clicking on the arrow icon next to the "Sort by" menu. If the current sorting direction is ascending, the arrow will be upward and clicking the arrow flips the direction of sorting to descending and also the direction of the arrow to downward. If the current sorting direction is descending, the arrow will be downward and clicking the arrow flips the direction of sorting to ascending and also the direction of the arrow to upward.
+
+5. We used a uniform blue color for all clickable icons and buttons to give a sense of theme and formality. We used red color for priority levels(!, !!, and !!!) as red is a contrast to blue and red signifies a sense of urgency.
+
+6. User Testing.
    (confirm that add function should be separate)
 
 

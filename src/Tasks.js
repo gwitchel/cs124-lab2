@@ -30,7 +30,8 @@ const collectionName = "Tasks";
 export default function Tasks(props) {
     const sortOptions = ['title', 'created', 'priority']
     const [sortBy, setSortBy] = useState(sortOptions[0]);
-    const q = query(collection(db, collectionName), orderBy(sortBy));   
+    const [sortDir, setSortDir] = useState('asc');
+    const q = query(collection(db, collectionName), orderBy(sortBy, sortDir));   
     const [taskList, loading, error] = useCollectionData(q);
     const [showCompleted, setShowCompleted] = useState(true);
 
@@ -40,6 +41,14 @@ export default function Tasks(props) {
 
     function onChangeSortOption(index) {
         setSortBy(sortOptions[index])
+    }
+
+    function onChangeSortDirection() {
+        if (sortDir==='asc') {
+            setSortDir('desc')
+        }else {
+            setSortDir('asc')
+        }
     }
 
     function deleteSingle(id){
@@ -106,6 +115,7 @@ export default function Tasks(props) {
                     onToggleComplete={onToggleComplete}
                     handleDeleteFinished={handleDeleteFinished}
                     onChangeSortOption={onChangeSortOption}
+                    onChangeSortDirection={onChangeSortDirection}
                 />
                 <p>Loading</p>
             </>
@@ -119,6 +129,7 @@ export default function Tasks(props) {
                     onToggleComplete={onToggleComplete}
                     handleDeleteFinished={handleDeleteFinished}
                     onChangeSortOption={onChangeSortOption}
+                    onChangeSortDirection={onChangeSortDirection}
                 />
 
                 <TasksToDisplay sx={{ml:10}}/>

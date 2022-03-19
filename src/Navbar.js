@@ -17,13 +17,15 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import './Navbar.css';
 
 export default function Navbar(props) {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
-    const priorityDic = {3: "low", 2: "medium", 1: "high"}
-    const [priority, setPriority] = useState(3);
+    const priorityDic = {1: "low", 2: "medium", 3: "high"}
+    const [priority, setPriority] = useState(1);
     const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
 
@@ -31,6 +33,7 @@ export default function Navbar(props) {
     const [anchorElSort, setAnchorElSort] = React.useState(null);
     const [selectedIndexSort, setSelectedIndexSort] = React.useState(0);
     const openSort = Boolean(anchorElSort);
+    const [ascending, setAscending] = React.useState(true);
 
     const showHideCompleted = props.showCompleted? 'Hide Completed': 'Show Completed'
     const menuOptions = [
@@ -132,13 +135,18 @@ export default function Navbar(props) {
         setAnchorElPriority(null);
     };
 
+    const handleClickSortDirection = () => {
+        setAscending(!ascending);
+        props.onChangeSortDirection()
+    }
+
   return (
     <div>
         <div className='navBar'>
+            <IconButton onClick={handleDialogOpen} color="primary">
+                <AddCircleOutlineIcon />
+            </IconButton>
             <div style={{ display: 'flex', flexDirection: 'row'}}>
-                <IconButton onClick={handleDialogOpen} color="primary">
-                    <AddCircleOutlineIcon />
-                </IconButton>
                 <List
                     component="nav"
                     aria-label="Sort settings"
@@ -181,6 +189,22 @@ export default function Navbar(props) {
                     </MenuItem>
                     ))}
                 </Menu>
+                {ascending && (
+                    <IconButton
+                        color="primary"
+                        onClick={handleClickSortDirection}
+                    >
+                        <ArrowUpwardIcon />
+                    </IconButton>)
+                }
+                {!ascending && (
+                    <IconButton
+                        color="primary"
+                        onClick={handleClickSortDirection}
+                    >
+                        <ArrowDownwardIcon />
+                    </IconButton>)
+                }
             </div>
             <IconButton
                 color="primary"
