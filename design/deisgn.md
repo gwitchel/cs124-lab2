@@ -11,7 +11,23 @@
 5. We used a uniform blue color for all clickable icons and buttons to give a sense of theme and formality. We used red color for priority levels(!, !!, and !!!) as red is a contrast to blue and red signifies a sense of urgency.
 
 6. User Testing.
-   (confirm that add function should be separate)
+   We did user testing with two people, UserA and UserB. We first give them a few minutes to play with the app and explore by themselves. Then, we asked them to perform a series of tasks:
+   1. In the current list, create an item named "buy apples" with low priority.
+   2. Mark the item named "call Mom" completed.
+   3. Mark the item named "call Mom" uncompleted.
+   4. Rename the item "buy book" to "buy math textbook".
+   5. Change the priority level for "buy apples" from low to medium.
+   6. Show only uncompleted items.
+   7. Show only completed items.
+   8. Delete all completed items.
+   9. Create an item with a very long name (more than ten words).
+   10. Delete all items.
+   11. Mark all items as completed and hide all of them.
+   12. Sort items by title, ascending and then descending.
+   13. Sort items by creation date, ascending and then descending.
+   14. Sort items by priority, ascending and then descending.
+   By observing them performing the above tasks and providing no guidance, we felt that the app is pretty straight-forward and easy to use as both users could figure out the necessary steps to complete an instruction in a few seconds and they were not confused with any steps in the entire process. Then, we interviewed them about how they felt about the app. They both mentioned that the app is "pretty clear" and "easy to use". We asked them about the feedback for the adding a new task functionality specifically. Instead of having the add function in the hamburger menu together with "Show/Hide Completed" and "Delete Completed" functions, both users felt that it is better to have the add function as a separate icon button as they tend to use it more frequently compared to the other two functions and it is convenient if the add button is easily accessible with only one tap (instead of two taps if it is in the hamburger menu). This confirms that our design decision was correct.
+
 
 
 
