@@ -2,6 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import { Delete, Edit } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
@@ -83,17 +84,25 @@ export default function Task(props) {
 
   return (
     <div className='Task'>
-      <Paper sx={{display:"flex", justifyContent:"space-between"}}>
-          <FormControlLabel
-            label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
-            style={{ pointerEvents: "none" }}
-          />
-          <div className='icons'>
-            <Typography sx={{color: 'red', marginRight:1}}>{priorityDic[props.priority]}</Typography>
+      <Paper>
+        <Grid container>
+          <Grid item xs={9}>
+            <FormControlLabel
+              label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
+              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+              style={{ pointerEvents: "none" }}
+            />
+          </Grid>
+          <Grid item xs={1} sx={{margin: 'auto'}}>
+            <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
+          </Grid>  
+          <Grid item xs={1} sx={{margin: 'auto'}}>
             <Edit onClick = {handleDialogOpen} sx={{color: 'primary.main'}}/>
+          </Grid>
+          <Grid item xs={1} sx={{margin: 'auto'}}>
             <Delete onClick = {deleteTask} sx={{color: 'primary.main'}}/>
-          </div>
+          </Grid>
+        </Grid>
       </Paper>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle>Edit A Task Title</DialogTitle>
