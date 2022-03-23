@@ -62,7 +62,7 @@ export default function Navbar(props) {
         setDialogOpen(false);
         setShowAlert(false);
         setTitle("")
-        setPriority(3)
+        setPriority(1)
     };
 
     function onSubmit(e) {
