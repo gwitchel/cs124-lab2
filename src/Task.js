@@ -2,6 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import { Delete, Edit } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
@@ -16,13 +17,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import "./Task.css"
-import Priority from "./Priority"
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [title, setTitle] = useState("");
   // const [showAlert, setShowAlert] = React.useState(false);
-  const priorityMap = {3: "low", 2: "medium", 1: "high"}
+  const priorityDic = {1: "!", 2: "!!", 3: "!!!"}
+  const priorityDic1 = {1: "low", 2: "medium", 3: "high"}
   const [priority, setPriority] = useState(props.priority);
   const [anchorElPriority, setAnchorElPriority] = React.useState(null);
   const openPriority = Boolean(anchorElPriority);
@@ -83,17 +84,25 @@ export default function Task(props) {
 
   return (
     <div className='Task'>
-      <Paper sx={{display:"flex", justifyContent:"space-between"}}>
-          <FormControlLabel
-            label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-            control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
-            style={{ pointerEvents: "none" }}
-          />
-          <div className='icons'>
-            <Priority priority = {props.priority}/>
-            <Edit onClick = {handleDialogOpen}/>
-            <Delete onClick = {deleteTask}/>
-          </div>
+      <Paper>
+        <Grid container>
+          <Grid item xs={9}>
+            <FormControlLabel
+              label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
+              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+              style={{ pointerEvents: "none" }}
+            />
+          </Grid>
+          <Grid item xs={1} sx={{margin: 'auto'}}>
+            <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
+          </Grid>  
+          <Grid item xs={1} sx={{margin: 'auto'}}>
+            <Edit onClick = {handleDialogOpen} sx={{color: 'primary.main'}}/>
+          </Grid>
+          <Grid item xs={1} sx={{margin: 'auto'}}>
+            <Delete onClick = {deleteTask} sx={{color: 'primary.main'}}/>
+          </Grid>
+        </Grid>
       </Paper>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle>Edit A Task Title</DialogTitle>
@@ -123,7 +132,7 @@ export default function Task(props) {
               onClick={handleClickPriority}
               sx={{marginTop:2, textTransform: 'capitalize'}}
           >
-              <Typography variant='body'>Priority level: {priorityMap[priority]}</Typography>
+              <Typography variant='body'>Priority level: {priorityDic1[priority]}</Typography>
               <ExpandMoreIcon/>
           </Button>
           <Menu
