@@ -1,18 +1,23 @@
 {
   "name": "lab2-react",
   "version": "0.1.0",
-  "homepage": "https://gwitchel.github.io/cs124-lab2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
+    "@mdi/font": "^6.5.95",
+    "@mdi/js": "^6.5.95",
+    "@mdi/react": "^1.5.0",
     "@mui/icons-material": "^5.4.2",
     "@mui/material": "^5.4.2",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "firebase": "^9.6.8",
+    "firebase-tools": "^10.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-firebase-hooks": "^5.0.3",
     "react-scripts": "5.0.0",
     "web-vitals": "^2.1.4"
   },
@@ -22,7 +27,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install-dependencies": "npm install firebase-tools",
+    "firebase-login": "npx firebase login",
+    "firebase-init": "npx firebase init"
   },
   "eslintConfig": {
     "extends": [

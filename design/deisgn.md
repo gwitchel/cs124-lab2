@@ -1,3 +1,37 @@
+# Changes in Design for Lab3
+
+1. We changed the design for the navigation bar by consolidating the "Show/Hide Completed" and "Delete Completed" buttons into one hamburger menu as it will make space for the sorting options menu. The final design consists of three components in a row: an add icon for adding a new task, a "Sort by xxx" menu to choose the sorting option, and a hamburger menu with "Show/Hide Completed" and "Delete Completed" options. The add icon is on the left most side aligned with the title and the left side of the task list. The hamburger menu icon is on the right most side aligned with the right side of the task list. The gives a sense of order and formality. We have thought about consolidating the adding a new task function into the hamburger menu but we felt that the add function is used much more frequently compared to other functions so it is more convenient to leave it as a separate button for easy access.
+
+2. For the "Sort by xxx" menu dropdown, we decided to display the current sorting criterion as a smaller grey text to provide useful information to the user without distracting the user by making it too prominent. When creating a new task or editing a new task, we decided to ask the user to choose the priority level from a dropdown and the default is low or the previously chosen level. in this way, each newly created task will always have a priority level and the user doesn't need to tap the menu if they are fine with the default level. The user is also allowed to edit a task with an empty new task name (only edit the priority level) which makes sense and is different from the previous design.
+
+3. In terms of the display to indicate different priority levels, we decided to use "!" for low priority, "!!" for medium priority and "!!!" for high priority. We have considered using numbers such as 1, 2, and 3, but it is not intuitively understandable which number represents the most urgent level(1 or 3). We have also considered displaying text but it would take too much space and it is not neat or compact. We also considered using icons but we didn't find satisfiable ones to distinguish between different priority levels and yet intuitively understandable. Thus, we decided that using different numbers of exclamation marks is intuitive, distinctive, and compact.
+
+4. We enabled changing sorting direction by clicking on the arrow icon next to the "Sort by" menu. If the current sorting direction is ascending, the arrow will be upward and clicking the arrow flips the direction of sorting to descending and also the direction of the arrow to downward. If the current sorting direction is descending, the arrow will be downward and clicking the arrow flips the direction of sorting to ascending and also the direction of the arrow to upward.
+
+5. We used a uniform blue color for all clickable icons and buttons to give a sense of theme and formality. We used red color for priority levels(!, !!, and !!!) as red is a contrast to blue and red signifies a sense of urgency.
+
+6. User Testing.
+   We did user testing with two people, UserA and UserB. We first give them a few minutes to play with the app and explore by themselves. Then, we asked them to perform a series of tasks:
+   1. In the current list, create an item named "buy apples" with low priority.
+   2. Mark the item named "call Mom" completed.
+   3. Mark the item named "call Mom" uncompleted.
+   4. Rename the item "buy book" to "buy math textbook".
+   5. Change the priority level for "buy apples" from low to medium.
+   6. Show only uncompleted items.
+   7. Show only completed items.
+   8. Delete all completed items.
+   9. Create an item with a very long name (more than ten words).
+   10. Delete all items.
+   11. Mark all items as completed and hide all of them.
+   12. Sort items by title, ascending and then descending.
+   13. Sort items by creation date, ascending and then descending.
+   14. Sort items by priority, ascending and then descending.
+   By observing them performing the above tasks and providing no guidance, we felt that the app is pretty straight-forward and easy to use as both users could figure out the necessary steps to complete an instruction in a few seconds and they were not confused with any steps in the entire process. Then, we interviewed them about how they felt about the app. They both mentioned that the app is "pretty clear" and "easy to use". We asked them about the feedback for the adding a new task functionality specifically. Instead of having the add function in the hamburger menu together with "Show/Hide Completed" and "Delete Completed" functions, both users felt that it is better to have the add function as a separate icon button as they tend to use it more frequently compared to the other two functions and it is convenient if the add button is easily accessible with only one tap (instead of two taps if it is in the hamburger menu). This confirms that our design decision was correct.
+
+
+
+
+
 # Design Decisions and Processes for Lab2
 # Our design decisions, rationale, and alternative designs considered
 Initially, we have thought about giving each task component a state information which includes “name” and “isCompleted”. However, we realized that it was inconvenient to manipulate and keep the task information so we decided to only keep an array of tasks as a state for the Tasks component. Based on the DRY Principle (Don’t Repeat Yourself Principle), we felt that the displayedTasks should not be a state either as it is calculated based on the tasks array. It is a repetition to keep the displayedTasks list (the filtered list for display) as another state information as if the tasks state is changed, the filtered list also needs to be changed. We should only have “one canonical truth” and one place to store the tasks without repetition. In case our list gets really long and re-calculating the displayedTasks list becomes inefficient, we can use the “UseMemo” hook to prevent unnecessary calculation, and only re-calculate the list if anything inside the list changes.
