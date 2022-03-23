@@ -279,9 +279,9 @@ export default function Navbar(props) {
                 'aria-labelledby': 'new-task-priority-button',
                 }}
             >
-                <MenuItem onClick={(event) => handleChangePriority(event, 3)}>Low</MenuItem>
+                <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
                 <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
-                <MenuItem onClick={(event) => handleChangePriority(event, 1)}>High</MenuItem>
+                <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
             </Menu>
             </DialogContent>
             <DialogActions>
