@@ -73,7 +73,7 @@ export default function Navbar(props) {
             props.handleNewTaskSubmit(title, priority);
             handleDialogClose();
             setTitle("")
-            setPriority(3)
+            setPriority(1)
         }
     }
 
