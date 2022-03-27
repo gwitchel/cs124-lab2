@@ -36,30 +36,7 @@ export default function Lists(props) {
         setTabId(newId);
     };
 
-    function TabPanel(props) {
-        const { children, name, id, ...other } = props;
-        
-        return (
-            <div
-                role="tabpanel"
-                hidden={tabId !== id}
-                id={`tabpanel-${name}`}
-                aria-labelledby={`tab-${name}`}
-                {...other}
-            >
-            {tabId === id && (
-                {children}
-            )}
-            </div>
-        );
-    }
-      
-    function a11yProps(name) {
-        return {
-            id: `tab-${name}`,
-            'aria-controls': `tabpanel-${name}`,
-        };
-    };
+    console.log("lists", lists)
 
     if (loadingLists) {
         return (
@@ -68,14 +45,14 @@ export default function Lists(props) {
     }else if (!errorLists){
         return (
             <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={tabId} onChange={handleChangeTab} aria-label="tabs">
-                        {lists.map(list => <Tab label={list.name} {...a11yProps(list.name)} />)}
-                    </Tabs>
-                </Box>
-                {lists.map(list => <TabPanel name={list.name} id={list.id}>
-                    <List list={list}/>
-                </TabPanel>)}
+                <Tabs
+                    value={tabId}
+                    onChange={handleChangeTab}
+                    aria-label="tabs"
+                >
+                    {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} />)}
+                </Tabs>
+                {/* <List listId={tabId}/> */}
             </Box>
         )
     }
