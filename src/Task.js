@@ -29,7 +29,7 @@ export default function Task(props) {
   const [anchorElPriority, setAnchorElPriority] = React.useState(null);
   const openPriority = Boolean(anchorElPriority);
   const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
-  const isNarrowThan200 = useMediaQuery({ maxWidth: 200 })
+  const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })
 
   const handleSetTitle = e => {
     setTitle(e.target.value)
@@ -97,7 +97,7 @@ export default function Task(props) {
   return (
     <Box sx={{margin:1}}>
       <Paper>
-        {!isNarrowThan300 && !isNarrowThan200 && (
+        {!isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
               label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
@@ -109,7 +109,7 @@ export default function Task(props) {
             <Edit onClick = {handleDialogOpen} sx={{color: 'primary.main'}}/>
             <Delete onClick = {deleteTask} sx={{color: 'primary.main'}}/>
           </Box>)}
-        {isNarrowThan300 && !isNarrowThan200 && (
+        {isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
               label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
@@ -141,14 +141,14 @@ export default function Task(props) {
             </Menu>
           </Box>
         )}
-        {isNarrowThan200 && (
+        {isNarrowThan230 && (
           <Box sx={{display:'flex', flexDirection: 'column'}}>
               <FormControlLabel
                 label={<div style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
                 control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
                 style={{ pointerEvents: "none" }}
               />
-              <Box sx={{display:'flex', flexDirection: 'column', marginLeft: '70%', alignItems:'center'}}>
+              <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-end'}}>
                 <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
                 <Box>
                   <Button

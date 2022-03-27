@@ -153,7 +153,7 @@ export default function Navbar(props) {
                 <IconButton onClick={handleDialogOpen} color="primary">
                     <AddCircleOutlineIcon />
                 </IconButton>
-                <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                <Box sx={{display:'flex', flexDirection:'row', alignItems:'center'}}>
                     <List
                         component="nav"
                         aria-label="Sort settings"
@@ -346,7 +346,7 @@ export default function Navbar(props) {
                     </MenuItem>
                     ))}
                 </Menu>
-                <Box sx={{display: 'flex', flexDirection: 'row', alignItems:'flex-start'}}>
+                <Box sx={{display: 'flex', flexDirection: 'row', alignItems:'center'}}>
                     <List
                         component="nav"
                         aria-label="Sort settings"
