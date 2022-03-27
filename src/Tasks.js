@@ -2,15 +2,14 @@ import React from 'react';
 import {useState} from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
-import Task from './Task';
-import Navbar from './Navbar';
-import './Tasks.css';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import Task from './Task';
+import Navbar from './Navbar';
 
 // web app's Firebase configuration
 const firebaseConfig = {
@@ -132,7 +131,7 @@ export default function Tasks(props) {
                     onChangeSortDirection={onChangeSortDirection}
                 />
 
-                <TasksToDisplay sx={{ml:10}}/>
+                <TasksToDisplay />
             </>
         )
     }

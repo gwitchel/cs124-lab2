@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Delete, Edit } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -19,8 +18,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import "./Task.css"
-import { display } from '@mui/system';
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -98,63 +95,51 @@ export default function Task(props) {
   };
 
   return (
-    <div className='Task'>
-      <Paper sx={{maxWidth:'100%'}}>
+    <Box sx={{margin:1}}>
+      <Paper>
         {!isNarrowThan300 && !isNarrowThan200 && (
-        <Grid container>
-          <Grid item xs={9}>
+          <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
-              label={<div style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
+              label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
               control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
               style={{ pointerEvents: "none" }}
+              sx={{ flexGrow: 1 }}
             />
-          </Grid>
-          <Grid item xs={1} sx={{margin: 'auto'}}>
             <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
-          </Grid>  
-          <Grid item xs={1} sx={{margin: 'auto'}}>
             <Edit onClick = {handleDialogOpen} sx={{color: 'primary.main'}}/>
-          </Grid>
-          <Grid item xs={1} sx={{margin: 'auto'}}>
             <Delete onClick = {deleteTask} sx={{color: 'primary.main'}}/>
-          </Grid>
-        </Grid>)}
+          </Box>)}
         {isNarrowThan300 && !isNarrowThan200 && (
-          <Grid container>
-            <Grid item xs={9}>
-              <FormControlLabel
-                label={<div style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-                control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
-                style={{ pointerEvents: "none" }}
-              />
-            </Grid>
-            <Grid item xs={1} sx={{margin: 'auto'}}>
-              <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
-            </Grid>  
-            <Grid item xs={2} sx={{margin: 'auto'}}>
-              <Button
-                id="task-button"
-                aria-controls={openTask ? 'task-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={openTask ? 'true' : undefined}
-                onClick={handleClickTaskMenu}
-              >
-                <MoreVertIcon sx={{color: 'primary.main'}}/>
-              </Button>
-              <Menu
-                id="task-menu"
-                anchorEl={anchorElTask}
-                open={openTask}
-                onClose={handleCloseTaskMenu}
-                MenuListProps={{
-                  'aria-labelledby': 'task-button',
-                }}
-              >
-                <MenuItem onClick={handleDialogOpen}>Edit</MenuItem>
-                <MenuItem onClick={deleteTask}>Delete</MenuItem>
-              </Menu>
-            </Grid>
-          </Grid>
+          <Box sx={{display:'flex', alignItems:'center'}}>
+            <FormControlLabel
+              label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
+              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+              style={{ pointerEvents: "none" }}
+              sx={{ flexGrow: 1 }}
+            />
+            <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
+            <Button
+              id="task-button"
+              aria-controls={openTask ? 'task-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={openTask ? 'true' : undefined}
+              onClick={handleClickTaskMenu}
+            >
+              <MoreVertIcon sx={{color: 'primary.main'}}/>
+            </Button>
+            <Menu
+              id="task-menu"
+              anchorEl={anchorElTask}
+              open={openTask}
+              onClose={handleCloseTaskMenu}
+              MenuListProps={{
+                'aria-labelledby': 'task-button',
+              }}
+            >
+              <MenuItem onClick={handleDialogOpen}>Edit</MenuItem>
+              <MenuItem onClick={deleteTask}>Delete</MenuItem>
+            </Menu>
+          </Box>
         )}
         {isNarrowThan200 && (
           <Box sx={{display:'flex', flexDirection: 'column'}}>
@@ -242,6 +227,6 @@ export default function Task(props) {
           <Button variant="contained" onClick={onSubmit}>Submit</Button>
           </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 }

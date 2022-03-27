@@ -1,6 +1,8 @@
 import React from 'react';
 import {useState} from 'react';
+import { useMediaQuery } from 'react-responsive';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -19,7 +21,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import './Navbar.css';
 
 export default function Navbar(props) {
     const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -46,6 +47,8 @@ export default function Navbar(props) {
 
     const [anchorElPriority, setAnchorElPriority] = React.useState(null);
     const openPriority = Boolean(anchorElPriority);
+
+    const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
 
     const handleSetTitle = e => {
         setTitle(e.target.value)
@@ -142,165 +145,330 @@ export default function Navbar(props) {
 
   return (
     <div>
-        <div className='navBar'>
-            <IconButton onClick={handleDialogOpen} color="primary">
-                <AddCircleOutlineIcon />
-            </IconButton>
-            <div style={{ display: 'flex', flexDirection: 'row'}}>
-                <List
-                    component="nav"
-                    aria-label="Sort settings"
-                    sx={{ bgcolor: 'background.paper' }}
-                >
-                    <ListItem
-                    button
-                    id="sort-button"
-                    aria-haspopup="listbox"
-                    aria-controls="sort-menu"
-                    aria-label="Sort by"
-                    aria-expanded={openSort ? 'true' : undefined}
-                    onClick={handleClickListItemSort}
+        {!isNarrowThan300 && (
+            <div>
+            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
+                <IconButton onClick={handleDialogOpen} color="primary">
+                    <AddCircleOutlineIcon />
+                </IconButton>
+                <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                    <List
+                        component="nav"
+                        aria-label="Sort settings"
+                        sx={{ bgcolor: 'background.paper' }}
                     >
-                        <ListItemText
-                            primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
-                            primaryTypographyProps={{ sx: { color: "primary.main" } }}
-                            secondary={sortOptions[selectedIndexSort]}
-                        />
-                    </ListItem>
-                </List>
+                        <ListItem
+                        button
+                        id="sort-button"
+                        aria-haspopup="listbox"
+                        aria-controls="sort-menu"
+                        aria-label="Sort by"
+                        aria-expanded={openSort ? 'true' : undefined}
+                        onClick={handleClickListItemSort}
+                        >
+                            <ListItemText
+                                primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
+                                primaryTypographyProps={{ sx: { color: "primary.main" } }}
+                                secondary={sortOptions[selectedIndexSort]}
+                            />
+                        </ListItem>
+                    </List>
+                    <Menu
+                        id="sort-menu"
+                        anchorEl={anchorElSort}
+                        open={openSort}
+                        onClose={handleCloseSort}
+                        MenuListProps={{
+                        'aria-labelledby': 'sort-button',
+                        role: 'listbox',
+                        }}
+                    >
+                        {sortOptions.map((option, index) => (
+                        <MenuItem
+                            key={option}
+                            disabled={index === selectedIndexSort}
+                            selected={index === selectedIndexSort}
+                            onClick={(event) => handleMenuItemClickSort(event, index)}
+                        >
+                            {option}
+                        </MenuItem>
+                        ))}
+                    </Menu>
+                    {ascending && (
+                        <IconButton
+                            color="primary"
+                            onClick={handleClickSortDirection}
+                        >
+                            <ArrowUpwardIcon />
+                        </IconButton>)
+                    }
+                    {!ascending && (
+                        <IconButton
+                            color="primary"
+                            onClick={handleClickSortDirection}
+                        >
+                            <ArrowDownwardIcon />
+                        </IconButton>)
+                    }
+                </Box>
+                <IconButton
+                    color="primary"
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={openMenu ? 'long-menu' : undefined}
+                    aria-expanded={openMenu ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClickMenu}
+                >
+                    <MenuIcon />
+                </IconButton>
                 <Menu
-                    id="sort-menu"
-                    anchorEl={anchorElSort}
-                    open={openSort}
-                    onClose={handleCloseSort}
+                    id="long-menu"
                     MenuListProps={{
-                    'aria-labelledby': 'sort-button',
-                    role: 'listbox',
+                    'aria-labelledby': 'long-button',
+                    }}
+                    anchorEl={anchorElMenu}
+                    open={openMenu}
+                    onClose={handleCloseMenu}
+                    PaperProps={{
+                    style: {
+                        maxHeight: ITEM_HEIGHT * 4.5,
+                        // width: '20ch',
+                    },
                     }}
                 >
-                    {sortOptions.map((option, index) => (
-                    <MenuItem
-                        key={option}
-                        disabled={index === selectedIndexSort}
-                        selected={index === selectedIndexSort}
-                        onClick={(event) => handleMenuItemClickSort(event, index)}
-                    >
+                    {menuOptions.map((option) => (
+                    <MenuItem key={option} onClick={(event) => handleMenuAction(event, option)}>
                         {option}
                     </MenuItem>
                     ))}
                 </Menu>
-                {ascending && (
-                    <IconButton
-                        color="primary"
-                        onClick={handleClickSortDirection}
-                    >
-                        <ArrowUpwardIcon />
-                    </IconButton>)
-                }
-                {!ascending && (
-                    <IconButton
-                        color="primary"
-                        onClick={handleClickSortDirection}
-                    >
-                        <ArrowDownwardIcon />
-                    </IconButton>)
-                }
-            </div>
-            <IconButton
-                color="primary"
-                aria-label="more"
-                id="long-button"
-                aria-controls={openMenu ? 'long-menu' : undefined}
-                aria-expanded={openMenu ? 'true' : undefined}
-                aria-haspopup="true"
-                onClick={handleClickMenu}
-            >
-                <MenuIcon />
-            </IconButton>
-            <Menu
-                id="long-menu"
-                MenuListProps={{
-                'aria-labelledby': 'long-button',
-                }}
-                anchorEl={anchorElMenu}
-                open={openMenu}
-                onClose={handleCloseMenu}
-                PaperProps={{
-                style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    // width: '20ch',
-                },
-                }}
-            >
-                {menuOptions.map((option) => (
-                <MenuItem key={option} onClick={(event) => handleMenuAction(event, option)}>
-                    {option}
-                </MenuItem>
-                ))}
-            </Menu>
+            </Box>
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                <DialogTitle>Create A New Task</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Please enter the title of the task below.
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="nameNew"
+                    label="Task Name"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    // inputProps={{ maxLength: 50 }}
+                    value={title}
+                    onChange={handleSetTitle}
+                />
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
+                <Button
+                    id="new-task-priority-button"
+                    variant='outlined'
+                    aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openPriority ? 'true' : undefined}
+                    onClick={handleClickPriority}
+                    sx={{marginTop:2, textTransform: 'capitalize'}}
+                >
+                    <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
+                    <ExpandMoreIcon/>
+                </Button>
+                <Menu
+                    id="new-task-priority-menu"
+                    anchorEl={anchorElPriority}
+                    open={openPriority}
+                    onClose={handleClosePriority}
+                    MenuListProps={{
+                    'aria-labelledby': 'new-task-priority-button',
+                    }}
+                >
+                    <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
+                    <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
+                    <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
+                </Menu>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleDialogClose}>Cancel</Button>
+                <Button variant="contained" onClick={onSubmit}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
+                <DialogTitle>Delete All Completed Tasks</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Are you sure that you want to delete ALL completed tasks?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleDialogCloseDelete}>Cancel</Button>
+                <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
+                </DialogActions>
+            </Dialog>
         </div>
-        <Dialog open={dialogOpen} onClose={handleDialogClose}>
-            <DialogTitle>Create A New Task</DialogTitle>
-            <DialogContent>
-            <DialogContentText>
-                Please enter the title of the task below.
-            </DialogContentText>
-            <TextField
-                autoFocus
-                margin="dense"
-                id="nameNew"
-                label="Task Name"
-                type="text"
-                fullWidth
-                variant="standard"
-                // inputProps={{ maxLength: 50 }}
-                value={title}
-                onChange={handleSetTitle}
-            />
-            {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
-            <Button
-                id="new-task-priority-button"
-                variant='outlined'
-                aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={openPriority ? 'true' : undefined}
-                onClick={handleClickPriority}
-                sx={{marginTop:2, textTransform: 'capitalize'}}
-            >
-                <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
-                <ExpandMoreIcon/>
-            </Button>
-            <Menu
-                id="new-task-priority-menu"
-                anchorEl={anchorElPriority}
-                open={openPriority}
-                onClose={handleClosePriority}
-                MenuListProps={{
-                'aria-labelledby': 'new-task-priority-button',
-                }}
-            >
-                <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
-                <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
-                <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
-            </Menu>
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={handleDialogClose}>Cancel</Button>
-            <Button variant="contained" onClick={onSubmit}>Submit</Button>
-            </DialogActions>
-        </Dialog>
-        <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
-            <DialogTitle>Delete All Completed Tasks</DialogTitle>
-            <DialogContent>
-            <DialogContentText>
-                Are you sure that you want to delete ALL completed tasks?
-            </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={handleDialogCloseDelete}>Cancel</Button>
-            <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
-            </DialogActions>
-        </Dialog>
+    )}
+    {isNarrowThan300 && (
+        <div>
+            <Box sx={{display: 'flex', flexDirection: 'column', alignItems:'flex-start'}}>
+                <IconButton
+                    color="primary"
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={openMenu ? 'long-menu' : undefined}
+                    aria-expanded={openMenu ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClickMenu}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <Menu
+                    id="long-menu"
+                    MenuListProps={{
+                    'aria-labelledby': 'long-button',
+                    }}
+                    anchorEl={anchorElMenu}
+                    open={openMenu}
+                    onClose={handleCloseMenu}
+                    PaperProps={{
+                    style: {
+                        maxHeight: ITEM_HEIGHT * 4.5,
+                        // width: '20ch',
+                    },
+                    }}
+                >
+                    <MenuItem key={'Add Task'} onClick={handleDialogOpen} >Add Task</MenuItem>
+                    {menuOptions.map((option) => (
+                    <MenuItem key={option} onClick={(event) => handleMenuAction(event, option)}>
+                        {option}
+                    </MenuItem>
+                    ))}
+                </Menu>
+                <Box sx={{display: 'flex', flexDirection: 'row', alignItems:'flex-start'}}>
+                    <List
+                        component="nav"
+                        aria-label="Sort settings"
+                        sx={{ bgcolor: 'background.paper' }}
+                    >
+                        <ListItem
+                        button
+                        id="sort-button"
+                        aria-haspopup="listbox"
+                        aria-controls="sort-menu"
+                        aria-label="Sort by"
+                        aria-expanded={openSort ? 'true' : undefined}
+                        onClick={handleClickListItemSort}
+                        >
+                            <ListItemText
+                                primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
+                                primaryTypographyProps={{ sx: { color: "primary.main" } }}
+                                secondary={sortOptions[selectedIndexSort]}
+                            />
+                        </ListItem>
+                    </List>
+                    <Menu
+                        id="sort-menu"
+                        anchorEl={anchorElSort}
+                        open={openSort}
+                        onClose={handleCloseSort}
+                        MenuListProps={{
+                        'aria-labelledby': 'sort-button',
+                        role: 'listbox',
+                        }}
+                    >
+                        {sortOptions.map((option, index) => (
+                        <MenuItem
+                            key={option}
+                            disabled={index === selectedIndexSort}
+                            selected={index === selectedIndexSort}
+                            onClick={(event) => handleMenuItemClickSort(event, index)}
+                        >
+                            {option}
+                        </MenuItem>
+                        ))}
+                    </Menu>
+                    {ascending && (
+                        <IconButton
+                            color="primary"
+                            onClick={handleClickSortDirection}
+                        >
+                            <ArrowUpwardIcon />
+                        </IconButton>)
+                    }
+                    {!ascending && (
+                        <IconButton
+                            color="primary"
+                            onClick={handleClickSortDirection}
+                        >
+                            <ArrowDownwardIcon />
+                        </IconButton>)
+                    }
+                </Box>
+            </Box>
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                <DialogTitle>Create A New Task</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Please enter the title of the task below.
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="nameNew"
+                    label="Task Name"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    // inputProps={{ maxLength: 50 }}
+                    value={title}
+                    onChange={handleSetTitle}
+                />
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
+                <Button
+                    id="new-task-priority-button"
+                    variant='outlined'
+                    aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openPriority ? 'true' : undefined}
+                    onClick={handleClickPriority}
+                    sx={{marginTop:2, textTransform: 'capitalize'}}
+                >
+                    <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
+                    <ExpandMoreIcon/>
+                </Button>
+                <Menu
+                    id="new-task-priority-menu"
+                    anchorEl={anchorElPriority}
+                    open={openPriority}
+                    onClose={handleClosePriority}
+                    MenuListProps={{
+                    'aria-labelledby': 'new-task-priority-button',
+                    }}
+                >
+                    <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
+                    <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
+                    <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
+                </Menu>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleDialogClose}>Cancel</Button>
+                <Button variant="contained" onClick={onSubmit}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
+                <DialogTitle>Delete All Completed Tasks</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Are you sure that you want to delete ALL completed tasks?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleDialogCloseDelete}>Cancel</Button>
+                <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    )}
     </div>
   );
 }
