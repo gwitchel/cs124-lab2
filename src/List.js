@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useCollectionData, useDocument } from "react-firebase-hooks/firestore";
 import Task from './Task';
 import Navbar from './Navbar';
 
@@ -25,9 +25,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function List(props) {
-    const list = props.list;
-    const listDocRef = doc(db, `App/XCGYdkjADqAzwFrF0kJ8/Lists/${list.id}`);
+function Tasks(props) {
+    const { list, listDocRef } = props;
+
+    console.log("list", list)
+    
     const sortOptions = ['title', 'created', 'priority'];
     const tasksCollectionRef = collection(listDocRef, 'Tasks');
     const q = query(tasksCollectionRef, orderBy(list.sortBy, list.sortDir));   
@@ -143,4 +145,17 @@ export default function List(props) {
         )
     }
 
+}
+
+export default function List(props) {
+    const listDocRef = doc(db, `Lists/${props.listId}`);
+    const [list, loading, error] = useDocument(listDocRef);
+
+    if (loading) {
+        return (
+            <p>Loading</p>
+        )
+    }else if (!error){
+        return <Tasks list={list.data()} listDocRef={listDocRef} />
+    }
 }

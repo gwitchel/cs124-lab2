@@ -11,7 +11,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Box from '@mui/material/Box';
-// import List from './List';
+import List from './List';
 
 // web app's Firebase configuration
 const firebaseConfig = {
@@ -27,10 +27,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function Lists(props) {
-    const q = query(collection(db, 'App/XCGYdkjADqAzwFrF0kJ8/Lists'));   
-    const [lists, loadingLists, errorLists] = useCollectionData(q);
-    const [tabId, setTabId] = useState('0PA6ekABU6Jl38Dv933P');
+function ListTabs(props) {
+    const lists = props.lists;
+    const [tabId, setTabId] = useState(lists.length===0 ? 'default' : lists[0].id);
 
     const handleChangeTab = (event, newId) => {
         setTabId(newId);
@@ -38,22 +37,32 @@ export default function Lists(props) {
 
     console.log("lists", lists)
 
-    if (loadingLists) {
+    if (tabId === 'default') {
+        return <p>No lists for display.</p>
+    }
+    return (
+        <Box sx={{ width: '100%' }}>
+            <Tabs
+                value={tabId}
+                onChange={handleChangeTab}
+                aria-label="tabs"
+            >
+                {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} />)}
+            </Tabs>
+            <List listId={tabId}/>
+        </Box>
+    )
+}
+
+export default function Lists(props) {
+    const q = query(collection(db, 'Lists'));   
+    const [lists, loading, error] = useCollectionData(q);
+
+    if (loading) {
         return (
             <p>Loading</p>
         )
-    }else if (!errorLists){
-        return (
-            <Box sx={{ width: '100%' }}>
-                <Tabs
-                    value={tabId}
-                    onChange={handleChangeTab}
-                    aria-label="tabs"
-                >
-                    {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} />)}
-                </Tabs>
-                {/* <List listId={tabId}/> */}
-            </Box>
-        )
+    }else if (!error){
+        return <ListTabs lists={lists}/>
     }
 }

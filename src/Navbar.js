@@ -188,15 +188,15 @@ export default function Navbar(props) {
                         {sortOptions.map((option, index) => (
                         <MenuItem
                             key={option}
-                            disabled={index === sortOptions.index(props.sortBy)}
-                            selected={index === sortOptions.index(props.sortBy)}
+                            disabled={index === sortOptions.indexOf(props.sortBy)}
+                            selected={index === sortOptions.indexOf(props.sortBy)}
                             onClick={(event) => handleMenuItemClickSort(event, index)}
                         >
                             {option}
                         </MenuItem>
                         ))}
                     </Menu>
-                    {props.sortDir && (
+                    {props.sortDir==='asc' && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
@@ -204,7 +204,7 @@ export default function Navbar(props) {
                             <ArrowUpwardIcon />
                         </IconButton>)
                     }
-                    {!props.sortDir && (
+                    {props.sortDir==='desc' && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
@@ -381,15 +381,15 @@ export default function Navbar(props) {
                         {sortOptions.map((option, index) => (
                         <MenuItem
                             key={option}
-                            disabled={index === sortOptions.index(props.sortBy)}
-                            selected={index === sortOptions.index(props.sortBy)}
+                            disabled={index === sortOptions.indexOf(props.sortBy)}
+                            selected={index === sortOptions.indexOf(props.sortBy)}
                             onClick={(event) => handleMenuItemClickSort(event, index)}
                         >
                             {option}
                         </MenuItem>
                         ))}
                     </Menu>
-                    {props.sortDir && (
+                    {props.sortDir==='asc' && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
@@ -397,7 +397,7 @@ export default function Navbar(props) {
                             <ArrowUpwardIcon />
                         </IconButton>)
                     }
-                    {!props.sortDir && (
+                    {props.sortDir==='desc' && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
