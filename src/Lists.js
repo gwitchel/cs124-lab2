@@ -11,7 +11,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Box from '@mui/material/Box';
-import List from './List';
+// import List from './List';
 
 // web app's Firebase configuration
 const firebaseConfig = {
