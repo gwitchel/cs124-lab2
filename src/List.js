@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState} from 'react';
+// import {useState} from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
 import { initializeApp } from 'firebase/app';
@@ -24,45 +24,47 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const collectionName = "Tasks";
 
-export default function Tasks(props) {
-    const sortOptions = ['title', 'created', 'priority']
-    const [sortBy, setSortBy] = useState(sortOptions[0]);
-    const [sortDir, setSortDir] = useState('asc');
-    const q = query(collection(db, collectionName), orderBy(sortBy, sortDir));   
-    const [taskList, loading, error] = useCollectionData(q);
-    const [showCompleted, setShowCompleted] = useState(true);
+export default function List(props) {
+    const list = props.list;
+    const listDocRef = doc(db, `App/XCGYdkjADqAzwFrF0kJ8/Lists/${list.id}`);
+    const sortOptions = ['title', 'created', 'priority'];
+    const tasksCollectionRef = collection(listDocRef, 'Tasks');
+    const q = query(tasksCollectionRef, orderBy(list.sortBy, list.sortDir));   
+    const [tasks, loading, error] = useCollectionData(q);
+    const showCompleted = list.showCompleted;
 
-    function onToggleComplete(){
-        setShowCompleted(!showCompleted)
+    function onToggleComplete(showCompleted){
+        updateDoc(listDocRef, {
+            showCompleted: !showCompleted
+        })
     }
 
     function onChangeSortOption(index) {
-        setSortBy(sortOptions[index])
+        updateDoc(listDocRef, {
+            sortBy: sortOptions[index]
+        })
     }
 
-    function onChangeSortDirection() {
-        if (sortDir==='asc') {
-            setSortDir('desc')
-        }else {
-            setSortDir('asc')
-        }
+    function onChangeSortDirection(dir) {
+        updateDoc(listDocRef, {
+            sortDir: dir
+        })
     }
 
     function deleteSingle(id){
-        deleteDoc(doc(db, collectionName, id))
+        deleteDoc(doc(tasksCollectionRef, id))
     }
 
     function handleEditTask(id, field, value) {
-        updateDoc(doc(db, collectionName, id), {
+        updateDoc(doc(tasksCollectionRef, id), {
             [field]: value
         })
     }
 
     function handleNewTaskSubmit(title, priority){
         const taskId = generateUniqueID()
-        setDoc(doc(db, collectionName, taskId), {
+        setDoc(doc(tasksCollectionRef, taskId), {
             id: taskId,
             title: title,
             completed: false,
@@ -72,20 +74,20 @@ export default function Tasks(props) {
     }
 
     function handleDeleteFinished(){
-        let tasksToDisplay = [...taskList]
+        let tasksToDisplay = [...tasks]
         let completed = tasksToDisplay.filter(task => task.completed)
-        completed.forEach(task => deleteDoc(doc(db, collectionName, task.id)))
+        completed.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
     }
 
     const TasksToDisplay = () => {
-        const allTasks = [...taskList]
+        const allTasks = [...tasks]
         const completed = allTasks.filter(task => task.completed)
         const uncompleted = allTasks.filter(task => !task.completed)
 
         const tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
 
         console.log("allTasks", allTasks)
-        console.log("sortBy", sortBy)
+        console.log("sortBy", list.sortBy)
 
         return (
             <>
@@ -104,17 +106,20 @@ export default function Tasks(props) {
             </>
         )
     }
+    
 
     if (loading) {
         return (
             <>
                 <Navbar
                     handleNewTaskSubmit={handleNewTaskSubmit}
-                    showCompleted={showCompleted}
+                    showCompleted={list.showCompleted}
                     onToggleComplete={onToggleComplete}
                     handleDeleteFinished={handleDeleteFinished}
                     onChangeSortOption={onChangeSortOption}
                     onChangeSortDirection={onChangeSortDirection}
+                    sortBy={list.sortBy}
+                    sortDir={list.sortDir}
                 />
                 <p>Loading</p>
             </>
@@ -129,10 +134,13 @@ export default function Tasks(props) {
                     handleDeleteFinished={handleDeleteFinished}
                     onChangeSortOption={onChangeSortOption}
                     onChangeSortDirection={onChangeSortDirection}
+                    sortBy={list.sortBy}
+                    sortDir={list.sortDir}
                 />
 
                 <TasksToDisplay />
             </>
         )
     }
+
 }

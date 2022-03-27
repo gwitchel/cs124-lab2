@@ -25,16 +25,16 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 export default function Navbar(props) {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
+
     const priorityDic = {1: "low", 2: "medium", 3: "high"}
     const [priority, setPriority] = useState(1);
+
     const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
 
-    const sortOptions = ['title', 'creation date', 'priority']
+    const sortOptions = ['title', 'created', 'priority']
     const [anchorElSort, setAnchorElSort] = React.useState(null);
-    const [selectedIndexSort, setSelectedIndexSort] = React.useState(0);
     const openSort = Boolean(anchorElSort);
-    const [ascending, setAscending] = React.useState(true);
 
     const showHideCompleted = props.showCompleted? 'Hide Completed': 'Show Completed'
     const menuOptions = [
@@ -99,7 +99,6 @@ export default function Navbar(props) {
     };
 
     const handleMenuItemClickSort = (event, index) => {
-        setSelectedIndexSort(index);
         props.onChangeSortOption(index)
         setAnchorElSort(null);
     };
@@ -118,7 +117,7 @@ export default function Navbar(props) {
 
     const handleMenuAction = (event, option) => {
         if (option === showHideCompleted) {
-            props.onToggleComplete()
+            props.onToggleComplete(props.showCompleted)
         }else {
             handleDialogOpenDelete()
         }
@@ -139,8 +138,11 @@ export default function Navbar(props) {
     };
 
     const handleClickSortDirection = () => {
-        setAscending(!ascending);
-        props.onChangeSortDirection()
+        if (props.sortDir === 'asc') {
+            props.onChangeSortDirection('desc')
+        }else{
+            props.onChangeSortDirection('asc')
+        }
     }
 
   return (
@@ -169,7 +171,7 @@ export default function Navbar(props) {
                             <ListItemText
                                 primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
                                 primaryTypographyProps={{ sx: { color: "primary.main" } }}
-                                secondary={sortOptions[selectedIndexSort]}
+                                secondary={props.sortBy}
                             />
                         </ListItem>
                     </List>
@@ -186,15 +188,15 @@ export default function Navbar(props) {
                         {sortOptions.map((option, index) => (
                         <MenuItem
                             key={option}
-                            disabled={index === selectedIndexSort}
-                            selected={index === selectedIndexSort}
+                            disabled={index === sortOptions.index(props.sortBy)}
+                            selected={index === sortOptions.index(props.sortBy)}
                             onClick={(event) => handleMenuItemClickSort(event, index)}
                         >
                             {option}
                         </MenuItem>
                         ))}
                     </Menu>
-                    {ascending && (
+                    {props.sortDir && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
@@ -202,7 +204,7 @@ export default function Navbar(props) {
                             <ArrowUpwardIcon />
                         </IconButton>)
                     }
-                    {!ascending && (
+                    {!props.sortDir && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
@@ -362,7 +364,7 @@ export default function Navbar(props) {
                             <ListItemText
                                 primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
                                 primaryTypographyProps={{ sx: { color: "primary.main" } }}
-                                secondary={sortOptions[selectedIndexSort]}
+                                secondary={props.sortBy}
                             />
                         </ListItem>
                     </List>
@@ -379,15 +381,15 @@ export default function Navbar(props) {
                         {sortOptions.map((option, index) => (
                         <MenuItem
                             key={option}
-                            disabled={index === selectedIndexSort}
-                            selected={index === selectedIndexSort}
+                            disabled={index === sortOptions.index(props.sortBy)}
+                            selected={index === sortOptions.index(props.sortBy)}
                             onClick={(event) => handleMenuItemClickSort(event, index)}
                         >
                             {option}
                         </MenuItem>
                         ))}
                     </Menu>
-                    {ascending && (
+                    {props.sortDir && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
@@ -395,7 +397,7 @@ export default function Navbar(props) {
                             <ArrowUpwardIcon />
                         </IconButton>)
                     }
-                    {!ascending && (
+                    {!props.sortDir && (
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
