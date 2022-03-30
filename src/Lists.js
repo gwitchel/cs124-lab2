@@ -99,16 +99,16 @@ export default function Lists(props) {
     //     })
     // }
 
-    // function onSubmitNewList(e) {
-    //     if (listName.length===0) {
-    //         setShowAlert(true)
-    //         setListName("")
-    //     }else{
-    //         // handleSubmitNewList()
-    //         handleNewListDialogClose();
-    //         setListName("")
-    //     }
-    // }
+    function onSubmitNewList(e) {
+        if (listName.length===0) {
+            setShowAlert(true)
+            setListName("")
+        }else{
+            // handleSubmitNewList()
+            handleNewListDialogClose();
+            setListName("")
+        }
+    }
     
     if (loading) {
         return (
@@ -143,8 +143,7 @@ export default function Lists(props) {
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleNewListDialogClose}>Cancel</Button>
-                {/* <Button onClick={onSubmitNewList}>Submit</Button> */}
-                <Button>Submit</Button>
+                <Button onClick={onSubmitNewList}>Submit</Button>
                 </DialogActions>
             </Dialog>
         </>)
