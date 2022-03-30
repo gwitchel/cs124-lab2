@@ -1,10 +1,10 @@
 import React from 'react';
 import {useState} from 'react';
-// import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
+import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
-// import { serverTimestamp } from "firebase/firestore";
-// import { setDoc, doc } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
@@ -87,24 +87,24 @@ export default function Lists(props) {
         }
     }
 
-    // function handleSubmitNewList(){
-    //     const listId = generateUniqueID()
-    //     setDoc(doc(db, "Lists", listId), {
-    //         id: listId,
-    //         name: listName,
-    //         showCompleted: false,
-    //         sortBy: "priority",
-    //         sortDir: "asc",
-    //         created: serverTimestamp(),
-    //     })
-    // }
+    function submitNewList(){
+        const listId = generateUniqueID()
+        setDoc(doc(db, "Lists", listId), {
+            id: listId,
+            name: listName,
+            showCompleted: false,
+            sortBy: "priority",
+            sortDir: "asc",
+            created: serverTimestamp(),
+        })
+    }
 
     function onSubmitNewList(e) {
         if (listName.length===0) {
             setShowAlert(true)
             setListName("")
         }else{
-            // handleSubmitNewList()
+            submitNewList()
             handleNewListDialogClose();
             setListName("")
         }
