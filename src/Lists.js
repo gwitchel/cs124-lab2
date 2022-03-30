@@ -11,13 +11,13 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
-// import Dialog from '@mui/material/Dialog';
-// import DialogActions from '@mui/material/DialogActions';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
-// import DialogTitle from '@mui/material/DialogTitle';
-// import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 import List from './List';
 
 // web app's Firebase configuration
@@ -64,28 +64,28 @@ function ListTabs(props) {
 export default function Lists(props) {
     const q = query(collection(db, 'Lists'));   
     const [lists, loading, error] = useCollectionData(q);
-    // const [newListDialogOpen, setNewListDialogOpen] = React.useState(false);
-    // const [listName, setListName] = useState("");
-    // const [showAlert, setShowAlert] = React.useState(false);
+    const [newListDialogOpen, setNewListDialogOpen] = React.useState(false);
+    const [listName, setListName] = useState("");
+    const [showAlert, setShowAlert] = React.useState(false);
 
-    // const handleNewListDialogOpen = () => {
-    //     setNewListDialogOpen(true);
-    // };
+    const handleNewListDialogOpen = () => {
+        setNewListDialogOpen(true);
+    };
 
-    // const handleNewListDialogClose = () => {
-    //     setNewListDialogOpen(false);
-    //     setShowAlert(false);
-    //     setListName("")
-    // };
+    const handleNewListDialogClose = () => {
+        setNewListDialogOpen(false);
+        setShowAlert(false);
+        setListName("")
+    };
 
-    // const handleSetListName = e => {
-    //     setListName(e.target.value)
-    //     if (e.target.value.length>0) {
-    //         setShowAlert(false);
-    //     }else{
-    //         setShowAlert(true);
-    //     }
-    // }
+    const handleSetListName = e => {
+        setListName(e.target.value)
+        if (e.target.value.length>0) {
+            setShowAlert(false);
+        }else{
+            setShowAlert(true);
+        }
+    }
 
     // function handleSubmitNewList(){
     //     const listId = generateUniqueID()
@@ -118,12 +118,11 @@ export default function Lists(props) {
         return (
         <>
             <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
-                {/* <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button> */}
-                <Button variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
+                <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
                 <Button variant='outlined' sx={{textTransform:'none'}}>Delete Current List</Button>
             </Box>
             <ListTabs lists={lists}/>
-            {/* <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
+            <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
                 <DialogTitle>Create a New List</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
@@ -144,9 +143,10 @@ export default function Lists(props) {
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleNewListDialogClose}>Cancel</Button>
-                <Button onClick={onSubmitNewList}>Submit</Button>
+                {/* <Button onClick={onSubmitNewList}>Submit</Button> */}
+                <Button>Submit</Button>
                 </DialogActions>
-            </Dialog> */}
+            </Dialog>
         </>)
     }
 }
