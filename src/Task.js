@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton } from '@mui/material';
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -104,10 +105,11 @@ export default function Task(props) {
               control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
               style={{ pointerEvents: "none" }}
               sx={{ flexGrow: 1 }}
+              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
             />
-            <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
-            <Edit onClick = {handleDialogOpen} sx={{color: 'primary.main'}}/>
-            <Delete onClick = {deleteTask} sx={{color: 'primary.main'}}/>
+            <Typography sx={{color: 'red'}} aria-label={`Priority level is ${priorityDic1[props.priority]}`}>{priorityDic[props.priority]}</Typography>
+            <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task"><Edit sx={{color: 'primary.main'}}/></IconButton>
+            <IconButton onClick={deleteTask} aria-label="Button for deleting a task"><Delete sx={{color: 'primary.main'}}/></IconButton>
           </Box>)}
         {isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
@@ -116,10 +118,12 @@ export default function Task(props) {
               control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
               style={{ pointerEvents: "none" }}
               sx={{ flexGrow: 1 }}
+              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
             />
             <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
             <Button
               id="task-button"
+              aria-label="Menu button for options to manage this single task"
               aria-controls={openTask ? 'task-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={openTask ? 'true' : undefined}
@@ -147,6 +151,7 @@ export default function Task(props) {
                 label={<div style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
                 control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
                 style={{ pointerEvents: "none" }}
+                aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
               />
               <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-end'}}>
                 <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
@@ -157,6 +162,7 @@ export default function Task(props) {
                   aria-haspopup="true"
                   aria-expanded={openTask ? 'true' : undefined}
                   onClick={handleClickTaskMenu}
+                  aria-label="Menu button for more options to manage this single task"
                   >
                     <MoreVertIcon sx={{color: 'primary.main'}}/>
                   </Button>
@@ -166,7 +172,7 @@ export default function Task(props) {
                     open={openTask}
                     onClose={handleCloseTaskMenu}
                     MenuListProps={{
-                      'aria-labelledby': 'task-button',
+                      'aria-labelledby': 'manage-current-task-menu-button',
                     }}
                   >
                     <MenuItem onClick={handleDialogOpen}>Edit</MenuItem>
@@ -187,7 +193,7 @@ export default function Task(props) {
               autoFocus
               margin="dense"
               id="titleEdit"
-              label="Task Name"
+              label="Please enter the new title of the new task"
               type="text"
               fullWidth
               variant="standard"

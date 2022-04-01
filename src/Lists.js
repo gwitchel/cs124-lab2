@@ -45,7 +45,7 @@ export default function Lists(props) {
     console.log("lists",lists)
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
-    const isNarrowThan500 = useMediaQuery({ maxWidth: 5000 })
+    const isNarrowThan500 = useMediaQuery({ maxWidth: 500 })
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
     const openMenu = Boolean(anchorElMenu);
@@ -251,7 +251,7 @@ export default function Lists(props) {
                     autoFocus
                     margin="dense"
                     id="list-name"
-                    label="List Name"
+                    label="Please enter the name of the new list"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -282,7 +282,7 @@ export default function Lists(props) {
                 <Box>
                     <IconButton
                         color="primary"
-                        aria-label="more"
+                        aria-label="Hamburger menu button for options to manage to-do lists"
                         id="manage-lists-button"
                         aria-controls={openMenu ? 'manage-lists-menu' : undefined}
                         aria-expanded={openMenu ? 'true' : undefined}
@@ -316,13 +316,13 @@ export default function Lists(props) {
                 <Tabs
                     value={tabId}
                     onChange={handleChangeTab}
-                    aria-label="tabs"
+                    aria-label="tabs for to-do lists"
                 >
-                    {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} sx={{textTransform:'none'}}/>)}
+                    {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} sx={{textTransform:'none'}} aria-label={`tab for the to-do list named ${list.name}`}/>)}
                 </Tabs>
                 <List listId={tabId}/>
             </Box>)}
-            <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
+            <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose} aria-describedby="Please enter the name of the list below.">
                 <DialogTitle>Create a New List</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
@@ -332,7 +332,7 @@ export default function Lists(props) {
                     autoFocus
                     margin="dense"
                     id="list-name"
-                    label="List Name"
+                    label="Please enter the name of the new list"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -357,7 +357,7 @@ export default function Lists(props) {
                     autoFocus
                     margin="dense"
                     id="delete-list-name"
-                    label="List Name"
+                    label="Please enter the name of the list that you want to delete to confirm"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -382,7 +382,7 @@ export default function Lists(props) {
                     autoFocus
                     margin="dense"
                     id="rename-list-old-name"
-                    label="Old Name"
+                    label="Please enter the old name of the list that you want to modify"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -393,7 +393,7 @@ export default function Lists(props) {
                 <TextField
                     margin="dense"
                     id="rename-list-new-name"
-                    label="New Name"
+                    label="Please enter the new name of the list that you want to modify"
                     type="text"
                     fullWidth
                     variant="standard"

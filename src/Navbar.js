@@ -150,7 +150,7 @@ export default function Navbar(props) {
         {!isNarrowThan300 && (
             <div>
             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
-                <IconButton onClick={handleDialogOpen} color="primary">
+                <IconButton onClick={handleDialogOpen} color="primary" aria-label={"Add button to add a new task"}>
                     <AddCircleOutlineIcon />
                 </IconButton>
                 <Box sx={{display:'flex', flexDirection:'row', alignItems:'center'}}>
@@ -163,8 +163,8 @@ export default function Navbar(props) {
                         button
                         id="sort-button"
                         aria-haspopup="listbox"
-                        aria-controls="sort-menu"
-                        aria-label="Sort by"
+                        aria-controls="sort menu"
+                        aria-label={`Sorting by ${props.sortBy}`}
                         aria-expanded={openSort ? 'true' : undefined}
                         onClick={handleClickListItemSort}
                         >
@@ -200,6 +200,7 @@ export default function Navbar(props) {
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
+                            aria-label="Current sort direction is ascending. Click to flip direction to descending."
                         >
                             <ArrowUpwardIcon />
                         </IconButton>)
@@ -208,6 +209,7 @@ export default function Navbar(props) {
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
+                            aria-label="Current sort direction is descending. Click to flip direction to ascending."
                         >
                             <ArrowDownwardIcon />
                         </IconButton>)
@@ -215,9 +217,9 @@ export default function Navbar(props) {
                 </Box>
                 <IconButton
                     color="primary"
-                    aria-label="more"
+                    aria-label="Hamburger menu button for more options to manage tasks."
                     id="long-button"
-                    aria-controls={openMenu ? 'long-menu' : undefined}
+                    aria-controls={openMenu ? 'manage-tasks-menu' : undefined}
                     aria-expanded={openMenu ? 'true' : undefined}
                     aria-haspopup="true"
                     onClick={handleClickMenu}
@@ -227,7 +229,7 @@ export default function Navbar(props) {
                 <Menu
                     id="long-menu"
                     MenuListProps={{
-                    'aria-labelledby': 'long-button',
+                    'aria-labelledby': 'manage-tasks-menu-button',
                     }}
                     anchorEl={anchorElMenu}
                     open={openMenu}
@@ -256,7 +258,7 @@ export default function Navbar(props) {
                     autoFocus
                     margin="dense"
                     id="nameNew"
-                    label="Task Name"
+                    label="Please enter the title of the new task"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -264,11 +266,11 @@ export default function Navbar(props) {
                     value={title}
                     onChange={handleSetTitle}
                 />
-                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
+                {showAlert && <Typography role = "alert" sx={{ fontSize:12, color:'red' }} aria-label="Please enter a non-empty title for the task">Please enter a non-empty title for the task!</Typography>}
                 <Button
                     id="new-task-priority-button"
                     variant='outlined'
-                    aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
+                    aria-controls={openPriority ? 'new-task-priority-options-menu' : undefined}
                     aria-haspopup="true"
                     aria-expanded={openPriority ? 'true' : undefined}
                     onClick={handleClickPriority}
@@ -283,7 +285,7 @@ export default function Navbar(props) {
                     open={openPriority}
                     onClose={handleClosePriority}
                     MenuListProps={{
-                    'aria-labelledby': 'new-task-priority-button',
+                    'aria-labelledby': 'new-task-priority-options-menu',
                     }}
                 >
                     <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
@@ -297,7 +299,7 @@ export default function Navbar(props) {
                 </DialogActions>
             </Dialog>
             <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
-                <DialogTitle>Delete All Completed Tasks</DialogTitle>
+                <DialogTitle aria-label="Are you sure that you want to delete ALL completed tasks?">Delete All Completed Tasks</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
                     Are you sure that you want to delete ALL completed tasks?
@@ -315,9 +317,9 @@ export default function Navbar(props) {
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems:'flex-start'}}>
                 <IconButton
                     color="primary"
-                    aria-label="more"
+                    aria-label="options to manage tasks"
                     id="long-button"
-                    aria-controls={openMenu ? 'long-menu' : undefined}
+                    aria-controls={openMenu ? 'manage-tasks-options-menu' : undefined}
                     aria-expanded={openMenu ? 'true' : undefined}
                     aria-haspopup="true"
                     onClick={handleClickMenu}
@@ -327,7 +329,7 @@ export default function Navbar(props) {
                 <Menu
                     id="long-menu"
                     MenuListProps={{
-                    'aria-labelledby': 'long-button',
+                    'aria-labelledby': 'manage-tasks-options-button',
                     }}
                     anchorEl={anchorElMenu}
                     open={openMenu}
@@ -357,7 +359,7 @@ export default function Navbar(props) {
                         id="sort-button"
                         aria-haspopup="listbox"
                         aria-controls="sort-menu"
-                        aria-label="Sort by"
+                        aria-label={`Sorting by ${props.sortBy}`}
                         aria-expanded={openSort ? 'true' : undefined}
                         onClick={handleClickListItemSort}
                         >
@@ -393,6 +395,7 @@ export default function Navbar(props) {
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
+                            aria-label="Current sort direction is ascending. Click to flip direction to descending."
                         >
                             <ArrowUpwardIcon />
                         </IconButton>)
@@ -401,6 +404,7 @@ export default function Navbar(props) {
                         <IconButton
                             color="primary"
                             onClick={handleClickSortDirection}
+                            aria-label="Current sort direction is descending. Click to flip direction to ascending."
                         >
                             <ArrowDownwardIcon />
                         </IconButton>)
@@ -417,7 +421,7 @@ export default function Navbar(props) {
                     autoFocus
                     margin="dense"
                     id="nameNew"
-                    label="Task Name"
+                    label="Please enter the title of the task"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -458,7 +462,7 @@ export default function Navbar(props) {
                 </DialogActions>
             </Dialog>
             <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
-                <DialogTitle>Delete All Completed Tasks</DialogTitle>
+                <DialogTitle aria-label="Are you sure that you want to delete ALL completed tasks?">Delete All Completed Tasks</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
                     Are you sure that you want to delete ALL completed tasks?
