@@ -28,7 +28,7 @@ const db = getFirestore(app);
 function Tasks(props) {
     const { list, listDocRef } = props;
 
-    console.log("list", list)
+    // console.log("list", list)
     
     const sortOptions = ['title', 'created', 'priority'];
     const tasksCollectionRef = collection(listDocRef, 'Tasks');
@@ -88,8 +88,8 @@ function Tasks(props) {
 
         const tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
 
-        console.log("allTasks", allTasks)
-        console.log("sortBy", list.sortBy)
+        // console.log("allTasks", allTasks)
+        // console.log("sortBy", list.sortBy)
 
         return (
             <>
