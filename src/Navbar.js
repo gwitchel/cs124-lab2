@@ -249,16 +249,17 @@ export default function Navbar(props) {
                 </Menu>
             </Box>
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle>Create A New Task</DialogTitle>
+                <DialogTitle aria-label='Create a New List. Please enter the name of the task below.'>Create a New Task</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
-                    Please enter the title of the task below.
+                    Please enter the name of the task below.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="nameNew"
-                    label="Please enter the title of the new task"
+                    aria-label={!showAlert ? `Task name` : `Please enter a non-empty name for the task`}
+                    label="Task name"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -266,7 +267,7 @@ export default function Navbar(props) {
                     value={title}
                     onChange={handleSetTitle}
                 />
-                {showAlert && <Typography role = "alert" sx={{ fontSize:12, color:'red' }} aria-label="Please enter a non-empty title for the task">Please enter a non-empty title for the task!</Typography>}
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the task!</Typography>}
                 <Button
                     id="new-task-priority-button"
                     variant='outlined'
@@ -412,16 +413,17 @@ export default function Navbar(props) {
                 </Box>
             </Box>
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle>Create A New Task</DialogTitle>
+                <DialogTitle aria-label='Create a New Task. Please enter the name of the new task below.'>Create a New Task</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
-                    Please enter the title of the task below.
+                    Please enter the name of the new task below.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="nameNew"
-                    label="Please enter the title of the task"
+                    aria-label={!showAlert ? `Task name` : `Please enter a non-empty name for the task`}
+                    label="Task name"
                     type="text"
                     fullWidth
                     variant="standard"
@@ -429,7 +431,7 @@ export default function Navbar(props) {
                     value={title}
                     onChange={handleSetTitle}
                 />
-                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>}
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the task!</Typography>}
                 <Button
                     id="new-task-priority-button"
                     variant='outlined'

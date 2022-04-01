@@ -242,23 +242,24 @@ export default function Lists(props) {
             <>
             <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
-                <DialogTitle>Create a New List</DialogTitle>
+                <DialogTitle aria-label="Create a New List. Please enter the name of the new list below.">Create a New List</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
-                    Please enter the name of the list below.
+                    Please enter the name of the new list below.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="list-name"
-                    label="Please enter the name of the new list"
+                    aria-label={!showAlert ? `List name` : `Please enter a non-empty name for the new list`}
+                    label="List name"
                     type="text"
                     fullWidth
                     variant="standard"
                     value={listName}
                     onChange={handleSetListName}
                 />
-                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the list!</Typography>}
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the new list!</Typography>}
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleNewListDialogClose}>Cancel</Button>
@@ -323,23 +324,24 @@ export default function Lists(props) {
                 <List listId={tabId}/>
             </Box>)}
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose} aria-describedby="Please enter the name of the list below.">
-                <DialogTitle>Create a New List</DialogTitle>
+                <DialogTitle aria-label='Create a New List. Please enter the name of the new list below.'>Create a New List</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
-                    Please enter the name of the list below.
+                    Please enter the name of the new list below.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="list-name"
-                    label="Please enter the name of the new list"
+                    aria-label={!showAlert ? `List name` : `Please enter a non-empty name for the new list`}
+                    label="List name"
                     type="text"
                     fullWidth
                     variant="standard"
                     value={listName}
                     onChange={handleSetListName}
                 />
-                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the list!</Typography>}
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the new list!</Typography>}
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleNewListDialogClose}>Cancel</Button>
@@ -348,7 +350,7 @@ export default function Lists(props) {
             </Dialog>
 
             <Dialog open={deleteListDialogOpen} onClose={handleDeleteListDialogClose}>
-                <DialogTitle>Delete a List</DialogTitle>
+                <DialogTitle aria-label='Delete a List. Please enter the name of the list that you want to delete to confirm.'>Delete a List</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
                     Please enter the name of the list that you want to delete to confirm.
@@ -357,14 +359,15 @@ export default function Lists(props) {
                     autoFocus
                     margin="dense"
                     id="delete-list-name"
-                    label="Please enter the name of the list that you want to delete to confirm"
+                    aria-label={!showAlertDelete ? `List name` : `Please enter the correct name of the list that you want to delete to confirm`}
+                    label="List name"
                     type="text"
                     fullWidth
                     variant="standard"
                     value={deleteName}
                     onChange={handleDeleteListName}
                 />
-                {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the name of the list that you want to delete to confirm.</Typography>}
+                {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the correct name of the list that you want to delete to confirm.</Typography>}
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleNewListDialogClose}>Cancel</Button>
@@ -373,27 +376,29 @@ export default function Lists(props) {
             </Dialog>
 
             <Dialog open={renameDialogOpen} onClose={handleRenameDialogClose}>
-                <DialogTitle>Rename a List</DialogTitle>
+                <DialogTitle aria-label='Rename a List. Please enter the old name and the new name of the list that you want to rename.'>Rename a List</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
-                    Please enter the old name and the new name of the list that you want to modify.
+                    Please enter the old name and the new name of the list that you want to rename.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="rename-list-old-name"
-                    label="Please enter the old name of the list that you want to modify"
+                    aria-label={!showAlertRenameOld ? `Old name` : `Please enter the name of an existing list that you want to rename`}
+                    label="Old name"
                     type="text"
                     fullWidth
                     variant="standard"
                     value={oldName}
                     onChange={handleRenameListOld}
                 />
-                {showAlertRenameOld && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the name of an existing list.</Typography>}
+                {showAlertRenameOld && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the name of an existing list that you want to rename.</Typography>}
                 <TextField
                     margin="dense"
                     id="rename-list-new-name"
-                    label="Please enter the new name of the list that you want to modify"
+                    aria-label={!showAlertRenameNew ? `New name` : `Please enter the new name of the list that you want to rename`}
+                    label="New name"
                     type="text"
                     fullWidth
                     variant="standard"
