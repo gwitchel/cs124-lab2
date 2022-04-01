@@ -1,5 +1,6 @@
 import React from 'react';
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
@@ -18,6 +19,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
 import List from './List';
 
 // web app's Firebase configuration
@@ -34,36 +39,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-function ListTabs(props) {
-    const lists = props.lists;
-    const [tabId, setTabId] = useState(lists.length===0 ? 'default' : lists[0].id);
-
-    const handleChangeTab = (event, newId) => {
-        setTabId(newId);
-    };
-
-    // console.log("lists", lists)
-
-    if (tabId === 'default') {
-        return <p>No lists for display.</p>
-    }
-    return (
-        <Box sx={{ width: '100%' }}>
-            <Tabs
-                value={tabId}
-                onChange={handleChangeTab}
-                aria-label="tabs"
-            >
-                {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} sx={{textTransform:'none'}}/>)}
-            </Tabs>
-            <List listId={tabId}/>
-        </Box>
-    )
-}
-
 export default function Lists(props) {
     const q = query(collection(db, 'Lists'));   
     const [lists, loading, error] = useCollectionData(q);
+    console.log("lists",lists)
+    const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
+
+    const isNarrowThan500 = useMediaQuery({ maxWidth: 5000 })
+    const ITEM_HEIGHT = 48;
+    const [anchorElMenu, setAnchorElMenu] = React.useState(null);
+    const openMenu = Boolean(anchorElMenu);
 
     const [newListDialogOpen, setNewListDialogOpen] = React.useState(false);
     const [listName, setListName] = useState("");
@@ -79,6 +64,9 @@ export default function Lists(props) {
     const [showAlertRenameOld, setShowAlertRenameOld] = React.useState(false);
     const [showAlertRenameNew, setShowAlertRenameNew] = React.useState(false);
     
+    const handleChangeTab = (event, newId) => {
+        setTabId(newId);
+    };
 
     const handleNewListDialogOpen = () => {
         setNewListDialogOpen(true);
@@ -109,6 +97,9 @@ export default function Lists(props) {
             sortDir: "desc",
             created: serverTimestamp(),
         })
+        if (lists.length===0) {
+            setTabId(listId)
+        }
     }
 
     function onSubmitNewList(e) {
@@ -140,7 +131,17 @@ export default function Lists(props) {
     function deleteList(){
         const list = lists.filter(list => list.name === deleteName)[0]
         if (list) {
+            // const listRef = doc(db, `Lists/${list.id}`);
+            // const collectionRef = collection(listRef, 'Tasks');
+            // const q = query(collectionRef);   
+            // const [tasks, loading, error] = useCollectionData(q);
+            // if (!loading && !error && tasks) {
+            //     const taskIds = tasks.map(task => task.id)
+            //     taskIds.forEach(id => deleteDoc(doc(collectionRef, id)))
+            // }
+
             deleteDoc(doc(collection(db, 'Lists'), list.id))
+            if (lists.length!==1) {setTabId(lists[0].id!==list.id ? lists[0].id : lists[1].id)}
         }
     }
 
@@ -207,20 +208,120 @@ export default function Lists(props) {
         }
     }
 
+    const handleClickMenu = (event) => {
+        setAnchorElMenu(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorElMenu(null);
+    };
+
+    const handleMenuAction = (e, option) => {
+        if (option === "Start a New List") {
+            handleNewListDialogOpen()
+        }else if (option === "Delete a List") {
+            handleDeleteListDialogOpen()
+        }else{
+            handleRenameDialogOpen()
+        }
+        setAnchorElMenu(null);
+    };
+
+    useEffect(() => {
+        if (lists && lists.length!==0) {
+            setTabId(lists[0].id)
+        }
+      }, [lists])
     
     if (loading) {
         return (
             <p>Loading</p>
         )
-    }else if (!error){
+    }else if (!error && lists.length===0) {
+        return (
+            <>
+            <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
+            <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
+                <DialogTitle>Create a New List</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Please enter the name of the list below.
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="list-name"
+                    label="List Name"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    value={listName}
+                    onChange={handleSetListName}
+                />
+                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the list!</Typography>}
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleNewListDialogClose}>Cancel</Button>
+                <Button onClick={onSubmitNewList}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+            </>
+        )
+    }
+    else if (!error && lists.length!==0) {
         return (
         <>
-            <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
-                <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
-                <Button onClick={handleDeleteListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Delete a List</Button>
-                <Button onClick={handleRenameDialogOpen} variant='outlined' sx={{textTransform:'none'}}>Rename a List</Button>
-            </Box>
-            <ListTabs lists={lists}/>
+            {!isNarrowThan500 && (
+                <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
+                    <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
+                    <Button onClick={handleDeleteListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Delete a List</Button>
+                    <Button onClick={handleRenameDialogOpen} variant='outlined' sx={{textTransform:'none'}}>Rename a List</Button>
+                </Box>
+            )}
+            {isNarrowThan500 && (
+                <Box>
+                    <IconButton
+                        color="primary"
+                        aria-label="more"
+                        id="manage-lists-button"
+                        aria-controls={openMenu ? 'manage-lists-menu' : undefined}
+                        aria-expanded={openMenu ? 'true' : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClickMenu}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Menu
+                        id="manage-lists-menu"
+                        MenuListProps={{
+                        'aria-labelledby': 'manage-lists-button',
+                        }}
+                        anchorEl={anchorElMenu}
+                        open={openMenu}
+                        onClose={handleCloseMenu}
+                        PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            // width: '20ch',
+                        },
+                        }}
+                    >
+                        <MenuItem key={'Start a New List'} onClick={(e) => handleMenuAction(e, "Start a New List")}>Start a New List</MenuItem>
+                        <MenuItem key={'Delete a List'} onClick={(e) => handleMenuAction(e, "Delete a List")}>Delete a List</MenuItem>
+                        <MenuItem key={'Rename a List'} onClick={(e) => handleMenuAction(e, "Rename a List")}>Rename a List</MenuItem>
+                    </Menu>
+                </Box>
+            )}
+            {tabId!=="none" && (<Box sx={{ width: '100%' }}>
+                <Tabs
+                    value={tabId}
+                    onChange={handleChangeTab}
+                    aria-label="tabs"
+                >
+                    {lists.map(list => <Tab value={list.id} label={list.name} key={list.id} sx={{textTransform:'none'}}/>)}
+                </Tabs>
+                <List listId={tabId}/>
+            </Box>)}
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
                 <DialogTitle>Create a New List</DialogTitle>
                 <DialogContent>

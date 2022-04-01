@@ -27,8 +27,8 @@ const db = getFirestore(app);
 
 function Tasks(props) {
     const { list, listDocRef } = props;
-
-    // console.log("list", list)
+    
+    console.log("list", list)
     
     const sortOptions = ['title', 'created', 'priority'];
     const tasksCollectionRef = collection(listDocRef, 'Tasks');
