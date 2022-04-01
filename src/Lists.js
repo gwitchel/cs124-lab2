@@ -320,7 +320,7 @@ export default function Lists(props) {
                     value={tabId}
                     onChange={handleChangeTab}
                     variant="scrollable"
-                    scrollButtons="auto"
+                    scrollButtons="false"
                     aria-label="tabs for to-do lists"
                 >
                     {lists.map(list => 
@@ -328,7 +328,7 @@ export default function Lists(props) {
                             value={list.id}
                             label={list.name}
                             key={list.id}
-                            sx={{textTransform:'none'}}
+                            sx={{textTransform:'none', maxWidth:120}}
                             aria-label={`tab for the to-do list named ${list.name}`}
                             wrapped
                         />
