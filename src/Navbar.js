@@ -73,7 +73,7 @@ export default function Navbar(props) {
         if (title.length===0) {
             setShowAlert(true);
         }else{
-            props.handleNewTaskSubmit(title, priority);
+            props.handleNewTask(title, priority);
             handleDialogClose();
             setTitle("")
             setPriority(1)
@@ -237,7 +237,6 @@ export default function Navbar(props) {
                     PaperProps={{
                     style: {
                         maxHeight: ITEM_HEIGHT * 4.5,
-                        // width: '20ch',
                     },
                     }}
                 >
@@ -263,7 +262,6 @@ export default function Navbar(props) {
                     type="text"
                     fullWidth
                     variant="standard"
-                    // inputProps={{ maxLength: 50 }}
                     value={title}
                     onChange={handleSetTitle}
                 />
@@ -338,7 +336,6 @@ export default function Navbar(props) {
                     PaperProps={{
                     style: {
                         maxHeight: ITEM_HEIGHT * 4.5,
-                        // width: '20ch',
                     },
                     }}
                 >
@@ -427,7 +424,6 @@ export default function Navbar(props) {
                     type="text"
                     fullWidth
                     variant="standard"
-                    // inputProps={{ maxLength: 50 }}
                     value={title}
                     onChange={handleSetTitle}
                 />

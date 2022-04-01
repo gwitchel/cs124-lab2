@@ -23,7 +23,6 @@ import { IconButton } from '@mui/material';
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [title, setTitle] = useState("");
-  // const [showAlert, setShowAlert] = React.useState(false);
   const priorityDic = {1: "!", 2: "!!", 3: "!!!"}
   const priorityDic1 = {1: "low", 2: "medium", 3: "high"}
   const [priority, setPriority] = useState(props.priority);
@@ -35,13 +34,11 @@ export default function Task(props) {
   const handleSetTitle = e => {
     setTitle(e.target.value)
     if (e.target.value.length>0) {
-      // setShowAlert(false);
     }
   }
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    // setShowAlert(false);
     setTitle("")
     setPriority(props.priority)
   };
@@ -197,11 +194,9 @@ export default function Task(props) {
               type="text"
               fullWidth
               variant="standard"
-              // inputProps={{ maxLength: 50 }}
               value={title}
               onChange={handleSetTitle}
           />
-          {/* {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>} */}
           <Button
               id="new-task-priority-button"
               variant='outlined'

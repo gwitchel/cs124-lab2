@@ -1,5 +1,4 @@
 import React from 'react';
-// import {useState} from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
 import { initializeApp } from 'firebase/app';
@@ -64,7 +63,7 @@ function Tasks(props) {
         })
     }
 
-    function handleNewTaskSubmit(title, priority){
+    function handleNewTask(title, priority){
         const taskId = generateUniqueID()
         setDoc(doc(tasksCollectionRef, taskId), {
             id: taskId,
@@ -76,8 +75,7 @@ function Tasks(props) {
     }
 
     function handleDeleteFinished(){
-        let tasksToDisplay = [...tasks]
-        let completed = tasksToDisplay.filter(task => task.completed)
+        let completed = tasks.filter(task => task.completed)
         completed.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
     }
 
@@ -87,9 +85,6 @@ function Tasks(props) {
         const uncompleted = allTasks.filter(task => !task.completed)
 
         const tasksToDisplay = showCompleted ? uncompleted.concat(completed) : uncompleted
-
-        // console.log("allTasks", allTasks)
-        // console.log("sortBy", list.sortBy)
 
         return (
             <>
@@ -108,37 +103,38 @@ function Tasks(props) {
             </>
         )
     }
+
+    const NavbarTasks = () => {
+        return (
+            <Navbar
+                handleNewTask={handleNewTask}
+                showCompleted={list.showCompleted}
+                onToggleComplete={onToggleComplete}
+                handleDeleteFinished={handleDeleteFinished}
+                onChangeSortOption={onChangeSortOption}
+                onChangeSortDirection={onChangeSortDirection}
+                sortBy={list.sortBy}
+                sortDir={list.sortDir}
+            />
+        )
+    }
     
 
     if (loading) {
         return (
             <>
-                <Navbar
-                    handleNewTaskSubmit={handleNewTaskSubmit}
-                    showCompleted={list.showCompleted}
-                    onToggleComplete={onToggleComplete}
-                    handleDeleteFinished={handleDeleteFinished}
-                    onChangeSortOption={onChangeSortOption}
-                    onChangeSortDirection={onChangeSortDirection}
-                    sortBy={list.sortBy}
-                    sortDir={list.sortDir}
-                />
+                <NavbarTasks />
                 <p>Loading</p>
             </>
         )
-    }else if (!error){
+    }else if (error) {
+        return (
+            <p>Error: {JSON.stringify(error)}</p>
+        )
+    }else if (tasks){
         return (
             <>
-                <Navbar
-                    handleNewTaskSubmit={handleNewTaskSubmit}
-                    showCompleted={showCompleted}
-                    onToggleComplete={onToggleComplete}
-                    handleDeleteFinished={handleDeleteFinished}
-                    onChangeSortOption={onChangeSortOption}
-                    onChangeSortDirection={onChangeSortDirection}
-                    sortBy={list.sortBy}
-                    sortDir={list.sortDir}
-                />
+                <NavbarTasks />
 
                 <TasksToDisplay />
             </>
@@ -155,7 +151,11 @@ export default function List(props) {
         return (
             <p>Loading</p>
         )
-    }else if (!error){
+    }else if (error) {
+        return (
+            <p>Error: {JSON.stringify(error)}</p>
+        )
+    }else if (list){
         return <Tasks list={list.data()} listDocRef={listDocRef} />
     }
 }

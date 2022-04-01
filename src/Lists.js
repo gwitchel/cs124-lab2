@@ -237,7 +237,11 @@ export default function Lists(props) {
         return (
             <p>Loading</p>
         )
-    }else if (!error && lists.length===0) {
+    }else if (error) {
+        return (
+            <p>Error: {JSON.stringify(error)}</p>
+        )
+    }else if (lists.length===0) {
         return (
             <>
             <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
@@ -268,8 +272,7 @@ export default function Lists(props) {
             </Dialog>
             </>
         )
-    }
-    else if (!error && lists.length!==0) {
+    }else if (lists.length!==0) {
         return (
         <>
             {!isNarrowThan500 && (
@@ -303,7 +306,6 @@ export default function Lists(props) {
                         PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            // width: '20ch',
                         },
                         }}
                     >
