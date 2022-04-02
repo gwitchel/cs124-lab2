@@ -150,14 +150,14 @@ export default function Navbar(props) {
         {!isNarrowThan300 && (
             <div>
             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
-                <IconButton onClick={handleDialogOpen} color="primary" aria-label={"Add button to add a new task"}>
+                <IconButton onClick={handleDialogOpen} sx={{color: 'primary.dark'}} aria-label={"Add a new task"}>
                     <AddCircleOutlineIcon />
                 </IconButton>
                 <Box sx={{display:'flex', flexDirection:'row', alignItems:'center'}}>
                     <List
                         component="nav"
                         aria-label="Sort settings"
-                        sx={{ bgcolor: 'background.paper' }}
+                        sx={{ bgcolor:'background.paper' }}
                     >
                         <ListItem
                         button
@@ -198,7 +198,7 @@ export default function Navbar(props) {
                     </Menu>
                     {props.sortDir==='asc' && (
                         <IconButton
-                            color="primary"
+                            sx={{color:'primary.dark'}}
                             onClick={handleClickSortDirection}
                             aria-label="Current sort direction is ascending. Click to flip direction to descending."
                         >
@@ -207,7 +207,7 @@ export default function Navbar(props) {
                     }
                     {props.sortDir==='desc' && (
                         <IconButton
-                            color="primary"
+                            sx={{color:'primary.dark'}}
                             onClick={handleClickSortDirection}
                             aria-label="Current sort direction is descending. Click to flip direction to ascending."
                         >

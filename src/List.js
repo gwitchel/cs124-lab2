@@ -1,7 +1,6 @@
 import React from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
-import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
@@ -9,20 +8,6 @@ import { query, collection } from "firebase/firestore";
 import { useCollectionData, useDocument } from "react-firebase-hooks/firestore";
 import Task from './Task';
 import Navbar from './Navbar';
-
-// web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDnLHzrDzijh4KmeJWRU5zSIiW2cPsZRHU",
-    authDomain: "cs124-lab3-3028f.firebaseapp.com",
-    projectId: "cs124-lab3-3028f",
-    storageBucket: "cs124-lab3-3028f.appspot.com",
-    messagingSenderId: "426502461839",
-    appId: "1:426502461839:web:56b4c42f33c8a6187353fa"
-    };
-    
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 function Tasks(props) {
     const { list, listDocRef } = props;
@@ -144,6 +129,8 @@ function Tasks(props) {
 }
 
 export default function List(props) {
+    const app = props.app;
+    const db = getFirestore(app);
     const listDocRef = doc(db, `Lists/${props.listId}`);
     const [list, loading, error] = useDocument(listDocRef);
 

@@ -92,7 +92,7 @@ export default function Lists(props) {
         setDoc(doc(db, "Lists", listId), {
             id: listId,
             name: listName,
-            showCompleted: false,
+            showCompleted: true,
             sortBy: "priority",
             sortDir: "desc",
             created: serverTimestamp(),
@@ -244,7 +244,7 @@ export default function Lists(props) {
     }else if (lists.length===0) {
         return (
             <>
-            <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
+            <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Start a New List</Button>
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
                 <DialogTitle aria-label="Create a New List. Please enter the name of the new list below.">Create a New List</DialogTitle>
                 <DialogContent>
@@ -266,8 +266,8 @@ export default function Lists(props) {
                 {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the new list!</Typography>}
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleNewListDialogClose}>Cancel</Button>
-                <Button onClick={onSubmitNewList}>Submit</Button>
+                <Button onClick={handleNewListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+                <Button onClick={onSubmitNewList} sx={{color: 'primary.dark'}}>Submit</Button>
                 </DialogActions>
             </Dialog>
             </>
@@ -277,9 +277,9 @@ export default function Lists(props) {
         <>
             {!isNarrowThan500 && (
                 <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
-                    <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Start a New List</Button>
-                    <Button onClick={handleDeleteListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2}}>Delete a List</Button>
-                    <Button onClick={handleRenameDialogOpen} variant='outlined' sx={{textTransform:'none'}}>Rename a List</Button>
+                    <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Start a New List</Button>
+                    <Button onClick={handleDeleteListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Delete a List</Button>
+                    <Button onClick={handleRenameDialogOpen} variant='outlined' sx={{textTransform:'none', color: 'primary.dark'}}>Rename a List</Button>
                 </Box>
             )}
             {isNarrowThan500 && (
@@ -334,7 +334,7 @@ export default function Lists(props) {
                         />
                     )}
                 </Tabs>
-                <List listId={tabId}/>
+                <List listId={tabId} app={app}/>
             </Box>)}
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose} aria-describedby="Please enter the name of the list below.">
                 <DialogTitle aria-label='Create a New List. Please enter the name of the new list below.'>Create a New List</DialogTitle>
@@ -357,8 +357,8 @@ export default function Lists(props) {
                 {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the new list!</Typography>}
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleNewListDialogClose}>Cancel</Button>
-                <Button onClick={onSubmitNewList}>Submit</Button>
+                <Button onClick={handleNewListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+                <Button onClick={onSubmitNewList} sx={{color: 'primary.dark'}}>Submit</Button>
                 </DialogActions>
             </Dialog>
 
@@ -383,8 +383,8 @@ export default function Lists(props) {
                 {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the correct name of the list that you want to delete to confirm.</Typography>}
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleNewListDialogClose}>Cancel</Button>
-                <Button onClick={onSubmitDeleteList}>Submit</Button>
+                <Button onClick={handleDeleteListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+                <Button onClick={onSubmitDeleteList} sx={{color: 'primary.dark'}}>Submit</Button>
                 </DialogActions>
             </Dialog>
 
@@ -421,8 +421,8 @@ export default function Lists(props) {
                 {showAlertRenameNew && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the new name of the list.</Typography>}
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleRenameDialogClose}>Cancel</Button>
-                <Button onClick={onSubmitRenameList}>Submit</Button>
+                <Button onClick={handleRenameDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+                <Button onClick={onSubmitRenameList} sx={{color: 'primary.dark'}}>Submit</Button>
                 </DialogActions>
             </Dialog>
         </>)

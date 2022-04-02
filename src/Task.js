@@ -99,14 +99,14 @@ export default function Task(props) {
           <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
               label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{pointerEvents: "auto"}} sx={{ml:1.5}}/>}
               style={{ pointerEvents: "none" }}
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1}}
               aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
             />
             <Typography sx={{color: 'red'}} aria-label={`Priority level is ${priorityDic1[props.priority]}`}>{priorityDic[props.priority]}</Typography>
-            <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task"><Edit sx={{color: 'primary.main'}}/></IconButton>
-            <IconButton onClick={deleteTask} aria-label="Button for deleting a task"><Delete sx={{color: 'primary.main'}}/></IconButton>
+            <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task"><Edit sx={{color: 'primary.dark'}}/></IconButton>
+            <IconButton onClick={deleteTask} aria-label="Button for deleting a task"><Delete sx={{color: 'primary.dark'}}/></IconButton>
           </Box>)}
         {isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
@@ -126,7 +126,7 @@ export default function Task(props) {
               aria-expanded={openTask ? 'true' : undefined}
               onClick={handleClickTaskMenu}
             >
-              <MoreVertIcon sx={{color: 'primary.main'}}/>
+              <MoreVertIcon sx={{color: 'primary.dark'}}/>
             </Button>
             <Menu
               id="task-menu"
@@ -161,7 +161,7 @@ export default function Task(props) {
                   onClick={handleClickTaskMenu}
                   aria-label="Menu button for more options to manage this single task"
                   >
-                    <MoreVertIcon sx={{color: 'primary.main'}}/>
+                    <MoreVertIcon sx={{color: 'primary.dark'}}/>
                   </Button>
                   <Menu
                     id="task-menu"
@@ -204,7 +204,7 @@ export default function Task(props) {
               aria-haspopup="true"
               aria-expanded={openPriority ? 'true' : undefined}
               onClick={handleClickPriority}
-              sx={{marginTop:2, textTransform: 'capitalize'}}
+              sx={{marginTop:2, textTransform:'capitalize', color:'primary.dark'}}
           >
               <Typography variant='body'>Priority level: {priorityDic1[priority]}</Typography>
               <ExpandMoreIcon/>
