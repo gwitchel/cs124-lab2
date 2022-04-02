@@ -11,9 +11,6 @@ import Navbar from './Navbar';
 
 function Tasks(props) {
     const { list, listDocRef } = props;
-    
-    console.log("list", list)
-    
     const sortOptions = ['title', 'created', 'priority'];
     const tasksCollectionRef = collection(listDocRef, 'Tasks');
     const q = query(tasksCollectionRef, orderBy(list.sortBy, list.sortDir));   
@@ -64,6 +61,18 @@ function Tasks(props) {
         completed.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
     }
 
+    function renameList(name) {
+        updateDoc(listDocRef, {
+            name: name
+        })
+    }
+
+    function deleteList() {
+        tasks.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
+        deleteDoc(doc(collection(props.db, 'Lists'), list.id))
+        props.setTab(list.id)
+    }
+
     const TasksToDisplay = () => {
         const allTasks = [...tasks]
         const completed = allTasks.filter(task => task.completed)
@@ -100,6 +109,9 @@ function Tasks(props) {
                 onChangeSortDirection={onChangeSortDirection}
                 sortBy={list.sortBy}
                 sortDir={list.sortDir}
+                renameList={renameList}
+                deleteList={deleteList}
+                list={list}
             />
         )
     }
@@ -120,7 +132,6 @@ function Tasks(props) {
         return (
             <>
                 <NavbarTasks />
-
                 <TasksToDisplay />
             </>
         )
@@ -143,6 +154,6 @@ export default function List(props) {
             <p>Error: {JSON.stringify(error)}</p>
         )
     }else if (list){
-        return <Tasks list={list.data()} listDocRef={listDocRef} />
+        return <Tasks list={list.data()} listDocRef={listDocRef} db={db} setTab={props.setTab}/>
     }
 }

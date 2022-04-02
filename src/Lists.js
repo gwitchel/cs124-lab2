@@ -42,10 +42,9 @@ const db = getFirestore(app);
 export default function Lists(props) {
     const q = query(collection(db, 'Lists'));   
     const [lists, loading, error] = useCollectionData(q);
-    console.log("lists",lists)
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
-    const isNarrowThan500 = useMediaQuery({ maxWidth: 500 })
+    const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
     const openMenu = Boolean(anchorElMenu);
@@ -53,16 +52,6 @@ export default function Lists(props) {
     const [newListDialogOpen, setNewListDialogOpen] = React.useState(false);
     const [listName, setListName] = useState("");
     const [showAlert, setShowAlert] = React.useState(false);
-
-    const [deleteListDialogOpen, setDeleteListDialogOpen] = React.useState(false);
-    const [deleteName, setDeleteName] = useState("");
-    const [showAlertDelete, setShowAlertDelete] = React.useState(false);
-
-    const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
-    const [oldName, setOldName] = useState("");
-    const [newName, setNewName] = useState("");
-    const [showAlertRenameOld, setShowAlertRenameOld] = React.useState(false);
-    const [showAlertRenameNew, setShowAlertRenameNew] = React.useState(false);
     
     const handleChangeTab = (event, newId) => {
         setTabId(newId);
@@ -113,101 +102,6 @@ export default function Lists(props) {
         }
     }
 
-    const handleDeleteListDialogOpen = () => {
-        setShowAlertDelete(false)
-        setDeleteListDialogOpen(true);
-    };
-
-    const handleDeleteListDialogClose = () => {
-        setDeleteListDialogOpen(false);
-        setShowAlertDelete(false);
-        setDeleteName("")
-    };
-
-    const handleDeleteListName = e => {
-        setDeleteName(e.target.value)
-    }
-
-    function deleteList(){
-        const list = lists.filter(list => list.name === deleteName)[0]
-        if (list) {
-            // const listRef = doc(db, `Lists/${list.id}`);
-            // const collectionRef = collection(listRef, 'Tasks');
-            // const q = query(collectionRef);   
-            // const [tasks, loading, error] = useCollectionData(q);
-            // if (!loading && !error && tasks) {
-            //     const taskIds = tasks.map(task => task.id)
-            //     taskIds.forEach(id => deleteDoc(doc(collectionRef, id)))
-            // }
-
-            deleteDoc(doc(collection(db, 'Lists'), list.id))
-            if (lists.length!==1) {setTabId(lists[0].id!==list.id ? lists[0].id : lists[1].id)}
-        }
-    }
-
-    function onSubmitDeleteList(e) {
-        const listNames = lists.map(list => list.name)
-        if (!listNames.includes(deleteName)) {
-            setShowAlertDelete(true)
-        }else{
-            deleteList()
-            handleDeleteListDialogClose();
-            setShowAlertDelete(false)
-            setDeleteName("")
-        }
-    }
-
-    const handleRenameDialogOpen = () => {
-        setRenameDialogOpen(true);
-    };
-
-    const handleRenameDialogClose = () => {
-        setRenameDialogOpen(false);
-        setShowAlertRenameOld(false)
-        setShowAlertRenameNew(false)
-        setOldName("")
-        setNewName("")
-    };
-
-    const handleRenameListOld = e => {
-        setOldName(e.target.value)
-    }
-
-    const handleRenameListNew = e => {
-        setNewName(e.target.value)
-    }
-
-    function renameList() {
-        const list = lists.filter(list => list.name === oldName)[0]
-        if (list) {
-            updateDoc(doc(collection(db, 'Lists'), list.id), {
-                name: newName
-            })
-        }
-    }
-
-    function onSubmitRenameList(e) {
-        const listNames = lists.map(list => list.name)
-        if (!listNames.includes(oldName)) {
-            setShowAlertRenameOld(true)
-        }else{
-            setShowAlertRenameOld(false)
-        }
-        if (newName.length === 0) {
-            setShowAlertRenameNew(true)
-        }else{
-            setShowAlertRenameNew(false)
-        }
-        if (listNames.includes(oldName) && newName.length !== 0) {
-            renameList()
-            handleRenameDialogClose();
-            setShowAlertRenameOld(false)
-            setShowAlertRenameNew(false)
-            setOldName("")
-            setNewName("")
-        }
-    }
-
     const handleClickMenu = (event) => {
         setAnchorElMenu(event.currentTarget);
     };
@@ -219,19 +113,25 @@ export default function Lists(props) {
     const handleMenuAction = (e, option) => {
         if (option === "Start a New List") {
             handleNewListDialogOpen()
-        }else if (option === "Delete a List") {
-            handleDeleteListDialogOpen()
-        }else{
-            handleRenameDialogOpen()
         }
         setAnchorElMenu(null);
     };
+
+    function setTab(deletedId) {
+        if (lists[0].id === deletedId && lists.length === 1) {
+            setTabId('none')
+        }else if (lists[0].id === deletedId && lists.length !== 1) {
+            setTabId(lists[1].id)
+        }else {
+            setTabId(lists[0].id)
+        }
+    }
 
     useEffect(() => {
         if (lists && lists.length!==0) {
             setTabId(lists[0].id)
         }
-      }, [lists])
+    }, [lists])
     
     if (loading) {
         return (
@@ -275,14 +175,12 @@ export default function Lists(props) {
     }else if (lists.length!==0) {
         return (
         <>
-            {!isNarrowThan500 && (
+            {!isNarrowThan230 && (
                 <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
                     <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Start a New List</Button>
-                    <Button onClick={handleDeleteListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Delete a List</Button>
-                    <Button onClick={handleRenameDialogOpen} variant='outlined' sx={{textTransform:'none', color: 'primary.dark'}}>Rename a List</Button>
                 </Box>
             )}
-            {isNarrowThan500 && (
+            {isNarrowThan230 && (
                 <Box>
                     <IconButton
                         color="primary"
@@ -310,8 +208,6 @@ export default function Lists(props) {
                         }}
                     >
                         <MenuItem key={'Start a New List'} onClick={(e) => handleMenuAction(e, "Start a New List")}>Start a New List</MenuItem>
-                        <MenuItem key={'Delete a List'} onClick={(e) => handleMenuAction(e, "Delete a List")}>Delete a List</MenuItem>
-                        <MenuItem key={'Rename a List'} onClick={(e) => handleMenuAction(e, "Rename a List")}>Rename a List</MenuItem>
                     </Menu>
                 </Box>
             )}
@@ -320,7 +216,7 @@ export default function Lists(props) {
                     value={tabId}
                     onChange={handleChangeTab}
                     variant="scrollable"
-                    scrollButtons="false"
+                    scrollButtons={false}
                     aria-label="tabs for to-do lists"
                 >
                     {lists.map(list => 
@@ -334,7 +230,7 @@ export default function Lists(props) {
                         />
                     )}
                 </Tabs>
-                <List listId={tabId} app={app}/>
+                <List listId={tabId} app={app} setTab={setTab}/>
             </Box>)}
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose} aria-describedby="Please enter the name of the list below.">
                 <DialogTitle aria-label='Create a New List. Please enter the name of the new list below.'>Create a New List</DialogTitle>
@@ -359,70 +255,6 @@ export default function Lists(props) {
                 <DialogActions>
                 <Button onClick={handleNewListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
                 <Button onClick={onSubmitNewList} sx={{color: 'primary.dark'}}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog open={deleteListDialogOpen} onClose={handleDeleteListDialogClose}>
-                <DialogTitle aria-label='Delete a List. Please enter the name of the list that you want to delete to confirm.'>Delete a List</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Please enter the name of the list that you want to delete to confirm.
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="delete-list-name"
-                    aria-label={!showAlertDelete ? `List name` : `Please enter the correct name of the list that you want to delete to confirm`}
-                    label="List name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={deleteName}
-                    onChange={handleDeleteListName}
-                />
-                {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the correct name of the list that you want to delete to confirm.</Typography>}
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleDeleteListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
-                <Button onClick={onSubmitDeleteList} sx={{color: 'primary.dark'}}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog open={renameDialogOpen} onClose={handleRenameDialogClose}>
-                <DialogTitle aria-label='Rename a List. Please enter the old name and the new name of the list that you want to rename.'>Rename a List</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Please enter the old name and the new name of the list that you want to rename.
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="rename-list-old-name"
-                    aria-label={!showAlertRenameOld ? `Old name` : `Please enter the name of an existing list that you want to rename`}
-                    label="Old name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={oldName}
-                    onChange={handleRenameListOld}
-                />
-                {showAlertRenameOld && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the name of an existing list that you want to rename.</Typography>}
-                <TextField
-                    margin="dense"
-                    id="rename-list-new-name"
-                    aria-label={!showAlertRenameNew ? `New name` : `Please enter the new name of the list that you want to rename`}
-                    label="New name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={newName}
-                    onChange={handleRenameListNew}
-                />
-                {showAlertRenameNew && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the new name of the list.</Typography>}
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleRenameDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
-                <Button onClick={onSubmitRenameList} sx={{color: 'primary.dark'}}>Submit</Button>
                 </DialogActions>
             </Dialog>
         </>)

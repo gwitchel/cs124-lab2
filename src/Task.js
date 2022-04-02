@@ -107,7 +107,8 @@ export default function Task(props) {
             <Typography sx={{color: 'red'}} aria-label={`Priority level is ${priorityDic1[props.priority]}`}>{priorityDic[props.priority]}</Typography>
             <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task"><Edit sx={{color: 'primary.dark'}}/></IconButton>
             <IconButton onClick={deleteTask} aria-label="Button for deleting a task"><Delete sx={{color: 'primary.dark'}}/></IconButton>
-          </Box>)}
+          </Box>
+        )}
         {isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
@@ -181,16 +182,16 @@ export default function Task(props) {
         )}
       </Paper>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Edit A Task Title</DialogTitle>
+          <DialogTitle aria-label="Edit Task Name. Please enter the new name of the task.">Edit Task Name</DialogTitle>
           <DialogContent>
           <DialogContentText>
-              Please enter the new title of the task below.
+              Please enter the new name of the task below.
           </DialogContentText>
           <TextField
               autoFocus
               margin="dense"
               id="titleEdit"
-              label="Please enter the new title of the new task"
+              label="Task name"
               type="text"
               fullWidth
               variant="standard"

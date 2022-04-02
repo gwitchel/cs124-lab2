@@ -23,32 +23,40 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export default function Navbar(props) {
+    const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
+    
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
 
     const priorityDic = {1: "low", 2: "medium", 3: "high"}
     const [priority, setPriority] = useState(1);
-
-    const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
-    const [showAlert, setShowAlert] = React.useState(false);
-
     const sortOptions = ['title', 'created', 'priority']
     const [anchorElSort, setAnchorElSort] = React.useState(null);
     const openSort = Boolean(anchorElSort);
 
+    const [anchorElPriority, setAnchorElPriority] = React.useState(null);
+    const openPriority = Boolean(anchorElPriority);
+
+    const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
+    const [showAlert, setShowAlert] = React.useState(false);
     const showHideCompleted = props.showCompleted? 'Hide Completed': 'Show Completed'
     const menuOptions = [
         showHideCompleted,
-        'Delete Completed'
+        'Delete Completed',
+        'Rename List',
+        'Delete List'
     ];
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
     const openMenu = Boolean(anchorElMenu);
 
-    const [anchorElPriority, setAnchorElPriority] = React.useState(null);
-    const openPriority = Boolean(anchorElPriority);
+    const [deleteListDialogOpen, setDeleteListDialogOpen] = React.useState(false);
+    const [deleteName, setDeleteName] = useState("");
+    const [showAlertDelete, setShowAlertDelete] = React.useState(false);
 
-    const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
+    const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
+    const [newName, setNewName] = useState("");
+    const [showAlertRename, setShowAlertRename] = React.useState(false);
 
     const handleSetTitle = e => {
         setTitle(e.target.value)
@@ -56,18 +64,15 @@ export default function Navbar(props) {
             setShowAlert(false);
         }
     }
-
     const handleDialogOpen = () => {
         setDialogOpen(true);
     };
-
     const handleDialogClose = () => {
         setDialogOpen(false);
         setShowAlert(false);
         setTitle("")
         setPriority(1)
     };
-
     function onSubmit(e) {
         e.preventDefault();
         if (title.length===0) {
@@ -80,63 +85,26 @@ export default function Navbar(props) {
         }
     }
 
-    const handleDialogOpenDelete = () => {
-        setDialogOpenDelete(true);
-    };
-
-    const handleDialogCloseDelete = () => {
-        setDialogOpenDelete(false);
-    };
-
-    function onSubmitDelete(e) {
-        e.preventDefault();
-        props.handleDeleteFinished();
-        handleDialogCloseDelete();
-    }
-
     const handleClickListItemSort = (event) => {
         setAnchorElSort(event.currentTarget);
     };
-
     const handleMenuItemClickSort = (event, index) => {
         props.onChangeSortOption(index)
         setAnchorElSort(null);
     };
-
     const handleCloseSort = () => {
         setAnchorElSort(null);
     };
-
-    const handleClickMenu = (event) => {
-        setAnchorElMenu(event.currentTarget);
-    };
-
-    const handleCloseMenu = () => {
-        setAnchorElMenu(null);
-    };
-
-    const handleMenuAction = (event, option) => {
-        if (option === showHideCompleted) {
-            props.onToggleComplete(props.showCompleted)
-        }else {
-            handleDialogOpenDelete()
-        }
-        setAnchorElMenu(null);
-    };
-
     const handleClickPriority = (event) => {
         setAnchorElPriority(event.currentTarget);
     };
-    
     const handleClosePriority = () => {
         setAnchorElPriority(null);
     };
-
     const handleChangePriority = (event, priority) => {
         setPriority(priority)
         setAnchorElPriority(null);
     };
-
     const handleClickSortDirection = () => {
         if (props.sortDir === 'asc') {
             props.onChangeSortDirection('desc')
@@ -145,10 +113,85 @@ export default function Navbar(props) {
         }
     }
 
+    const handleDialogOpenDelete = () => {
+        setDialogOpenDelete(true);
+    };
+    const handleDialogCloseDelete = () => {
+        setDialogOpenDelete(false);
+    };
+    function onSubmitDelete(e) {
+        e.preventDefault();
+        props.handleDeleteFinished();
+        handleDialogCloseDelete();
+    }
+
+    const handleDeleteListDialogOpen = () => {
+        setShowAlertDelete(false)
+        setDeleteListDialogOpen(true);
+    };
+    const handleDeleteListDialogClose = () => {
+        setDeleteListDialogOpen(false);
+        setShowAlertDelete(false);
+        setDeleteName("")
+    };
+    const handleDeleteListName = e => {
+        setDeleteName(e.target.value)
+    }
+    function onSubmitDeleteList(e) {
+        if (deleteName !== props.list.name) {
+            setShowAlertDelete(true)
+        }else{
+            props.deleteList()
+            setShowAlertDelete(false)
+            handleDeleteListDialogClose();
+            setDeleteName("")
+        }
+    }
+
+    const handleRenameDialogOpen = () => {
+        setRenameDialogOpen(true);
+    };
+    const handleRenameDialogClose = () => {
+        setRenameDialogOpen(false);
+        setShowAlertRename(false)
+        setNewName("")
+    };
+    const handleRenameListNew = e => {
+        setNewName(e.target.value)
+    }
+    function onSubmitRenameList(e) {
+        if (newName.length !== 0) {
+            props.renameList(newName)
+            handleRenameDialogClose();
+            setNewName("")
+            setShowAlertRename(false)
+        }else {
+            setShowAlertRename(true)
+        }
+    }
+
+    const handleClickMenu = (event) => {
+        setAnchorElMenu(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorElMenu(null);
+    };
+    const handleMenuAction = (event, option) => {
+        if (option === showHideCompleted) {
+            props.onToggleComplete(props.showCompleted)
+        }else if (option === 'Delete Completed') {
+            handleDialogOpenDelete()
+        }else if (option === 'Rename List') {
+            handleRenameDialogOpen()
+        }else if (option === 'Delete List') {
+            handleDeleteListDialogOpen()
+        }
+        setAnchorElMenu(null);
+    };
+
   return (
     <div>
         {!isNarrowThan300 && (
-            <div>
             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent:'space-between'}}>
                 <IconButton onClick={handleDialogOpen} sx={{color: 'primary.dark'}} aria-label={"Add a new task"}>
                     <AddCircleOutlineIcon />
@@ -247,73 +290,9 @@ export default function Navbar(props) {
                     ))}
                 </Menu>
             </Box>
-            <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle aria-label='Create a New List. Please enter the name of the task below.'>Create a New Task</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Please enter the name of the task below.
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="nameNew"
-                    aria-label={!showAlert ? `Task name` : `Please enter a non-empty name for the task`}
-                    label="Task name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={title}
-                    onChange={handleSetTitle}
-                />
-                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the task!</Typography>}
-                <Button
-                    id="new-task-priority-button"
-                    variant='outlined'
-                    aria-controls={openPriority ? 'new-task-priority-options-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={openPriority ? 'true' : undefined}
-                    onClick={handleClickPriority}
-                    sx={{marginTop:2, textTransform: 'capitalize'}}
-                >
-                    <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
-                    <ExpandMoreIcon/>
-                </Button>
-                <Menu
-                    id="new-task-priority-menu"
-                    anchorEl={anchorElPriority}
-                    open={openPriority}
-                    onClose={handleClosePriority}
-                    MenuListProps={{
-                    'aria-labelledby': 'new-task-priority-options-menu',
-                    }}
-                >
-                    <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
-                    <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
-                    <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
-                </Menu>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleDialogClose}>Cancel</Button>
-                <Button variant="contained" onClick={onSubmit}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
-                <DialogTitle aria-label="Are you sure that you want to delete ALL completed tasks?">Delete All Completed Tasks</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Are you sure that you want to delete ALL completed tasks?
-                </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleDialogCloseDelete}>Cancel</Button>
-                <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    )}
-    {isNarrowThan300 && (
-        <div>
-            <Box sx={{display: 'flex', flexDirection: 'column', alignItems:'flex-start'}}>
+        )}
+        {isNarrowThan300 && (
+            <Box sx={{display:'flex', flexDirection:'row', alignContent:'center'}}>
                 <IconButton
                     color="primary"
                     aria-label="options to manage tasks"
@@ -409,70 +388,121 @@ export default function Navbar(props) {
                     }
                 </Box>
             </Box>
-            <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle aria-label='Create a New Task. Please enter the name of the new task below.'>Create a New Task</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Please enter the name of the new task below.
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="nameNew"
-                    aria-label={!showAlert ? `Task name` : `Please enter a non-empty name for the task`}
-                    label="Task name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={title}
-                    onChange={handleSetTitle}
-                />
-                {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the task!</Typography>}
-                <Button
-                    id="new-task-priority-button"
-                    variant='outlined'
-                    aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={openPriority ? 'true' : undefined}
-                    onClick={handleClickPriority}
-                    sx={{marginTop:2, textTransform: 'capitalize'}}
-                >
-                    <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
-                    <ExpandMoreIcon/>
-                </Button>
-                <Menu
-                    id="new-task-priority-menu"
-                    anchorEl={anchorElPriority}
-                    open={openPriority}
-                    onClose={handleClosePriority}
-                    MenuListProps={{
-                    'aria-labelledby': 'new-task-priority-button',
-                    }}
-                >
-                    <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
-                    <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
-                    <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
-                </Menu>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleDialogClose}>Cancel</Button>
-                <Button variant="contained" onClick={onSubmit}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
-                <DialogTitle aria-label="Are you sure that you want to delete ALL completed tasks?">Delete All Completed Tasks</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Are you sure that you want to delete ALL completed tasks?
-                </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleDialogCloseDelete}>Cancel</Button>
-                <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    )}
+        )}
+        <Dialog open={dialogOpen} onClose={handleDialogClose}>
+            <DialogTitle aria-label='Create a New Task. Please enter the name of the new task below.'>Create a New Task</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                Please enter the name of the new task below.
+            </DialogContentText>
+            <TextField
+                autoFocus
+                margin="dense"
+                id="nameNew"
+                aria-label={!showAlert ? `Task name` : `Please enter a non-empty name for the task`}
+                label="Task name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={title}
+                onChange={handleSetTitle}
+            />
+            {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the task!</Typography>}
+            <Button
+                id="new-task-priority-button"
+                variant='outlined'
+                aria-controls={openPriority ? 'new-task-priority-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={openPriority ? 'true' : undefined}
+                onClick={handleClickPriority}
+                sx={{marginTop:2, textTransform: 'capitalize'}}
+            >
+                <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
+                <ExpandMoreIcon/>
+            </Button>
+            <Menu
+                id="new-task-priority-menu"
+                anchorEl={anchorElPriority}
+                open={openPriority}
+                onClose={handleClosePriority}
+                MenuListProps={{
+                'aria-labelledby': 'new-task-priority-button',
+                }}
+            >
+                <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
+                <MenuItem onClick={(event) => handleChangePriority(event, 2)}>Medium</MenuItem>
+                <MenuItem onClick={(event) => handleChangePriority(event, 3)}>High</MenuItem>
+            </Menu>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleDialogClose}>Cancel</Button>
+            <Button variant="contained" onClick={onSubmit}>Submit</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog open={dialogOpenDelete} onClose={handleDialogCloseDelete}>
+            <DialogTitle aria-label="Are you sure that you want to delete ALL completed tasks?">Delete All Completed Tasks</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                Are you sure that you want to delete ALL completed tasks?
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleDialogCloseDelete}>Cancel</Button>
+            <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog open={deleteListDialogOpen} onClose={handleDeleteListDialogClose}>
+            <DialogTitle aria-label='Delete Current List. Please enter the name of the current list to confirm deletion.'>Delete Current List</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                Please enter the name of the current list to confirm deletion.
+            </DialogContentText>
+            <TextField
+                autoFocus
+                margin="dense"
+                id="delete-list-name"
+                aria-label={!showAlertDelete ? `List name` : `Please enter the correct name of the current list to confirm deletion`}
+                label="List name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={deleteName}
+                onChange={handleDeleteListName}
+            />
+            {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the correct name of the current list to confirm deletion.</Typography>}
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleDeleteListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+            <Button onClick={onSubmitDeleteList} sx={{color: 'primary.dark'}}>Submit</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog open={renameDialogOpen} onClose={handleRenameDialogClose}>
+            <DialogTitle aria-label='Rename Current List. Please enter the new name of the current list.'>Rename Current List</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                Please enter the new name of the current list.
+            </DialogContentText>
+            <TextField
+                margin="dense"
+                id="rename-list-new-name"
+                aria-label={!showAlertRename ? `New name` : `Please enter a non-empty name for the list`}
+                label="New name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newName}
+                onChange={handleRenameListNew}
+            />
+            {showAlertRename && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the list.</Typography>}
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleRenameDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+            <Button onClick={onSubmitRenameList} sx={{color: 'primary.dark'}}>Submit</Button>
+            </DialogActions>
+        </Dialog>
     </div>
   );
 }
