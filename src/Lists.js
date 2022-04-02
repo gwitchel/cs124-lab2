@@ -5,7 +5,7 @@ import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
-import { setDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
