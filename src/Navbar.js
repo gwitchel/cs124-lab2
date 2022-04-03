@@ -458,10 +458,10 @@ export default function Navbar(props) {
         </Dialog>
 
         <Dialog open={deleteListDialogOpen} onClose={handleDeleteListDialogClose}>
-            <DialogTitle aria-label='Delete Current List. Please enter the name of the current list to confirm deletion.'>Delete Current List</DialogTitle>
+            <DialogTitle aria-label={`Delete Current List. Please enter the name of the current list "${props.list.name}" to confirm deletion.`}>Delete Current List</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Please enter the name of the current list to confirm deletion.
+                {`Please enter the name of the current list "${props.list.name}" to confirm deletion.`}
             </DialogContentText>
             <TextField
                 autoFocus
@@ -485,10 +485,10 @@ export default function Navbar(props) {
         </Dialog>
 
         <Dialog open={renameDialogOpen} onClose={handleRenameDialogClose}>
-            <DialogTitle aria-label='Rename Current List. Please enter the new name of the current list.'>Rename Current List</DialogTitle>
+            <DialogTitle aria-label={`Rename Current List. Please enter the new name of the current list named "${props.list.name}".`}>Rename Current List</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Please enter the new name of the current list.
+                {`Please enter the new name of the current list named "${props.list.name}".`}
             </DialogContentText>
             <TextField
                 autoFocus
