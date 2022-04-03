@@ -129,7 +129,7 @@ export default function Lists(props) {
 
     useEffect(() => {
         if (lists && lists.length!==0) {
-            setTabId(lists[0].id)
+            setTabId(prevId => prevId==='none' ? lists[0].id : prevId)
         }
     }, [lists])
     
