@@ -215,7 +215,7 @@ export default function Navbar(props) {
                             <ListItemText
                                 primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon sx={{color:'primary.dark'}}/></div>}
                                 primaryTypographyProps={{ sx: { color:"primary.dark" } }}
-                                secondary={props.sortBy}
+                                secondary={props.sortBy==='created' ? 'creation date' : props.sortBy}
                                 secondaryTypographyProps={{ sx: { color:"black" } }}
                             />
                         </ListItem>
@@ -237,7 +237,7 @@ export default function Navbar(props) {
                             selected={index === sortOptions.indexOf(props.sortBy)}
                             onClick={(event) => handleMenuItemClickSort(event, index)}
                         >
-                            {option}
+                            {option==='created' ? 'creation date' : option}
                         </MenuItem>
                         ))}
                     </Menu>
@@ -345,7 +345,7 @@ export default function Navbar(props) {
                             <ListItemText
                                 primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon sx={{color:'primary.dark'}}/></div>}
                                 primaryTypographyProps={{ sx: { color: "primary.dark" } }}
-                                secondary={props.sortBy}
+                                secondary={props.sortBy==='created' ? 'creation date' : props.sortBy}
                                 secondaryTypographyProps={{ sx: { color:"black" } }}
                             />
                         </ListItem>
@@ -367,7 +367,7 @@ export default function Navbar(props) {
                             selected={index === sortOptions.indexOf(props.sortBy)}
                             onClick={(event) => handleMenuItemClickSort(event, index)}
                         >
-                            {option}
+                            {option==='created' ? 'creation date' : option}
                         </MenuItem>
                         ))}
                     </Menu>
