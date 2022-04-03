@@ -393,10 +393,10 @@ export default function Navbar(props) {
             </Box>
         )}
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
-            <DialogTitle aria-label='Create a New Task. Please enter the name of the new task below.'>Create a New Task</DialogTitle>
+            <DialogTitle aria-label='Create a New Task. Please enter the name and choose a priority level for the new task.'>Create a New Task</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Please enter the name of the new task below.
+                Please enter the name and choose a priority level for the new task below.
             </DialogContentText>
             <TextField
                 autoFocus

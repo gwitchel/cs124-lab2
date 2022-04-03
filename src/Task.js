@@ -115,13 +115,13 @@ export default function Task(props) {
                 />}
               style={{ pointerEvents: "none" }}
               sx={{ flexGrow: 1}}
-              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
+              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}. Check to mark this task as completed.`}
             />
             <Typography sx={{color: 'red'}} aria-label={`Priority level is ${priorityDic1[props.priority]}`}>{priorityDic[props.priority]}</Typography>
-            <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task">
+            <IconButton onClick={handleDialogOpen} aria-label={`Edit this task named ${props.title}`}>
               <Edit sx={{color: 'primary.dark'}}/>
             </IconButton>
-            <IconButton onClick={deleteTask} aria-label="Button for deleting a task">
+            <IconButton onClick={deleteTask} aria-label={`Delete this task named ${props.title}`}>
               <Delete sx={{color: 'primary.dark'}}/>
             </IconButton>
           </Box>
@@ -145,12 +145,12 @@ export default function Task(props) {
                 />}
               style={{ pointerEvents: "none" }}
               sx={{ flexGrow: 1 }}
-              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
+              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}. Check to mark this task as completed.`}
             />
             <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
             <Button
-              id="task-button"
-              aria-label="Menu button for options to manage this single task"
+              id="edit-or-delete-task-button"
+              aria-label={`Menu button for edit or delete this task named ${props.title}`}
               aria-controls={openTask ? 'task-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={openTask ? 'true' : undefined}
@@ -164,11 +164,11 @@ export default function Task(props) {
               open={openTask}
               onClose={handleCloseTaskMenu}
               MenuListProps={{
-                'aria-labelledby': 'task-button',
+                'aria-labelledby': 'edit-or-delete-task-menu',
               }}
             >
-              <MenuItem onClick={handleDialogOpen}>Edit</MenuItem>
-              <MenuItem onClick={deleteTask}>Delete</MenuItem>
+              <MenuItem onClick={handleDialogOpen} aria-label={`Edit this task named ${props.title}`}>Edit</MenuItem>
+              <MenuItem onClick={deleteTask} aria-label={`Delete this task named ${props.title}`}>Delete</MenuItem>
             </Menu>
           </Box>
         )}
@@ -190,18 +190,18 @@ export default function Task(props) {
                     sx={{ml:1.5, color:'primary.dark'}}
                   />}
                 style={{ pointerEvents: "none" }}
-                aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
+                aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}. Check to mark this task as completed.`}
               />
               <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-end'}}>
                 <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
                 <Box>
                   <Button
-                  id="task-button"
+                  id="edit-or-delete-task-button"
                   aria-controls={openTask ? 'task-menu' : undefined}
                   aria-haspopup="true"
                   aria-expanded={openTask ? 'true' : undefined}
                   onClick={handleClickTaskMenu}
-                  aria-label="Menu button for more options to manage this single task"
+                  aria-label={`Menu button for edit or delete this task named ${props.title}`}
                   >
                     <MoreVertIcon sx={{color: 'primary.dark'}}/>
                   </Button>
@@ -211,11 +211,11 @@ export default function Task(props) {
                     open={openTask}
                     onClose={handleCloseTaskMenu}
                     MenuListProps={{
-                      'aria-labelledby': 'manage-current-task-menu-button',
+                      'aria-labelledby': 'edit-or-delete-task-menu',
                     }}
                   >
-                    <MenuItem onClick={handleDialogOpen}>Edit</MenuItem>
-                    <MenuItem onClick={deleteTask}>Delete</MenuItem>
+                    <MenuItem onClick={handleDialogOpen} aria-label={`Edit this task named ${props.title}`}>Edit</MenuItem>
+                    <MenuItem onClick={deleteTask} aria-label={`Delete this task named ${props.title}`}>Delete</MenuItem>
                   </Menu>
                 </Box>
               </Box>
@@ -223,10 +223,10 @@ export default function Task(props) {
         )}
       </Paper>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle aria-label="Edit Task Name. Please enter the new name of the task.">Edit Task Name</DialogTitle>
+          <DialogTitle aria-label="Edit Task Name and Priority. Please enter the new name of the task and/or choose a priority level.">Edit Task Name and Priority</DialogTitle>
           <DialogContent>
           <DialogContentText>
-              Please enter the new name of the task below.
+            Please enter the new name of the task and/or choose a priority level.
           </DialogContentText>
           <TextField
               autoFocus
@@ -253,12 +253,12 @@ export default function Task(props) {
               <ExpandMoreIcon sx={{color:'primary.dark'}}/>
           </Button>
           <Menu
-              id="new-task-priority-menu"
+              id="task-priority-button"
               anchorEl={anchorElPriority}
               open={openPriority}
               onClose={handleClosePriority}
               MenuListProps={{
-              'aria-labelledby': 'new-task-priority-button',
+              'aria-labelledby': 'task-priority-menu',
               }}
           >
               <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
