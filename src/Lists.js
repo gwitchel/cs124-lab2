@@ -144,7 +144,7 @@ export default function Lists(props) {
     }else if (lists.length===0) {
         return (
             <>
-            <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Start a New List</Button>
+            <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color:'primary.dark'}}>Start a New List</Button>
             <Dialog open={newListDialogOpen} onClose={handleNewListDialogClose}>
                 <DialogTitle aria-label="Create a New List. Please enter the name of the new list below.">Create a New List</DialogTitle>
                 <DialogContent>
@@ -162,6 +162,7 @@ export default function Lists(props) {
                     variant="standard"
                     value={listName}
                     onChange={handleSetListName}
+                    sx={{color:'primary.dark'}}
                 />
                 {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the new list!</Typography>}
                 </DialogContent>
@@ -177,13 +178,13 @@ export default function Lists(props) {
         <>
             {!isNarrowThan230 && (
                 <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
-                    <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color: 'primary.dark'}}>Start a New List</Button>
+                    <Button onClick={handleNewListDialogOpen} variant='outlined' sx={{textTransform:'none', marginRight:2, color:'primary.dark'}}>Start a New List</Button>
                 </Box>
             )}
             {isNarrowThan230 && (
                 <Box>
                     <IconButton
-                        color="primary"
+                        sx={{color:'primary.dark'}}
                         aria-label="Hamburger menu button for options to manage to-do lists"
                         id="manage-lists-button"
                         aria-controls={openMenu ? 'manage-lists-menu' : undefined}
@@ -224,7 +225,7 @@ export default function Lists(props) {
                             value={list.id}
                             label={list.name}
                             key={list.id}
-                            sx={{textTransform:'none', maxWidth:120}}
+                            sx={{textTransform:'none', maxWidth:120, color:'primary.dark'}}
                             aria-label={`tab for the to-do list named ${list.name}`}
                             wrapped
                         />
@@ -249,6 +250,7 @@ export default function Lists(props) {
                     variant="standard"
                     value={listName}
                     onChange={handleSetListName}
+                    sx={{color:'primary.dark'}}
                 />
                 {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the new list!</Typography>}
                 </DialogContent>

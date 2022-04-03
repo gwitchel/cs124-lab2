@@ -98,22 +98,51 @@ export default function Task(props) {
         {!isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
-              label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{pointerEvents: "auto"}} sx={{ml:1.5}}/>}
+              label={
+                <div 
+                  style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}
+                >
+                  {props.title}
+                </div>
+              }
+              control={
+                <Checkbox
+                  name="completed"
+                  checked={props.completed}
+                  onChange={handleCheckboxClick}
+                  style={{pointerEvents: "auto"}}
+                  sx={{ml:1.5, color:'primary.dark'}}
+                />}
               style={{ pointerEvents: "none" }}
               sx={{ flexGrow: 1}}
               aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
             />
             <Typography sx={{color: 'red'}} aria-label={`Priority level is ${priorityDic1[props.priority]}`}>{priorityDic[props.priority]}</Typography>
-            <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task"><Edit sx={{color: 'primary.dark'}}/></IconButton>
-            <IconButton onClick={deleteTask} aria-label="Button for deleting a task"><Delete sx={{color: 'primary.dark'}}/></IconButton>
+            <IconButton onClick={handleDialogOpen} aria-label="Button for editing a task">
+              <Edit sx={{color: 'primary.dark'}}/>
+            </IconButton>
+            <IconButton onClick={deleteTask} aria-label="Button for deleting a task">
+              <Delete sx={{color: 'primary.dark'}}/>
+            </IconButton>
           </Box>
         )}
         {isNarrowThan300 && !isNarrowThan230 && (
           <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
-              label={<div style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+              label={
+                <div
+                  style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}
+                >
+                  {props.title}
+                </div>}
+              control={
+                <Checkbox
+                  name="completed"
+                  checked={props.completed}
+                  onChange={handleCheckboxClick}
+                  style={{ pointerEvents: "auto" }}
+                  sx={{ml:1.5, color:'primary.dark'}}
+                />}
               style={{ pointerEvents: "none" }}
               sx={{ flexGrow: 1 }}
               aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
@@ -127,7 +156,7 @@ export default function Task(props) {
               aria-expanded={openTask ? 'true' : undefined}
               onClick={handleClickTaskMenu}
             >
-              <MoreVertIcon sx={{color: 'primary.dark'}}/>
+              <MoreVertIcon sx={{color:'primary.dark'}}/>
             </Button>
             <Menu
               id="task-menu"
@@ -146,8 +175,20 @@ export default function Task(props) {
         {isNarrowThan230 && (
           <Box sx={{display:'flex', flexDirection: 'column'}}>
               <FormControlLabel
-                label={<div style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-                control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+                label={
+                  <div
+                    style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}
+                  >
+                    {props.title}
+                  </div>}
+                control={
+                  <Checkbox
+                    name="completed"
+                    checked={props.completed}
+                    onChange={handleCheckboxClick}
+                    style={{ pointerEvents: "auto" }}
+                    sx={{ml:1.5, color:'primary.dark'}}
+                  />}
                 style={{ pointerEvents: "none" }}
                 aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}`}
               />
@@ -197,6 +238,7 @@ export default function Task(props) {
               variant="standard"
               value={title}
               onChange={handleSetTitle}
+              sx={{color:'primary.dark'}}
           />
           <Button
               id="new-task-priority-button"
@@ -207,8 +249,8 @@ export default function Task(props) {
               onClick={handleClickPriority}
               sx={{marginTop:2, textTransform:'capitalize', color:'primary.dark'}}
           >
-              <Typography variant='body'>Priority level: {priorityDic1[priority]}</Typography>
-              <ExpandMoreIcon/>
+              <Typography variant='body' sx={{color:'primary.dark'}}>Priority level: {priorityDic1[priority]}</Typography>
+              <ExpandMoreIcon sx={{color:'primary.dark'}}/>
           </Button>
           <Menu
               id="new-task-priority-menu"
@@ -225,7 +267,7 @@ export default function Task(props) {
           </Menu>
           </DialogContent>
           <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={handleDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
           <Button variant="contained" onClick={onSubmit}>Submit</Button>
           </DialogActions>
       </Dialog>

@@ -24,7 +24,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
-    
+
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
 
@@ -66,6 +66,7 @@ export default function Navbar(props) {
     }
     const handleDialogOpen = () => {
         setDialogOpen(true);
+        setAnchorElMenu(null);
     };
     const handleDialogClose = () => {
         setDialogOpen(false);
@@ -212,9 +213,10 @@ export default function Navbar(props) {
                         onClick={handleClickListItemSort}
                         >
                             <ListItemText
-                                primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
-                                primaryTypographyProps={{ sx: { color: "primary.main" } }}
+                                primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon sx={{color:'primary.dark'}}/></div>}
+                                primaryTypographyProps={{ sx: { color:"primary.dark" } }}
                                 secondary={props.sortBy}
+                                secondaryTypographyProps={{ sx: { color:"black" } }}
                             />
                         </ListItem>
                     </List>
@@ -259,7 +261,7 @@ export default function Navbar(props) {
                     }
                 </Box>
                 <IconButton
-                    color="primary"
+                    sx={{color:'primary.dark'}}
                     aria-label="Hamburger menu button for more options to manage tasks."
                     id="long-button"
                     aria-controls={openMenu ? 'manage-tasks-menu' : undefined}
@@ -294,7 +296,7 @@ export default function Navbar(props) {
         {isNarrowThan300 && (
             <Box sx={{display:'flex', flexDirection:'row', alignContent:'center'}}>
                 <IconButton
-                    color="primary"
+                    sx={{color:'primary.dark'}}
                     aria-label="options to manage tasks"
                     id="long-button"
                     aria-controls={openMenu ? 'manage-tasks-options-menu' : undefined}
@@ -341,9 +343,10 @@ export default function Navbar(props) {
                         onClick={handleClickListItemSort}
                         >
                             <ListItemText
-                                primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon/></div>}
-                                primaryTypographyProps={{ sx: { color: "primary.main" } }}
+                                primary={<div style={{ display: 'flex', flexDirection: 'row'}}><Typography>Sort by</Typography><ExpandMoreIcon sx={{color:'primary.dark'}}/></div>}
+                                primaryTypographyProps={{ sx: { color: "primary.dark" } }}
                                 secondary={props.sortBy}
+                                secondaryTypographyProps={{ sx: { color:"black" } }}
                             />
                         </ListItem>
                     </List>
@@ -370,7 +373,7 @@ export default function Navbar(props) {
                     </Menu>
                     {props.sortDir==='asc' && (
                         <IconButton
-                            color="primary"
+                            sx={{color:'primary.dark'}}
                             onClick={handleClickSortDirection}
                             aria-label="Current sort direction is ascending. Click to flip direction to descending."
                         >
@@ -379,7 +382,7 @@ export default function Navbar(props) {
                     }
                     {props.sortDir==='desc' && (
                         <IconButton
-                            color="primary"
+                            sx={{color:'primary.dark'}}
                             onClick={handleClickSortDirection}
                             aria-label="Current sort direction is descending. Click to flip direction to ascending."
                         >
@@ -406,6 +409,7 @@ export default function Navbar(props) {
                 variant="standard"
                 value={title}
                 onChange={handleSetTitle}
+                sx={{color:'primary.dark'}}
             />
             {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the task!</Typography>}
             <Button
@@ -415,10 +419,10 @@ export default function Navbar(props) {
                 aria-haspopup="true"
                 aria-expanded={openPriority ? 'true' : undefined}
                 onClick={handleClickPriority}
-                sx={{marginTop:2, textTransform: 'capitalize'}}
+                sx={{marginTop:2, textTransform:'capitalize', color:'primary.dark'}}
             >
-                <Typography variant='body'>Priority level: {priorityDic[priority]}</Typography>
-                <ExpandMoreIcon/>
+                <Typography variant='body' sx={{color:'primary.dark'}}>Priority level: {priorityDic[priority]}</Typography>
+                <ExpandMoreIcon sx={{color:'primary.dark'}}/>
             </Button>
             <Menu
                 id="new-task-priority-menu"
@@ -435,7 +439,7 @@ export default function Navbar(props) {
             </Menu>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleDialogClose}>Cancel</Button>
+            <Button onClick={handleDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
             <Button variant="contained" onClick={onSubmit}>Submit</Button>
             </DialogActions>
         </Dialog>
@@ -448,7 +452,7 @@ export default function Navbar(props) {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleDialogCloseDelete}>Cancel</Button>
+            <Button onClick={handleDialogCloseDelete} sx={{color:'primary.dark'}}>Cancel</Button>
             <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
             </DialogActions>
         </Dialog>
@@ -470,12 +474,13 @@ export default function Navbar(props) {
                 variant="standard"
                 value={deleteName}
                 onChange={handleDeleteListName}
+                sx={{color:'primary.dark'}}
             />
             {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the correct name of the current list to confirm deletion.</Typography>}
             </DialogContent>
             <DialogActions>
             <Button onClick={handleDeleteListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
-            <Button onClick={onSubmitDeleteList} sx={{color: 'primary.dark'}}>Submit</Button>
+            <Button onClick={onSubmitDeleteList} variant="contained">Submit</Button>
             </DialogActions>
         </Dialog>
 
@@ -486,6 +491,7 @@ export default function Navbar(props) {
                 Please enter the new name of the current list.
             </DialogContentText>
             <TextField
+                autoFocus
                 margin="dense"
                 id="rename-list-new-name"
                 aria-label={!showAlertRename ? `New name` : `Please enter a non-empty name for the list`}
@@ -495,12 +501,13 @@ export default function Navbar(props) {
                 variant="standard"
                 value={newName}
                 onChange={handleRenameListNew}
+                sx={{color:'primary.dark'}}
             />
             {showAlertRename && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the list.</Typography>}
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleRenameDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
-            <Button onClick={onSubmitRenameList} sx={{color: 'primary.dark'}}>Submit</Button>
+            <Button onClick={handleRenameDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
+            <Button onClick={onSubmitRenameList} variant="contained">Submit</Button>
             </DialogActions>
         </Dialog>
     </div>
