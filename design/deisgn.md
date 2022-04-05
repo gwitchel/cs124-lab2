@@ -1,5 +1,8 @@
 # Design decisions for Lab4
 
+Video demo link for using a screen reader and keyboard: https://www.loom.com/share/7312c0484ccd47fd8014af885df10ebc
+Video demo link for using only keyboard: https://www.loom.com/share/49f007f38d6c4529a94eb84a3cabdbb8
+
 1. We decided to use flex display instead of grid display for the task rows in order to obtain responsive design when user resizes the screen or when user uses different screen sizes.
 
 2. For various screen sizes, we changed the layout of the elements accordingly to make the app look more organized.
