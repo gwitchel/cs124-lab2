@@ -1,7 +1,0 @@
-.navBar {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 22px;
-    justify-content: space-between;
-    max-width: 325px;
-}

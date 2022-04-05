@@ -1,11 +1,11 @@
 import './App.css';
-import Tasks from './Tasks';
+import Lists from './Lists';
 
 function App() {
   return (
     <div className='app'>
       <h1>To-Do List</h1>
-      <Tasks />
+      <Lists />
     </div>
   );
 }

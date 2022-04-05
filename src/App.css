@@ -1,7 +1,11 @@
 .app {
     margin-left: 20px;
+    margin-right: 20px;
+    max-width: 100%;
 }
 
 h1 {
     margin-left: 5px;
+    margin-right: 5px;
+    max-width: 100%;
 }

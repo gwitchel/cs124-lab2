@@ -1,8 +1,9 @@
 import React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { Delete, Edit } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
@@ -16,28 +17,28 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import "./Task.css"
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton } from '@mui/material';
 
 export default function Task(props) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [title, setTitle] = useState("");
-  // const [showAlert, setShowAlert] = React.useState(false);
   const priorityDic = {1: "!", 2: "!!", 3: "!!!"}
   const priorityDic1 = {1: "low", 2: "medium", 3: "high"}
   const [priority, setPriority] = useState(props.priority);
   const [anchorElPriority, setAnchorElPriority] = React.useState(null);
   const openPriority = Boolean(anchorElPriority);
+  const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
+  const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })
 
   const handleSetTitle = e => {
     setTitle(e.target.value)
     if (e.target.value.length>0) {
-      // setShowAlert(false);
     }
   }
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    // setShowAlert(false);
     setTitle("")
     setPriority(props.priority)
   };
@@ -82,47 +83,163 @@ export default function Task(props) {
       setAnchorElPriority(null);
   };
 
+  const [anchorElTask, setAnchorElTask] = React.useState(null);
+  const openTask = Boolean(anchorElTask);
+  const handleClickTaskMenu = (event) => {
+    setAnchorElTask(event.currentTarget);
+  };
+  const handleCloseTaskMenu = () => {
+    setAnchorElTask(null);
+  };
+
   return (
-    <div className='Task'>
+    <Box sx={{margin:1}}>
       <Paper>
-        <Grid container>
-          <Grid item xs={9}>
+        {!isNarrowThan300 && !isNarrowThan230 && (
+          <Box sx={{display:'flex', alignItems:'center'}}>
             <FormControlLabel
-              label={<div style={{ width:180, whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}>{props.title}</div>}
-              control={<Checkbox name="completed" checked={props.completed} onChange={handleCheckboxClick} style={{ pointerEvents: "auto" }} sx={{ml:1.5}}/>}
+              label={
+                <div 
+                  style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}
+                >
+                  {props.title}
+                </div>
+              }
+              control={
+                <Checkbox
+                  name="completed"
+                  checked={props.completed}
+                  onChange={handleCheckboxClick}
+                  style={{pointerEvents: "auto"}}
+                  sx={{ml:1.5, color:'primary.dark'}}
+                />}
               style={{ pointerEvents: "none" }}
+              sx={{ flexGrow: 1}}
+              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}. Check to mark this task as completed.`}
             />
-          </Grid>
-          <Grid item xs={1} sx={{margin: 'auto'}}>
+            <Typography sx={{color: 'red'}} aria-label={`Priority level is ${priorityDic1[props.priority]}`}>{priorityDic[props.priority]}</Typography>
+            <IconButton onClick={handleDialogOpen} aria-label={`Edit this task named ${props.title}`}>
+              <Edit sx={{color: 'primary.dark'}}/>
+            </IconButton>
+            <IconButton onClick={deleteTask} aria-label={`Delete this task named ${props.title}`}>
+              <Delete sx={{color: 'primary.dark'}}/>
+            </IconButton>
+          </Box>
+        )}
+        {isNarrowThan300 && !isNarrowThan230 && (
+          <Box sx={{display:'flex', alignItems:'center'}}>
+            <FormControlLabel
+              label={
+                <div
+                  style={{ whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}
+                >
+                  {props.title}
+                </div>}
+              control={
+                <Checkbox
+                  name="completed"
+                  checked={props.completed}
+                  onChange={handleCheckboxClick}
+                  style={{ pointerEvents: "auto" }}
+                  sx={{ml:1.5, color:'primary.dark'}}
+                />}
+              style={{ pointerEvents: "none" }}
+              sx={{ flexGrow: 1 }}
+              aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}. Check to mark this task as completed.`}
+            />
             <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
-          </Grid>  
-          <Grid item xs={1} sx={{margin: 'auto'}}>
-            <Edit onClick = {handleDialogOpen} sx={{color: 'primary.main'}}/>
-          </Grid>
-          <Grid item xs={1} sx={{margin: 'auto'}}>
-            <Delete onClick = {deleteTask} sx={{color: 'primary.main'}}/>
-          </Grid>
-        </Grid>
+            <Button
+              id="edit-or-delete-task-button"
+              aria-label={`Menu button for edit or delete this task named ${props.title}`}
+              aria-controls={openTask ? 'task-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={openTask ? 'true' : undefined}
+              onClick={handleClickTaskMenu}
+            >
+              <MoreVertIcon sx={{color:'primary.dark'}}/>
+            </Button>
+            <Menu
+              id="task-menu"
+              anchorEl={anchorElTask}
+              open={openTask}
+              onClose={handleCloseTaskMenu}
+              MenuListProps={{
+                'aria-labelledby': 'edit-or-delete-task-menu',
+              }}
+            >
+              <MenuItem onClick={handleDialogOpen} aria-label={`Edit this task named ${props.title}`}>Edit</MenuItem>
+              <MenuItem onClick={deleteTask} aria-label={`Delete this task named ${props.title}`}>Delete</MenuItem>
+            </Menu>
+          </Box>
+        )}
+        {isNarrowThan230 && (
+          <Box sx={{display:'flex', flexDirection: 'column'}}>
+              <FormControlLabel
+                label={
+                  <div
+                    style={{ maxWidth: '100%', whiteSpace:'normal', textAlign:'left', overflowWrap:'break-word' }}
+                  >
+                    {props.title}
+                  </div>}
+                control={
+                  <Checkbox
+                    name="completed"
+                    checked={props.completed}
+                    onChange={handleCheckboxClick}
+                    style={{ pointerEvents: "auto" }}
+                    sx={{ml:1.5, color:'primary.dark'}}
+                  />}
+                style={{ pointerEvents: "none" }}
+                aria-label={`Task name is ${props.title} and priority level is ${priorityDic1[props.priority]}. Check to mark this task as completed.`}
+              />
+              <Box sx={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'flex-end'}}>
+                <Typography sx={{color: 'red'}}>{priorityDic[props.priority]}</Typography>
+                <Box>
+                  <Button
+                  id="edit-or-delete-task-button"
+                  aria-controls={openTask ? 'task-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openTask ? 'true' : undefined}
+                  onClick={handleClickTaskMenu}
+                  aria-label={`Menu button for edit or delete this task named ${props.title}`}
+                  >
+                    <MoreVertIcon sx={{color: 'primary.dark'}}/>
+                  </Button>
+                  <Menu
+                    id="task-menu"
+                    anchorEl={anchorElTask}
+                    open={openTask}
+                    onClose={handleCloseTaskMenu}
+                    MenuListProps={{
+                      'aria-labelledby': 'edit-or-delete-task-menu',
+                    }}
+                  >
+                    <MenuItem onClick={handleDialogOpen} aria-label={`Edit this task named ${props.title}`}>Edit</MenuItem>
+                    <MenuItem onClick={deleteTask} aria-label={`Delete this task named ${props.title}`}>Delete</MenuItem>
+                  </Menu>
+                </Box>
+              </Box>
+          </Box>
+        )}
       </Paper>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Edit A Task Title</DialogTitle>
+          <DialogTitle aria-label="Edit Task Name and Priority. Please enter the new name of the task and/or choose a priority level.">Edit Task Name and Priority</DialogTitle>
           <DialogContent>
           <DialogContentText>
-              Please enter the new title of the task below.
+            Please enter the new name of the task and/or choose a priority level.
           </DialogContentText>
           <TextField
               autoFocus
               margin="dense"
               id="titleEdit"
-              label="Task Name"
+              label="Task name"
               type="text"
               fullWidth
               variant="standard"
-              // inputProps={{ maxLength: 50 }}
               value={title}
               onChange={handleSetTitle}
+              sx={{color:'primary.dark'}}
           />
-          {/* {showAlert && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty title for the task!</Typography>} */}
           <Button
               id="new-task-priority-button"
               variant='outlined'
@@ -130,18 +247,18 @@ export default function Task(props) {
               aria-haspopup="true"
               aria-expanded={openPriority ? 'true' : undefined}
               onClick={handleClickPriority}
-              sx={{marginTop:2, textTransform: 'capitalize'}}
+              sx={{marginTop:2, textTransform:'capitalize', color:'primary.dark'}}
           >
-              <Typography variant='body'>Priority level: {priorityDic1[priority]}</Typography>
-              <ExpandMoreIcon/>
+              <Typography variant='body' sx={{color:'primary.dark'}}>Priority level: {priorityDic1[priority]}</Typography>
+              <ExpandMoreIcon sx={{color:'primary.dark'}}/>
           </Button>
           <Menu
-              id="new-task-priority-menu"
+              id="task-priority-button"
               anchorEl={anchorElPriority}
               open={openPriority}
               onClose={handleClosePriority}
               MenuListProps={{
-              'aria-labelledby': 'new-task-priority-button',
+              'aria-labelledby': 'task-priority-menu',
               }}
           >
               <MenuItem onClick={(event) => handleChangePriority(event, 1)}>Low</MenuItem>
@@ -150,10 +267,10 @@ export default function Task(props) {
           </Menu>
           </DialogContent>
           <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={handleDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
           <Button variant="contained" onClick={onSubmit}>Submit</Button>
           </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 }
