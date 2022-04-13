@@ -120,7 +120,9 @@ export default function Tasks(props) {
                 <p>Loading</p>
             </>
         )
-    }else if (!error){
+    }else if (error) {
+        return <p>Error: {JSON.stringify(error)}</p>
+    }else {
         return (
             <>
                 <Navbar

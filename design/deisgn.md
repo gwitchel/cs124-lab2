@@ -1,3 +1,7 @@
+# Video demo link for lab6:
+https://www.loom.com/share/c929ad07b3a34803b52fde1a2c6d190b
+
+
 # Changes in Design for Lab3
 
 1. We changed the design for the navigation bar by consolidating the "Show/Hide Completed" and "Delete Completed" buttons into one hamburger menu as it will make space for the sorting options menu. The final design consists of three components in a row: an add icon for adding a new task, a "Sort by xxx" menu to choose the sorting option, and a hamburger menu with "Show/Hide Completed" and "Delete Completed" options. The add icon is on the left most side aligned with the title and the left side of the task list. The hamburger menu icon is on the right most side aligned with the right side of the task list. The gives a sense of order and formality. We have thought about consolidating the adding a new task function into the hamburger menu but we felt that the add function is used much more frequently compared to other functions so it is more convenient to leave it as a separate button for easy access.

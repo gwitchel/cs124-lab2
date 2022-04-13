@@ -2,6 +2,7 @@
   "name": "lab2-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
@@ -25,7 +26,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp -r build/* ./cordova/www",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "install-dependencies": "npm install firebase-tools",
