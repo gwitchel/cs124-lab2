@@ -1,3 +1,8 @@
+# Video link for lab6:
+https://www.loom.com/share/aa6e645e333748eba47ddc69cdc1f9cb
+
+
+
 # Design decisions for Lab4
 
 Video demo link for using a screen reader and keyboard: https://www.loom.com/share/7312c0484ccd47fd8014af885df10ebc
