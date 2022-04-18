@@ -56,6 +56,15 @@ function Tasks(props) {
         })
     }
 
+    function handleShareList(email){
+        console.log("sharedDocref",listDocRef)
+        let updatedShareList =  list.sharedWith.concat([email])
+        console.log("newShares",updatedShareList )
+        updateDoc(listDocRef, {
+            sharedWith: updatedShareList
+        })
+    }
+
     function handleDeleteFinished(){
         let completed = tasks.filter(task => task.completed)
         completed.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
@@ -69,7 +78,7 @@ function Tasks(props) {
 
     function deleteList() {
         tasks.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
-        deleteDoc(doc(collection(props.db, 'Lists'), list.id))
+        deleteDoc(doc(collection(props.db, 'listsLab5'), list.id))
         props.setTab(list.id)
     }
 
@@ -107,6 +116,7 @@ function Tasks(props) {
                 handleDeleteFinished={handleDeleteFinished}
                 onChangeSortOption={onChangeSortOption}
                 onChangeSortDirection={onChangeSortDirection}
+                handleShareList={handleShareList}
                 sortBy={list.sortBy}
                 sortDir={list.sortDir}
                 renameList={renameList}
@@ -142,7 +152,7 @@ function Tasks(props) {
 export default function List(props) {
     const app = props.app;
     const db = getFirestore(app);
-    const listDocRef = doc(db, `Lists/${props.listId}`);
+    const listDocRef = doc(db, `listsLab5/${props.listId}`);
     const [list, loading, error] = useDocument(listDocRef);
 
     if (loading) {

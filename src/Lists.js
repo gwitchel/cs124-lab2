@@ -3,10 +3,7 @@ import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from "firebase/firestore";
-import { serverTimestamp } from "firebase/firestore";
-import { setDoc, doc } from "firebase/firestore";
-import { query, collection } from "firebase/firestore";
+import { query, collection, where, setDoc, doc, serverTimestamp, getFirestore } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -23,25 +20,19 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
-import List from './List';
 
-// web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDnLHzrDzijh4KmeJWRU5zSIiW2cPsZRHU",
-    authDomain: "cs124-lab3-3028f.firebaseapp.com",
-    projectId: "cs124-lab3-3028f",
-    storageBucket: "cs124-lab3-3028f.appspot.com",
-    messagingSenderId: "426502461839",
-    appId: "1:426502461839:web:56b4c42f33c8a6187353fa"
-};
-    
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import List from './List';
+import {app, db} from './firebase.js'
 
 export default function Lists(props) {
-    const q = query(collection(db, 'Lists'));   
-    const [lists, loading, error] = useCollectionData(q);
+    const userData = props.userData
+    //const q = query(collection(db, 'listsLab5'),where(userData.email,'in','sharedWith'));
+    //const q = query(collection(db, 'listsLab5'),where("owner",'==',userData.uid));  
+    const q = query(collection(db, 'listsLab5')); 
+    const [allLists, loading, error] = useCollectionData(q);
+    let lists = null 
+    if (allLists) lists = allLists.filter(l => l.owner === userData.uid || l.sharedWith.includes(userData.email))
+    
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
     const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })
@@ -78,12 +69,14 @@ export default function Lists(props) {
 
     function submitNewList(){
         const listId = generateUniqueID()
-        setDoc(doc(db, "Lists", listId), {
+        setDoc(doc(db, "listsLab5", listId), {
             id: listId,
             name: listName,
             showCompleted: true,
             sortBy: "priority",
             sortDir: "desc",
+            owner: userData.uid,
+            sharedWith: [],
             created: serverTimestamp(),
         })
         if (lists.length===0) {

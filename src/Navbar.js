@@ -1,6 +1,7 @@
 import React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { query, collection, where, setDoc, doc, serverTimestamp, getFirestore } from "firebase/firestore";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -21,6 +22,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
+import getUserByEmail from 'firebase/auth';
+import {db,auth} from './firebase';
 
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
@@ -44,7 +48,8 @@ export default function Navbar(props) {
         showHideCompleted,
         'Delete Completed',
         'Rename List',
-        'Delete List'
+        'Delete List',
+        'Share List'
     ];
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
@@ -55,8 +60,13 @@ export default function Navbar(props) {
     const [showAlertDelete, setShowAlertDelete] = React.useState(false);
 
     const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
+    const [shareListDialogOpen, setShareListDialogOpen] = React.useState(false);
+
     const [newName, setNewName] = useState("");
+    const [shareWith, setShareWith] = useState("");
     const [showAlertRename, setShowAlertRename] = React.useState(false);
+    const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState(false);
+
 
     const handleSetTitle = e => {
         setTitle(e.target.value)
@@ -85,7 +95,6 @@ export default function Navbar(props) {
             setPriority(1)
         }
     }
-
     const handleClickListItemSort = (event) => {
         setAnchorElSort(event.currentTarget);
     };
@@ -113,7 +122,6 @@ export default function Navbar(props) {
             props.onChangeSortDirection('asc')
         }
     }
-
     const handleDialogOpenDelete = () => {
         setDialogOpenDelete(true);
     };
@@ -125,7 +133,6 @@ export default function Navbar(props) {
         props.handleDeleteFinished();
         handleDialogCloseDelete();
     }
-
     const handleDeleteListDialogOpen = () => {
         setShowAlertDelete(false)
         setDeleteListDialogOpen(true);
@@ -148,7 +155,6 @@ export default function Navbar(props) {
             setDeleteName("")
         }
     }
-
     const handleRenameDialogOpen = () => {
         setRenameDialogOpen(true);
     };
@@ -170,6 +176,20 @@ export default function Navbar(props) {
             setShowAlertRename(true)
         }
     }
+    const handleShareList = e => {
+        setShareWith(e.target.value)
+    }
+    const handleShareListDialogOpen = () => {
+        setShareListDialogOpen(true)
+    }
+    const handleShareListDialogClose = () => {
+        setShareListDialogOpen(false)
+    }
+    function onSubmitShareList(email) {
+        props.handleShareList(shareWith)
+        console.log("SHARING LIST yayyy")
+        handleShareListDialogClose()
+    }
 
     const handleClickMenu = (event) => {
         setAnchorElMenu(event.currentTarget);
@@ -186,6 +206,8 @@ export default function Navbar(props) {
             handleRenameDialogOpen()
         }else if (option === 'Delete List') {
             handleDeleteListDialogOpen()
+        } else if (option === 'Share List') {
+            handleShareListDialogOpen()
         }
         setAnchorElMenu(null);
     };
@@ -508,6 +530,33 @@ export default function Navbar(props) {
             <DialogActions>
             <Button onClick={handleRenameDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
             <Button onClick={onSubmitRenameList} variant="contained">Submit</Button>
+            </DialogActions>
+        </Dialog>
+        
+        <Dialog open={shareListDialogOpen} onClose={handleShareListDialogClose}>
+            <DialogTitle aria-label={`Please enter an email to share "${props.list.name}".`}>Share {props.list.name}</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                {`Please enter an email to share "${props.list.name}".`}
+            </DialogContentText>
+            <TextField
+                autoFocus
+                margin="dense"
+                id="share-list"
+                aria-label={!showAlertInvalidEmail ? `recipient` : `Please enter a valid email`}
+                label="recipient"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={shareWith}
+                onChange={handleShareList}
+                sx={{color:'primary.dark'}}
+            />
+            {showAlertInvalidEmail && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a valid email</Typography>}
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleShareListDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
+            <Button onClick={onSubmitShareList} variant="contained">Submit</Button>
             </DialogActions>
         </Dialog>
     </div>
