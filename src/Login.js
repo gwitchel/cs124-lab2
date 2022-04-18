@@ -5,7 +5,6 @@ import { useAuthState,
     useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import "./Login.css";
 import LoggedInApp from "./LoggedInApp"
-import { sendEmailVerification, } from "firebase/auth";
 import {auth} from './firebase'
 
 import CircularProgress from '@mui/material/CircularProgress';

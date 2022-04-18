@@ -184,6 +184,7 @@ export default function Navbar(props) {
     function onSubmitShareList(email) {
         props.handleShareList(shareWith)
         console.log("SHARING LIST yayyy")
+        setShowAlertInvalidEmail(false) // update to check if email is valid
         handleShareListDialogClose()
     }
 
