@@ -1,6 +1,6 @@
  import React from 'react'
  import { signOut } from "firebase/auth";
- import {auth,db} from './firebase'
+ import {auth} from './firebase'
  import { Typography } from '@mui/material';
  import './Banner.css'
  import Box from '@mui/material/Box';
@@ -11,20 +11,17 @@
  import Divider from '@mui/material/Divider';
  import IconButton from '@mui/material/IconButton';
  import Tooltip from '@mui/material/Tooltip';
- import PersonAdd from '@mui/icons-material/PersonAdd';
- import Settings from '@mui/icons-material/Settings';
  import Logout from '@mui/icons-material/Logout';
 
- import { useState } from "react";
  import { useAuthState } from "react-firebase-hooks/auth";
- import { query, collection, getDocs, where } from "firebase/firestore";
 
  function Banner() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const [user, loading, error] = useAuthState(auth);
+    console.log(loading,error)
     // TODO: display inititals once you have display name entered. 
-    let initials = user ? ( user.displayName ? user.displayName[0] :false ):false 
+    //let initials = user ? ( user.displayName ? user.displayName[0] :false ):false 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };

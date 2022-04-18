@@ -1,7 +1,6 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { query, collection, where, setDoc, doc, serverTimestamp, getFirestore } from "firebase/firestore";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -22,9 +21,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-
-import getUserByEmail from 'firebase/auth';
-import {db,auth} from './firebase';
 
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
@@ -66,7 +62,7 @@ export default function Navbar(props) {
     const [shareWith, setShareWith] = useState("");
     const [showAlertRename, setShowAlertRename] = React.useState(false);
     const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState(false);
-
+    //setShowAlertInvalidEmail(false) // for firestore error managment
 
     const handleSetTitle = e => {
         setTitle(e.target.value)

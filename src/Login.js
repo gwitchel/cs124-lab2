@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { useAuthState,
     useCreateUserWithEmailAndPassword,
     useSignInWithGoogle,
@@ -106,9 +106,9 @@ function SignUp(props) {
 function Login() {
   const [user, loading, error] = useAuthState(auth);
   const [alreadyRegistered, setAlreadyRegistered] = useState(true)
-  function verifyEmail() {
-      sendEmailVerification(user);
-  }
+//   function verifyEmail() {
+//       sendEmailVerification(user);
+//   }
   
   if (loading) {
       return <p>Checking...</p>;

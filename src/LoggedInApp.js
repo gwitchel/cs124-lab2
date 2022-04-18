@@ -1,6 +1,6 @@
 import './LoggedInApp.css';
 import Lists from './Lists';
-import {auth,app,db} from './firebase'
+import {auth} from './firebase'
 import {
   useAuthState,
 } from 'react-firebase-hooks/auth';
