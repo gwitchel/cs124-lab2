@@ -1,7 +1,6 @@
 import React from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
-import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
@@ -165,7 +164,7 @@ export default function List(props) {
     //const db = getFirestore(app);
     const listDocRef = doc(db, `listsLab5/${props.listId}`);
     const [list, loading, error] = useDocument(listDocRef);
-
+    
     if (loading) {
         return (
             <p>Loading</p>

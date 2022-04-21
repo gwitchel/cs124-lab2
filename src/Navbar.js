@@ -157,10 +157,15 @@ export default function Navbar(props) {
             setShowAlertRename(true)
         }
     }
-    const onSubmitShareList = (e) => {
+    const onSubmitShareList = () => {
         props.handleShareList(shareWith)
-
-        setShowAlertInvalidEmail(false) // update to check if email is valid
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if ( re.test(shareWith) ) {
+            props.handleShareList(shareWith)
+        }
+        else {
+            setShowAlertInvalidEmail(true)
+        }
     }
 
     const handleClickMenu = (event) => {
@@ -524,11 +529,9 @@ export default function Navbar(props) {
                 value={shareWith}
                 onChange={e => setShareWith(e.target.value)}
                 sx={{color:'primary.dark'}}
-                onKeyPress={e => e.key === 'Enter' && onSubmitShareList(e)}
+                onKeyPress={e => e.key === 'Enter' && onSubmitShareList()}
             />
-            {listOfUsersListIsSharedWith}
-            {showAlertInvalidEmail && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a valid email</Typography>}
-            
+            {listOfUsersListIsSharedWith}            
             </DialogContent>
             <DialogActions>
             <Button onClick={()=> props.setShareListDialogOpen(false)} variant="contained" >Done</Button>
