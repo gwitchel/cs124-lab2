@@ -158,7 +158,6 @@ export default function Navbar(props) {
         }
     }
     const onSubmitShareList = () => {
-        props.handleShareList(shareWith)
         let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if ( re.test(shareWith) ) {
             props.handleShareList(shareWith)
@@ -531,7 +530,9 @@ export default function Navbar(props) {
                 sx={{color:'primary.dark'}}
                 onKeyPress={e => e.key === 'Enter' && onSubmitShareList()}
             />
-            {listOfUsersListIsSharedWith}            
+            {listOfUsersListIsSharedWith}
+            {showAlertInvalidEmail && <Typography sx={{ fontSize:12, color:'red' }}>whoops! looks like that's not a valid email address</Typography>}
+            
             </DialogContent>
             <DialogActions>
             <Button onClick={()=> props.setShareListDialogOpen(false)} variant="contained" >Done</Button>

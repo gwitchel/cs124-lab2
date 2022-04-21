@@ -160,11 +160,10 @@ function Tasks(props) {
 }
 
 export default function List(props) {
-    //const app = props.app;
-    //const db = getFirestore(app);
+
     const listDocRef = doc(db, `listsLab5/${props.listId}`);
     const [list, loading, error] = useDocument(listDocRef);
-    
+
     if (loading) {
         return (
             <p>Loading</p>
