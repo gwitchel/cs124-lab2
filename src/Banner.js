@@ -19,7 +19,7 @@
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const [user, loading, error] = useAuthState(auth);
-
+    console.log(loading,error)
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };

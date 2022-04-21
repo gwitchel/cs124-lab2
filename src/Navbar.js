@@ -157,9 +157,9 @@ export default function Navbar(props) {
             setShowAlertRename(true)
         }
     }
-
     const onSubmitShareList = (e) => {
         props.handleShareList(shareWith)
+
         setShowAlertInvalidEmail(false) // update to check if email is valid
     }
 
@@ -512,7 +512,7 @@ export default function Navbar(props) {
             <DialogContentText>
                 {`Please enter an email to share "${props.list.name}".`}
             </DialogContentText>
-            <TextField
+            <TextField 
                 autoFocus
                 margin="dense"
                 id="share-list"

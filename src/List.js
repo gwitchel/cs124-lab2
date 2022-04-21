@@ -8,6 +8,7 @@ import { query, collection } from "firebase/firestore";
 import { useCollectionData, useDocument } from "react-firebase-hooks/firestore";
 import Task from './Task';
 import Navbar from './Navbar';
+import {db} from './firebase'
 
 function Tasks(props) {
     const { list, listDocRef } = props;
@@ -160,8 +161,8 @@ function Tasks(props) {
 }
 
 export default function List(props) {
-    const app = props.app;
-    const db = getFirestore(app);
+    //const app = props.app;
+    //const db = getFirestore(app);
     const listDocRef = doc(db, `listsLab5/${props.listId}`);
     const [list, loading, error] = useDocument(listDocRef);
 
