@@ -19,9 +19,7 @@
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const [user, loading, error] = useAuthState(auth);
-    console.log(loading,error)
-    // TODO: display inititals once you have display name entered. 
-    //let initials = user ? ( user.displayName ? user.displayName[0] :false ):false 
+
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };

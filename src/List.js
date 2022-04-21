@@ -16,6 +16,7 @@ function Tasks(props) {
     const q = query(tasksCollectionRef, orderBy(list.sortBy, list.sortDir));   
     const [tasks, loading, error] = useCollectionData(q);
     const showCompleted = list.showCompleted;
+    const [shareListDialogOpen, setShareListDialogOpen] = React.useState(false);
 
     function onToggleComplete(showCompleted){
         updateDoc(listDocRef, {
@@ -57,9 +58,14 @@ function Tasks(props) {
     }
 
     function handleShareList(email){
-        console.log("sharedDocref",listDocRef)
         let updatedShareList =  list.sharedWith.concat([email])
-        console.log("newShares",updatedShareList )
+        updateDoc(listDocRef, {
+            sharedWith: updatedShareList
+        })
+    }
+
+    function removeFromSharelist(email){
+        let updatedShareList =  list.sharedWith.filter((e)=> e !== email )
         updateDoc(listDocRef, {
             sharedWith: updatedShareList
         })
@@ -81,6 +87,7 @@ function Tasks(props) {
         deleteDoc(doc(collection(props.db, 'listsLab5'), list.id))
         props.setTab(list.id)
     }
+    
 
     const TasksToDisplay = () => {
         const allTasks = [...tasks]
@@ -117,11 +124,14 @@ function Tasks(props) {
                 onChangeSortOption={onChangeSortOption}
                 onChangeSortDirection={onChangeSortDirection}
                 handleShareList={handleShareList}
+                removeFromSharelist={removeFromSharelist}
                 sortBy={list.sortBy}
                 sortDir={list.sortDir}
                 renameList={renameList}
                 deleteList={deleteList}
                 list={list}
+                shareListDialogOpen={shareListDialogOpen}
+                setShareListDialogOpen={setShareListDialogOpen}
             />
         )
     }

@@ -11,7 +11,6 @@ function LoggedInApp(props) {
   if (loading) { 
     return <p>Loading</p>
   } else if (user) {
-    console.log("UserData",user)
     return (
       <div className='app'>
         <Lists userData = {props.userData}/>
