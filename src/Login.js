@@ -2,16 +2,16 @@ import React, {useState } from "react";
 import { useAuthState,
     useCreateUserWithEmailAndPassword,
     useSignInWithGoogle,
-    useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+    useSignInWithEmailAndPassword,} from "react-firebase-hooks/auth";
 import "./Login.css";
 import LoggedInApp from "./LoggedInApp"
 import {auth} from './firebase'
+import {sendEmailVerification} from "firebase/auth"
 
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
+import Loading from './Loading'
 
 function SignIn(props) {
   const [
@@ -30,10 +30,7 @@ function SignIn(props) {
       // we are signed in.
       return <div>Unexpectedly signed in already</div>
   } else if (loading1 || loading2) {
-      return <>
-        <Box sx={{ display: 'flex'}}>
-            <CircularProgress />
-        </Box></>;
+      return <Loading/>
   }
   return <div>
       {error1 && <p>"Error logging in: " {error1.message}</p>}
@@ -65,7 +62,7 @@ function SignUp(props) {
   ] = useCreateUserWithEmailAndPassword(auth);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  const [username, setUsername] = useState("");
+  
   if (userCredential) {
       // Shouldn't happen because App should see that
       // we are signed in.
@@ -76,9 +73,6 @@ function SignUp(props) {
   return <div>
       {error && <p>"Error signing up: " {error.message}</p>}
       <form className="login-form">
-        <TextField  label="Name" value={username} variant="standard" 
-            onChange={e=>setUsername(e.target.value)} />
-        <br/>
         <TextField  label="Email" value={email} variant="standard" 
             onChange={e=>setEmail(e.target.value)} />
         <br/>
@@ -87,11 +81,7 @@ function SignUp(props) {
         <br/>
         <br/>
         <Button variant="contained"  onClick={() =>
-            createUserWithEmailAndPassword(email, pw).then((user) => {if(username){
-                user.updateProfile({
-                    displayName: username
-                })
-            }})}>
+            createUserWithEmailAndPassword(email, pw).then((user)=>{sendEmailVerification(user)})}>
             Register
         </Button>
         <br/>
@@ -110,8 +100,9 @@ function Login() {
 //   }
   
   if (loading) {
-      return <p>Checking...</p>;
+    return <Loading/>
   } else if (user) {
+   // console.log("EMail verified?",user.emailVerified)
     return <LoggedInApp userData = {user}/>
   } else {
       return <>

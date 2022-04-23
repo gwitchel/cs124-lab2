@@ -22,6 +22,7 @@ import IconButton from '@mui/material/IconButton';
 
 import List from './List';
 import {app, db} from './firebase.js'
+import Loading from './Loading';
 
 export default function Lists(props) {
     const userData = props.userData
@@ -126,9 +127,7 @@ export default function Lists(props) {
     }, [lists])
     
     if (loading) {
-        return (
-            <p>Loading</p>
-        )
+        return <Loading/>
     }else if (error) {
         return (
             <p>Error: {JSON.stringify(error)}</p>

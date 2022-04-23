@@ -23,6 +23,9 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Chip from '@mui/material/Chip';
 
+import {auth} from "./firebase"
+import {fetchSignInMethodsForEmail } from "firebase/auth";
+
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
 
@@ -61,7 +64,7 @@ export default function Navbar(props) {
     const [newName, setNewName] = useState("");
     const [shareWith, setShareWith] = useState("");
     const [showAlertRename, setShowAlertRename] = React.useState(false);
-    const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState(false);
+    const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState([false,""]);
     
     const listOfUsersListIsSharedWith = props.list.sharedWith.map((email) => <Chip key={email} label={email} onDelete={() => props.removeFromSharelist(email)} />)
     
@@ -158,13 +161,16 @@ export default function Navbar(props) {
         }
     }
     const onSubmitShareList = () => {
-        let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if ( re.test(shareWith) ) {
-            props.handleShareList(shareWith)
-        }
-        else {
-            setShowAlertInvalidEmail(true)
-        }
+        fetchSignInMethodsForEmail(auth,shareWith).then((methods) => {
+            if(methods.length > 0){
+                props.handleShareList(shareWith)
+                setShowAlertInvalidEmail([false,""])
+            } else {
+                setShowAlertInvalidEmail([true,"whoops, looks like this user isn't registered yet!"])
+            }
+        }).catch((error) => {
+            setShowAlertInvalidEmail([true,"invalid email: please check that the email is a valid address"]) 
+        });
     }
 
     const handleClickMenu = (event) => {
@@ -520,7 +526,7 @@ export default function Navbar(props) {
                 autoFocus
                 margin="dense"
                 id="share-list"
-                aria-label={!showAlertInvalidEmail ? `recipient` : `Please enter a valid email`}
+                aria-label={!showAlertInvalidEmail[0] ? `recipient` : showAlertInvalidEmail[1]}
                 label="recipient"
                 type="text"
                 fullWidth
@@ -531,7 +537,7 @@ export default function Navbar(props) {
                 onKeyPress={e => e.key === 'Enter' && onSubmitShareList()}
             />
             {listOfUsersListIsSharedWith}
-            {showAlertInvalidEmail && <Typography sx={{ fontSize:12, color:'red' }}>whoops! looks like that's not a valid email address</Typography>}
+            {showAlertInvalidEmail[0] && <Typography sx={{ fontSize:12, color:'red' }}>{showAlertInvalidEmail[1]}</Typography>}
             
             </DialogContent>
             <DialogActions>

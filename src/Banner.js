@@ -12,14 +12,13 @@
  import IconButton from '@mui/material/IconButton';
  import Tooltip from '@mui/material/Tooltip';
  import Logout from '@mui/icons-material/Logout';
-
  import { useAuthState } from "react-firebase-hooks/auth";
 
  function Banner() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const [user, loading, error] = useAuthState(auth);
-    console.log(loading,error)
+    const [user, loading , error] = useAuthState(auth);
+    console.log("Loading,error:", loading,error)
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };

@@ -8,6 +8,7 @@ import { useCollectionData, useDocument } from "react-firebase-hooks/firestore";
 import Task from './Task';
 import Navbar from './Navbar';
 import {db} from './firebase'
+import Loading from './Loading';
 
 function Tasks(props) {
     const { list, listDocRef } = props;
@@ -56,7 +57,6 @@ function Tasks(props) {
             priority: priority
         })
     }
-
     function handleShareList(email){
         let updatedShareList =  list.sharedWith.concat([email])
         updateDoc(listDocRef, {
@@ -70,6 +70,7 @@ function Tasks(props) {
             sharedWith: updatedShareList
         })
     }
+    
 
     function handleDeleteFinished(){
         let completed = tasks.filter(task => task.completed)
@@ -166,7 +167,7 @@ export default function List(props) {
 
     if (loading) {
         return (
-            <p>Loading</p>
+            <Loading/>
         )
     }else if (error) {
         return (

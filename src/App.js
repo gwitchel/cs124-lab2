@@ -4,18 +4,13 @@ import Login from './Login';
 import Banner from './Banner'
 import { useAuthState } from "react-firebase-hooks/auth";
 import {auth} from "./firebase"
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import Loading from "./Loading"
 
 function App() {
     const [user, loading, error] = useAuthState(auth);
     
     if (loading) {
-        return <>
-        <Banner/> 
-        <Box sx={{ display: 'flex'}}>
-            <CircularProgress />
-        </Box></>;
+        return <Loading/>
     } else if (user) {
     return <>
         <Banner/> 
