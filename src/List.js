@@ -166,9 +166,7 @@ export default function List(props) {
     const [list, loading, error] = useDocument(listDocRef);
 
     if (loading) {
-        return (
-            <Loading/>
-        )
+        return  <Loading/>
     }else if (error) {
         return (
             <p>Error: {JSON.stringify(error)}</p>

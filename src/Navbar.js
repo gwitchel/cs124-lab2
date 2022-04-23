@@ -25,6 +25,7 @@ import Chip from '@mui/material/Chip';
 
 import {auth} from "./firebase"
 import {fetchSignInMethodsForEmail } from "firebase/auth";
+import Stack from '@mui/material/Stack';
 
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
@@ -522,6 +523,7 @@ export default function Navbar(props) {
             <DialogContentText>
                 {`Please enter an email to share "${props.list.name}".`}
             </DialogContentText>
+            <Stack direction="row">
             <TextField 
                 autoFocus
                 margin="dense"
@@ -536,6 +538,10 @@ export default function Navbar(props) {
                 sx={{color:'primary.dark'}}
                 onKeyPress={e => e.key === 'Enter' && onSubmitShareList()}
             />
+            <IconButton onClick={()=>onSubmitShareList()} sx={{color: 'primary.dark'}} aria-label={"share with email"}>
+                    <AddCircleOutlineIcon />
+            </IconButton>
+            </Stack>
             {listOfUsersListIsSharedWith}
             {showAlertInvalidEmail[0] && <Typography sx={{ fontSize:12, color:'red' }}>{showAlertInvalidEmail[1]}</Typography>}
             
