@@ -7,34 +7,37 @@ import "./Login.css";
 import LoggedInApp from "./LoggedInApp"
 import {auth} from './firebase'
 import {sendEmailVerification} from "firebase/auth"
-
+import MuiAlert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Loading from './Loading'
+import Stack from '@mui/material/Stack';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  
 function SignIn(props) {
-  const [
-      signInWithEmailAndPassword,
-      user1, loading1, error1
-  ] = useSignInWithEmailAndPassword(auth);
-  const [
-      signInWithGoogle,
-      user2, loading2, error2
-  ] = useSignInWithGoogle(auth);
-  const [email, setEmail] = useState("");
-  const [pw, setPw] = useState("");
+    const [email, setEmail] = useState("");
+    const [pw, setPw] = useState("");
+  
+    const [ signInWithEmailAndPassword, user1, loading1, error1 ] = 
+    useSignInWithEmailAndPassword(auth)
 
-  if (user1 || user2) {
+    const [ signInWithGoogle, user2, loading2, error2] = 
+    useSignInWithGoogle(auth);
+  
+    if (user1 || user2) {
       // Shouldn't happen because App should see that
       // we are signed in.
       return <div>Unexpectedly signed in already</div>
-  } else if (loading1 || loading2) {
-      return <Loading/>
-  }
+    } else if (loading1 || loading2) {
+        return <Loading/>
+    }  
   return <div>
-      {error1 && <p>"Error logging in: " {error1.message}</p>}
-      {error2 && <p>"Error logging in: " {error2.message}</p>}
+      {error1 &&  <Stack alignItems="center"> <Alert severity="error" sx={{ maxWidth: '300px' }}> {error1.message.slice(10,-1)}</Alert> </Stack>}
+      {error2 && <Stack alignItems="center"> <Alert severity="error" sx={{ maxWidth: '300px' }}> {error2.message.slice(10,-1)}</Alert> </Stack>}
 
       <form className="login-form">
         <TextField  label="Email" value={email} variant="standard" 
@@ -71,7 +74,7 @@ function SignUp(props) {
       return <p>Signing up…</p>
   }
   return <div>
-      {error && <p>"Error signing up: " {error.message}</p>}
+      {error &&  <Stack alignItems="center"> <Alert severity="error" sx={{ maxWidth: '300px' }}> {error.message.slice(10,-1)}</Alert> </Stack>}
       <form className="login-form">
         <TextField  label="Email" value={email} variant="standard" 
             onChange={e=>setEmail(e.target.value)} />
@@ -95,18 +98,13 @@ function SignUp(props) {
 function Login() {
   const [user, loading, error] = useAuthState(auth);
   const [alreadyRegistered, setAlreadyRegistered] = useState(true)
-//   function verifyEmail() {
-//       sendEmailVerification(user);
-//   }
-  
   if (loading) {
     return <Loading/>
   } else if (user) {
-   // console.log("EMail verified?",user.emailVerified)
     return <LoggedInApp userData = {user}/>
   } else {
       return <>
-        {error && <p>Error App: {error.message}</p>}
+        {error && <Stack alignItems="center"> <Alert severity="error" sx={{ maxWidth: '300px' }}> {error.message.slice(10,-1)}</Alert> </Stack>}
         {alreadyRegistered && 
             <SignIn setAlreadyRegistered = {setAlreadyRegistered} key="Sign In"/>}
         {!alreadyRegistered && 

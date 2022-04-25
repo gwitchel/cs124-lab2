@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
-import { query, collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { query,where, collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -26,12 +26,13 @@ import Loading from './Loading';
 
 export default function Lists(props) {
     const userData = props.userData
-    //const q = query(collection(db, 'listsLab5'),where(userData.email,'in','sharedWith'));
-    //const q = query(collection(db, 'listsLab5'),where("owner",'==',userData.uid));  
-    const q = query(collection(db, 'listsLab5')); 
-    const [allLists, loading, error] = useCollectionData(q);
+    const q2 = query(collection(db, 'listsLab5'),where('sharedWith','array-contains',userData.email));
+    const q1 = query(collection(db, 'listsLab5'),where("owner",'==',userData.uid));  
+    //const q = query(collection(db, 'listsLab5')); 
+    const [ownerLists, loading1, error1] = useCollectionData(q1);
+    const [sharedLists, loading2, error2] = useCollectionData(q2);
     let lists = null 
-    if (allLists) lists = allLists.filter(l => l.owner === userData.uid || l.sharedWith.includes(userData.email))
+    if (ownerLists && sharedLists ) lists = ownerLists.concat(sharedLists)
     
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
@@ -126,12 +127,10 @@ export default function Lists(props) {
         }
     }, [lists])
     
-    if (loading) {
+    if (loading1 || loading2) {
         return <Loading/>
-    }else if (error) {
-        return (
-            <p>Error: {JSON.stringify(error)}</p>
-        )
+    }else if (error1 || error2) {
+        return error1? <p>Error: {JSON.stringify(error1)}</p>:<p>Error: {JSON.stringify(error2)}</p>
     }else if (lists.length===0) {
         return (
             <>

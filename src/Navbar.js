@@ -67,6 +67,7 @@ export default function Navbar(props) {
     const [showAlertRename, setShowAlertRename] = React.useState(false);
     const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState([false,""]);
     
+
     const listOfUsersListIsSharedWith = props.list.sharedWith.map((email) => <Chip key={email} label={email} onDelete={() => props.removeFromSharelist(email)} />)
     
     const handleSetTitle = e => {
@@ -162,18 +163,21 @@ export default function Navbar(props) {
         }
     }
     const onSubmitShareList = () => {
-        fetchSignInMethodsForEmail(auth,shareWith).then((methods) => {
-            if(methods.length > 0){
-                props.handleShareList(shareWith)
-                setShowAlertInvalidEmail([false,""])
-            } else {
-                setShowAlertInvalidEmail([true,"whoops, looks like this user isn't registered yet!"])
-            }
-        }).catch((error) => {
-            setShowAlertInvalidEmail([true,"invalid email: please check that the email is a valid address"]) 
-        });
+        if (props.list.sharedWith.includes(shareWith)){
+            setShowAlertInvalidEmail([true,"list is already shared with user"])
+        } else {
+            fetchSignInMethodsForEmail(auth,shareWith).then((methods) => {
+                if(methods.length > 0){
+                    props.handleShareList(shareWith)
+                    setShowAlertInvalidEmail([false,""])
+                } else {
+                    setShowAlertInvalidEmail([true,"whoops, looks like this user isn't registered yet!"])
+                }
+            }).catch((error) => {
+                setShowAlertInvalidEmail([true,"invalid email: please check that the email is a valid address"]) 
+            });
+        }
     }
-
     const handleClickMenu = (event) => {
         setAnchorElMenu(event.currentTarget);
     };
@@ -547,7 +551,7 @@ export default function Navbar(props) {
             
             </DialogContent>
             <DialogActions>
-            <Button onClick={()=> props.setShareListDialogOpen(false)} variant="contained" >Done</Button>
+            <Button onClick={()=> props.setShareListDialogOpen(false)} variant="contained" >Close</Button>
             </DialogActions>
         </Dialog>
     </div>
