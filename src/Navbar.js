@@ -47,13 +47,15 @@ export default function Navbar(props) {
     const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
     const showHideCompleted = props.showCompleted? 'Hide Completed': 'Show Completed'
-    const menuOptions = [
+    let menuOptions = [
         showHideCompleted,
         'Delete Completed',
         'Rename List',
         props.list.owner === user.uid? 'Delete List' : "Remove List",
-        'Share List'
+        
     ];
+    if (props.list.owner === user.uid) menuOptions.push('Share List')
+
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
     const openMenu = Boolean(anchorElMenu);

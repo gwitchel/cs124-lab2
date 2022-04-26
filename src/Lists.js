@@ -32,9 +32,10 @@ export default function Lists(props) {
    
     const q2 = query(collection(db, 'listsLab5'),where('sharedWith','array-contains',userData.email));
     const [sharedLists, loading2, error2] = useCollectionData(q2);
+
     let lists = null 
     if (ownerLists && sharedLists ) lists = ownerLists.concat(sharedLists)
-    console.log("ERROR1,ERROR2",error1,error2)
+
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
     const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })
@@ -211,12 +212,22 @@ export default function Lists(props) {
                     scrollButtons={false}
                     aria-label="tabs for to-do lists"
                 >
-                    {lists.map(list => 
+                    {ownerLists.map(list => 
                         <Tab 
                             value={list.id}
                             label={list.name}
                             key={list.id}
                             sx={{textTransform:'none', maxWidth:120, color:'primary.dark'}}
+                            aria-label={`tab for the to-do list named ${list.name}`}
+                            wrapped
+                        />
+                    )}
+                    {sharedLists.map(list => 
+                        <Tab 
+                            value={list.id}
+                            label={list.name}
+                            key={list.id}
+                            sx={{textTransform:'none', maxWidth:120, color:'secondary.dark'}}
                             aria-label={`tab for the to-do list named ${list.name}`}
                             wrapped
                         />

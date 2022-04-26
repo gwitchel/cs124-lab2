@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { 
+      // checks if the user is signed in 
+      return request.auth.uid != null;
+    }
+    function isValidUser() { 
+        // checks if the user is signed in and has also verified their email 
+    	return signedIn() && request.auth.token.email_verified
+    }
+    function isDocOwner(data) {
+      // checks to see if the document owner is the person making the request 
+      return request.auth.uid == data.owner;
+    }
+    function isSharedWithMe(list) {
+      // checks to see if the person making the request is in the list of shared emails 
+      return request.auth.token.email in list.data.sharedWith;
+    }
+
+	function updatedDocNonOwnerHasCorrectSharing() {
+      // verifies that the only person being removed from a list of shared emails is the verified users email
+      return resource.data.sharedWith.toSet().difference(request.resouce.data.sharedWith.toSet()).union(request.auth.token.email) == [request.auth.token.email].toSet();
+    }
+    function updatedDocHasSameOwner() {
+      // verifies that the docs owner does not change across updates
+      return (resource.data.owner == request.resource.data.owner) 
+    }
+
+    // allow access for previous labs no authentication required
+    match /Lists/{list}{
+    	allow read,write,create,delete: if true
+    }
+    match /Tasks/{Task}{
+    	allow read,write,create,delete: if true
+    }
+    
+    // no one can change the owner
+    // only the owner can remove people unless someone is removing themselves
+    // owner or owner can add people 
+    // lists can only be shared with authenticated user who exists
+    match /listsLab5/{listId} {
+      allow create: if isValidUser() && isDocOwner(request.resource.data) // only valid users can make docs that they are the owner of
+      allow delete: if isValidUser() && resource.data.owner == request.auth.uid // only valid users can delete lists that they are the owner of
+      allow read: if isValidUser() && 
+      (isSharedWithMe(resource) || isDocOwner(resource.data))  // only read if your a valid user and the list is shared with you or you own it 
+      allow update: if (isValidUser() && updatedDocHasSameOwner()) &&  
+      (isDocOwner(resource.data)  || 
+      isSharedWithMe(resource) && updatedDocNonOwnerHasCorrectSharing())
+    }
+    match /listsLab5/{listId}/Tasks/{task}{
+      allow read,write,create,update,delete: if isValidUser() && 
+      (
+      get(/databases/$(database)/documents/listsLab5/$(listId)).data.owner == request.auth.uid 
+      || 
+      isSharedWithMe(get(/databases/$(database)/documents/listsLab5/$(listId)))
+      ) 
+    }
+  }
+}
