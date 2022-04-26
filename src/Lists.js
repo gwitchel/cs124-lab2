@@ -26,14 +26,15 @@ import Loading from './Loading';
 
 export default function Lists(props) {
     const userData = props.userData
-    const q2 = query(collection(db, 'listsLab5'),where('sharedWith','array-contains',userData.email));
+   
     const q1 = query(collection(db, 'listsLab5'),where("owner",'==',userData.uid));  
-    //const q = query(collection(db, 'listsLab5')); 
-    const [ownerLists, loading1, error1] = useCollectionData(q1);
+    const [ownerLists, loading1, error1] = useCollectionData(q1); 
+   
+    const q2 = query(collection(db, 'listsLab5'),where('sharedWith','array-contains',userData.email));
     const [sharedLists, loading2, error2] = useCollectionData(q2);
     let lists = null 
     if (ownerLists && sharedLists ) lists = ownerLists.concat(sharedLists)
-    
+    console.log("ERROR1,ERROR2",error1,error2)
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
     const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })

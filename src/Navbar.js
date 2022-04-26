@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useAuthState } from "react-firebase-hooks/auth";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -29,7 +30,8 @@ import Stack from '@mui/material/Stack';
 
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
-
+    const [user, loading, error] = useAuthState(auth);
+    console.log(loading,error)
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
 
@@ -49,7 +51,7 @@ export default function Navbar(props) {
         showHideCompleted,
         'Delete Completed',
         'Rename List',
-        'Delete List',
+        props.list.owner === user.uid? 'Delete List' : "Remove List",
         'Share List'
     ];
     const ITEM_HEIGHT = 48;
@@ -57,6 +59,7 @@ export default function Navbar(props) {
     const openMenu = Boolean(anchorElMenu);
 
     const [deleteListDialogOpen, setDeleteListDialogOpen] = React.useState(false);
+    const [removeListDialogOpen, setRemoveListDialogOpen] = React.useState(false);
     const [deleteName, setDeleteName] = useState("");
     const [showAlertDelete, setShowAlertDelete] = React.useState(false);
 
@@ -66,9 +69,8 @@ export default function Navbar(props) {
     const [shareWith, setShareWith] = useState("");
     const [showAlertRename, setShowAlertRename] = React.useState(false);
     const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState([false,""]);
-    
 
-    const listOfUsersListIsSharedWith = props.list.sharedWith.map((email) => <Chip key={email} label={email} onDelete={() => props.removeFromSharelist(email)} />)
+    const listOfUsersListIsSharedWith = props.list.sharedWith.map((email) => email !== user.email ? <Chip key={email} label={email} onDelete={() => props.removeFromSharelist(email)} /> : <div key={email}></div> )
     
     const handleSetTitle = e => {
         setTitle(e.target.value)
@@ -137,6 +139,9 @@ export default function Navbar(props) {
         setShowAlertDelete(false);
         setDeleteName("")
     };
+    const handleRemoveListDialogClose = () => {
+        setRemoveListDialogOpen(false);
+    };
     function onSubmitDeleteList(e) {
         if (deleteName !== props.list.name) {
             setShowAlertDelete(true)
@@ -147,6 +152,11 @@ export default function Navbar(props) {
             setDeleteName("")
         }
     }
+    function onSubmitRemoveList(){
+        props.removeFromSharelist(user.email)
+        window.location.reload(false);
+    }
+
     const handleRenameDialogClose = () => {
         setRenameDialogOpen(false);
         setShowAlertRename(false)
@@ -191,9 +201,13 @@ export default function Navbar(props) {
             setDialogOpenDelete(true);
         }else if (option === 'Rename List') {
             setRenameDialogOpen(true);
-        }else if (option === 'Delete List') {
-            setShowAlertDelete(false)
-            setDeleteListDialogOpen(true);
+        }else if (option === 'Delete List' || option === 'Remove List') {
+            if (props.list.owner === user.uid){
+                setShowAlertDelete(false)
+                setDeleteListDialogOpen(true);
+            } else {
+                setRemoveListDialogOpen(true)
+            }
         } else if (option === 'Share List') {
             props.setShareListDialogOpen(true)
         }
@@ -464,6 +478,19 @@ export default function Navbar(props) {
             <DialogActions>
             <Button onClick={handleDialogCloseDelete} sx={{color:'primary.dark'}}>Cancel</Button>
             <Button variant="contained" onClick={onSubmitDelete}>Submit</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog open={removeListDialogOpen} onClose={handleRemoveListDialogClose}>
+            <DialogTitle aria-label={'Remove current list. This will not delete the list, only remove you from the list of people who can view it.'}>Remove Current List</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                This will not delete the list, only remove you from the list of people who can view it.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleRemoveListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+            <Button onClick={onSubmitRemoveList} variant="contained">Confirm</Button>
             </DialogActions>
         </Dialog>
 

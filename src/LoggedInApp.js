@@ -14,6 +14,7 @@ function LoggedInApp(props) {
   if (loading) { 
     return <Loading/>
   } else if (user && user.emailVerified) {
+    console.log("user",user)
     return (
       <div className='app'>
         <Lists userData = {props.userData}/>
