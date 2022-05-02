@@ -69,7 +69,7 @@ function SignUp(props) {
   const registerUser = async (email,pw) => {
     await createUserWithEmailAndPassword(email,pw).then((user) =>  {
       if (user != null){
-        user.sendEmailVerification();
+        sendEmailVerification(user);
       }
     })
   }
