@@ -65,13 +65,21 @@ function SignUp(props) {
   ] = useCreateUserWithEmailAndPassword(auth);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  
+
+  const registerUser = async (email,pw) => {
+    await createUserWithEmailAndPassword(email,pw).then((user) =>  {
+      if (user != null){
+        user.sendEmailVerification();
+      }
+    })
+  }
   if (userCredential) {
       // Shouldn't happen because App should see that
       // we are signed in.
       return <div>Unexpectedly signed in already</div>
   } else if (loading) {
       return <p>Signing up…</p>
+
   }
   return <div>
       {error &&  <Stack alignItems="center"> <Alert severity="error" sx={{ maxWidth: '300px' }}> {error.message.slice(10,-1)}</Alert> </Stack>}
@@ -83,8 +91,7 @@ function SignUp(props) {
         onChange={e=>setPw(e.target.value)} />
         <br/>
         <br/>
-        <Button variant="contained"  onClick={() =>
-            createUserWithEmailAndPassword(email, pw).then((user)=>{sendEmailVerification(user)})}>
+        <Button variant="contained"  onClick={ () => registerUser(email,pw)}>
             Register
         </Button>
         <br/>

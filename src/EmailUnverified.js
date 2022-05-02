@@ -12,11 +12,16 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-function EmailUnverified() {
+function EmailUnverified(props) {
     const [user, loading, error] = useAuthState(auth);
     const [showSentAlert,setShowSentAlert] = useState(false)
     const [showErrorMessage,setShowErrorMessage] = useState(false)
     const [errorMessage,setErrorMessage] = useState('')
+    
+    if(props.verificationEmailSent === false){
+        sendEmailVerification(user)
+        props.setVerificationEmailSent(true)
+    }
     const verifyEmail = () => {
         sendEmailVerification(user).then(() => {
             setShowSentAlert(true)

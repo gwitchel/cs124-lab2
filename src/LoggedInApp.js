@@ -21,7 +21,7 @@ function LoggedInApp(props) {
       </div>
     );
   } else if (user) {
-    return <EmailUnverified/>
+    return <EmailUnverified />
   } else {
     return <>            
     {error && <p>Error App: {error.message}</p>}
