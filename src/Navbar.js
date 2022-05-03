@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useAuthState } from "react-firebase-hooks/auth";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -21,10 +22,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import Chip from '@mui/material/Chip';
+
+import {auth} from "./firebase"
+import {fetchSignInMethodsForEmail } from "firebase/auth";
+import Stack from '@mui/material/Stack';
 
 export default function Navbar(props) {
     const isNarrowThan300 = useMediaQuery({ maxWidth: 300 })
-
+    const [user, loading, error] = useAuthState(auth);
+    console.log(loading,error)
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [title, setTitle] = useState("");
 
@@ -40,24 +47,33 @@ export default function Navbar(props) {
     const [dialogOpenDelete, setDialogOpenDelete] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
     const showHideCompleted = props.showCompleted? 'Hide Completed': 'Show Completed'
-    const menuOptions = [
+    let menuOptions = [
         showHideCompleted,
         'Delete Completed',
         'Rename List',
-        'Delete List'
+        props.list.owner === user.uid? 'Delete List' : "Remove List",
+        
     ];
+    if (props.list.owner === user.uid) menuOptions.push('Share List')
+
     const ITEM_HEIGHT = 48;
     const [anchorElMenu, setAnchorElMenu] = React.useState(null);
     const openMenu = Boolean(anchorElMenu);
 
     const [deleteListDialogOpen, setDeleteListDialogOpen] = React.useState(false);
+    const [removeListDialogOpen, setRemoveListDialogOpen] = React.useState(false);
     const [deleteName, setDeleteName] = useState("");
     const [showAlertDelete, setShowAlertDelete] = React.useState(false);
 
     const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
-    const [newName, setNewName] = useState("");
-    const [showAlertRename, setShowAlertRename] = React.useState(false);
 
+    const [newName, setNewName] = useState("");
+    const [shareWith, setShareWith] = useState("");
+    const [showAlertRename, setShowAlertRename] = React.useState(false);
+    const [showAlertInvalidEmail, setShowAlertInvalidEmail] = React.useState([false,""]);
+
+    const listOfUsersListIsSharedWith = props.list.sharedWith.map((email) => email !== user.email ? <Chip key={email} label={email} onDelete={() => props.removeFromSharelist(email)} /> : <div key={email}></div> )
+    
     const handleSetTitle = e => {
         setTitle(e.target.value)
         if (e.target.value.length>0) {
@@ -85,7 +101,6 @@ export default function Navbar(props) {
             setPriority(1)
         }
     }
-
     const handleClickListItemSort = (event) => {
         setAnchorElSort(event.currentTarget);
     };
@@ -113,10 +128,6 @@ export default function Navbar(props) {
             props.onChangeSortDirection('asc')
         }
     }
-
-    const handleDialogOpenDelete = () => {
-        setDialogOpenDelete(true);
-    };
     const handleDialogCloseDelete = () => {
         setDialogOpenDelete(false);
     };
@@ -125,19 +136,14 @@ export default function Navbar(props) {
         props.handleDeleteFinished();
         handleDialogCloseDelete();
     }
-
-    const handleDeleteListDialogOpen = () => {
-        setShowAlertDelete(false)
-        setDeleteListDialogOpen(true);
-    };
     const handleDeleteListDialogClose = () => {
         setDeleteListDialogOpen(false);
         setShowAlertDelete(false);
         setDeleteName("")
     };
-    const handleDeleteListName = e => {
-        setDeleteName(e.target.value)
-    }
+    const handleRemoveListDialogClose = () => {
+        setRemoveListDialogOpen(false);
+    };
     function onSubmitDeleteList(e) {
         if (deleteName !== props.list.name) {
             setShowAlertDelete(true)
@@ -148,18 +154,15 @@ export default function Navbar(props) {
             setDeleteName("")
         }
     }
+    const onSubmitRemoveList = () => {
+        props.removeFromSharelist(user.email)
+    }
 
-    const handleRenameDialogOpen = () => {
-        setRenameDialogOpen(true);
-    };
     const handleRenameDialogClose = () => {
         setRenameDialogOpen(false);
         setShowAlertRename(false)
         setNewName("")
     };
-    const handleRenameListNew = e => {
-        setNewName(e.target.value)
-    }
     function onSubmitRenameList(e) {
         if (newName.length !== 0) {
             props.renameList(newName)
@@ -170,7 +173,24 @@ export default function Navbar(props) {
             setShowAlertRename(true)
         }
     }
-
+    const onSubmitShareList = () => {
+        if (props.list.sharedWith.includes(shareWith)){
+            setShowAlertInvalidEmail([true,"list is already shared with user"])
+        } else if (shareWith === user.email) {
+            setShowAlertInvalidEmail([true,"user cannot share list with themselves"])
+        } else {
+            fetchSignInMethodsForEmail(auth,shareWith).then((methods) => {
+                if(methods.length > 0){
+                    props.handleShareList(shareWith)
+                    setShowAlertInvalidEmail([false,""])
+                } else {
+                    setShowAlertInvalidEmail([true,"whoops, looks like this user isn't registered yet!"])
+                }
+            }).catch((error) => {
+                setShowAlertInvalidEmail([true,"invalid email: please check that the email is a valid address"]) 
+            });
+        }
+    }
     const handleClickMenu = (event) => {
         setAnchorElMenu(event.currentTarget);
     };
@@ -181,11 +201,18 @@ export default function Navbar(props) {
         if (option === showHideCompleted) {
             props.onToggleComplete(props.showCompleted)
         }else if (option === 'Delete Completed') {
-            handleDialogOpenDelete()
+            setDialogOpenDelete(true);
         }else if (option === 'Rename List') {
-            handleRenameDialogOpen()
-        }else if (option === 'Delete List') {
-            handleDeleteListDialogOpen()
+            setRenameDialogOpen(true);
+        }else if (option === 'Delete List' || option === 'Remove List') {
+            if (props.list.owner === user.uid){
+                setShowAlertDelete(false)
+                setDeleteListDialogOpen(true);
+            } else {
+                setRemoveListDialogOpen(true)
+            }
+        } else if (option === 'Share List') {
+            props.setShareListDialogOpen(true)
         }
         setAnchorElMenu(null);
     };
@@ -457,6 +484,19 @@ export default function Navbar(props) {
             </DialogActions>
         </Dialog>
 
+        <Dialog open={removeListDialogOpen} onClose={handleRemoveListDialogClose}>
+            <DialogTitle aria-label={'Remove current list. This will not delete the list, only remove you from the list of people who can view it.'}>Remove Current List</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                This will not delete the list, only remove you from the list of people who can view it.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleRemoveListDialogClose} sx={{color: 'primary.dark'}}>Cancel</Button>
+            <Button onClick={onSubmitRemoveList} variant="contained">Confirm</Button>
+            </DialogActions>
+        </Dialog>
+
         <Dialog open={deleteListDialogOpen} onClose={handleDeleteListDialogClose}>
             <DialogTitle aria-label={`Delete Current List. Please enter the name of the current list "${props.list.name}" to confirm deletion.`}>Delete Current List</DialogTitle>
             <DialogContent>
@@ -473,7 +513,7 @@ export default function Navbar(props) {
                 fullWidth
                 variant="standard"
                 value={deleteName}
-                onChange={handleDeleteListName}
+                onChange={e => setDeleteName(e.target.value)}
                 sx={{color:'primary.dark'}}
             />
             {showAlertDelete && <Typography sx={{ fontSize:12, color:'red' }}>Please enter the correct name of the current list to confirm deletion.</Typography>}
@@ -500,7 +540,7 @@ export default function Navbar(props) {
                 fullWidth
                 variant="standard"
                 value={newName}
-                onChange={handleRenameListNew}
+                onChange={e => setNewName(e.target.value)}
                 sx={{color:'primary.dark'}}
             />
             {showAlertRename && <Typography sx={{ fontSize:12, color:'red' }}>Please enter a non-empty name for the list.</Typography>}
@@ -508,6 +548,40 @@ export default function Navbar(props) {
             <DialogActions>
             <Button onClick={handleRenameDialogClose} sx={{color:'primary.dark'}}>Cancel</Button>
             <Button onClick={onSubmitRenameList} variant="contained">Submit</Button>
+            </DialogActions>
+        </Dialog>
+        
+        <Dialog fullWidth maxWidth='lg' open={props.shareListDialogOpen} >
+            <DialogTitle aria-label={`Please enter an email to share "${props.list.name}".`}>Share {props.list.name}</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                {`Please enter an email to share "${props.list.name}".`}
+            </DialogContentText>
+            <Stack direction="row">
+            <TextField 
+                autoFocus
+                margin="dense"
+                id="share-list"
+                aria-label={!showAlertInvalidEmail[0] ? `recipient` : showAlertInvalidEmail[1]}
+                label="recipient"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={shareWith}
+                onChange={e => setShareWith(e.target.value)}
+                sx={{color:'primary.dark'}}
+                onKeyPress={e => e.key === 'Enter' && onSubmitShareList()}
+            />
+            <IconButton onClick={()=>onSubmitShareList()} sx={{color: 'primary.dark'}} aria-label={"share with email"}>
+                    <AddCircleOutlineIcon />
+            </IconButton>
+            </Stack>
+            {listOfUsersListIsSharedWith}
+            {showAlertInvalidEmail[0] && <Typography sx={{ fontSize:12, color:'red' }}>{showAlertInvalidEmail[1]}</Typography>}
+            
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={()=> props.setShareListDialogOpen(false)} variant="contained" >Close</Button>
             </DialogActions>
         </Dialog>
     </div>

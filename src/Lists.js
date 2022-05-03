@@ -2,11 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from "firebase/firestore";
-import { serverTimestamp } from "firebase/firestore";
-import { setDoc, doc } from "firebase/firestore";
-import { query, collection } from "firebase/firestore";
+import { query,where, collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -23,25 +19,23 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
-import List from './List';
 
-// web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDnLHzrDzijh4KmeJWRU5zSIiW2cPsZRHU",
-    authDomain: "cs124-lab3-3028f.firebaseapp.com",
-    projectId: "cs124-lab3-3028f",
-    storageBucket: "cs124-lab3-3028f.appspot.com",
-    messagingSenderId: "426502461839",
-    appId: "1:426502461839:web:56b4c42f33c8a6187353fa"
-};
-    
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import List from './List';
+import {app, db} from './firebase.js'
+import Loading from './Loading';
 
 export default function Lists(props) {
-    const q = query(collection(db, 'Lists'));   
-    const [lists, loading, error] = useCollectionData(q);
+    const userData = props.userData
+   
+    const q1 = query(collection(db, 'listsLab5'),where("owner",'==',userData.uid));  
+    const [ownerLists, loading1, error1] = useCollectionData(q1); 
+   
+    const q2 = query(collection(db, 'listsLab5'),where('sharedWith','array-contains',userData.email));
+    const [sharedLists, loading2, error2] = useCollectionData(q2);
+
+    let lists = null 
+    if (ownerLists && sharedLists ) lists = ownerLists.concat(sharedLists)
+
     const [tabId, setTabId] = useState((lists && lists.length!==0) ? lists[0].id : 'none');
 
     const isNarrowThan230 = useMediaQuery({ maxWidth: 230 })
@@ -76,19 +70,21 @@ export default function Lists(props) {
         }
     }
 
-    function submitNewList(){
+    async function submitNewList(){
         const listId = generateUniqueID()
-        setDoc(doc(db, "Lists", listId), {
+        await setDoc(doc(db, "listsLab5", listId), {
             id: listId,
             name: listName,
             showCompleted: true,
             sortBy: "priority",
             sortDir: "desc",
+            owner: userData.uid,
+            sharedWith: [],
             created: serverTimestamp(),
         })
-        if (lists.length===0) {
-            setTabId(listId)
-        }
+        await window.location.reload(false)
+        setTabId(listId)
+        
     }
 
     function onSubmitNewList(e) {
@@ -133,14 +129,10 @@ export default function Lists(props) {
         }
     }, [lists])
     
-    if (loading) {
-        return (
-            <p>Loading</p>
-        )
-    }else if (error) {
-        return (
-            <p>Error: {JSON.stringify(error)}</p>
-        )
+    if (loading1 || loading2) {
+        return <Loading/>
+    }else if (error1 || error2) {
+        return error1? <p>Error: {JSON.stringify(error1)}</p>:<p>Error: {JSON.stringify(error2)}</p>
     }else if (lists.length===0) {
         return (
             <>
@@ -220,12 +212,22 @@ export default function Lists(props) {
                     scrollButtons={false}
                     aria-label="tabs for to-do lists"
                 >
-                    {lists.map(list => 
+                    {ownerLists.map(list => 
                         <Tab 
                             value={list.id}
                             label={list.name}
                             key={list.id}
                             sx={{textTransform:'none', maxWidth:120, color:'primary.dark'}}
+                            aria-label={`tab for the to-do list named ${list.name}`}
+                            wrapped
+                        />
+                    )}
+                    {sharedLists.map(list => 
+                        <Tab 
+                            value={list.id}
+                            label={list.name}
+                            key={list.id}
+                            sx={{textTransform:'none', maxWidth:120, color:'secondary.dark'}}
                             aria-label={`tab for the to-do list named ${list.name}`}
                             wrapped
                         />

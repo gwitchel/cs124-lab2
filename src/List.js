@@ -1,13 +1,14 @@
 import React from 'react';
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import { Typography } from '@mui/material';
-import { getFirestore } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { setDoc, doc, updateDoc, deleteDoc, orderBy } from "firebase/firestore";
 import { query, collection } from "firebase/firestore";
 import { useCollectionData, useDocument } from "react-firebase-hooks/firestore";
 import Task from './Task';
 import Navbar from './Navbar';
+import {db} from './firebase'
+import Loading from './Loading';
 
 function Tasks(props) {
     const { list, listDocRef } = props;
@@ -16,6 +17,7 @@ function Tasks(props) {
     const q = query(tasksCollectionRef, orderBy(list.sortBy, list.sortDir));   
     const [tasks, loading, error] = useCollectionData(q);
     const showCompleted = list.showCompleted;
+    const [shareListDialogOpen, setShareListDialogOpen] = React.useState(false);
 
     function onToggleComplete(showCompleted){
         updateDoc(listDocRef, {
@@ -55,6 +57,20 @@ function Tasks(props) {
             priority: priority
         })
     }
+    function handleShareList(email){
+        let updatedShareList =  list.sharedWith.concat([email])
+        updateDoc(listDocRef, {
+            sharedWith: updatedShareList
+        })
+    }
+
+    function removeFromSharelist(email){
+        let updatedShareList =  list.sharedWith.filter((e)=> e !== email )
+        updateDoc(listDocRef, {
+            sharedWith: updatedShareList
+        })
+    }
+    
 
     function handleDeleteFinished(){
         let completed = tasks.filter(task => task.completed)
@@ -69,9 +85,10 @@ function Tasks(props) {
 
     function deleteList() {
         tasks.forEach(task => deleteDoc(doc(tasksCollectionRef, task.id)))
-        deleteDoc(doc(collection(props.db, 'Lists'), list.id))
+        deleteDoc(doc(collection(props.db, 'listsLab5'), list.id))
         props.setTab(list.id)
     }
+    
 
     const TasksToDisplay = () => {
         const allTasks = [...tasks]
@@ -107,11 +124,15 @@ function Tasks(props) {
                 handleDeleteFinished={handleDeleteFinished}
                 onChangeSortOption={onChangeSortOption}
                 onChangeSortDirection={onChangeSortDirection}
+                handleShareList={handleShareList}
+                removeFromSharelist={removeFromSharelist}
                 sortBy={list.sortBy}
                 sortDir={list.sortDir}
                 renameList={renameList}
                 deleteList={deleteList}
                 list={list}
+                shareListDialogOpen={shareListDialogOpen}
+                setShareListDialogOpen={setShareListDialogOpen}
             />
         )
     }
@@ -140,15 +161,12 @@ function Tasks(props) {
 }
 
 export default function List(props) {
-    const app = props.app;
-    const db = getFirestore(app);
-    const listDocRef = doc(db, `Lists/${props.listId}`);
+
+    const listDocRef = doc(db, `listsLab5/${props.listId}`);
     const [list, loading, error] = useDocument(listDocRef);
 
     if (loading) {
-        return (
-            <p>Loading</p>
-        )
+        return  <Loading/>
     }else if (error) {
         return (
             <p>Error: {JSON.stringify(error)}</p>

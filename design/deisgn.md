@@ -1,3 +1,39 @@
+# Design decisions for Lab5
+
+1. we decided that a user cannot use their account until they have verified it using the email verification link. If the user cannot verify their email then we saw no reason why they should have access to any usability, other than the opportunity to log out. 
+
+2. For sharing purposes, we developed the following rules 
+   2.1. If user A shares their list with user B, user B cannot share it with user C
+   2.2. If user A shared their list with user B, user B can remove themselves from the 
+   list of people the list is shared with but no one else. 
+   2.3. If user A is the owner of the list, they can remove user B from the list
+   2.4. there can only be one list owner. 
+   2.5. Ownership of lists cannot be transferred 
+   2.6. If user A shares a list with user B, they can change all mutable properties of the list (ex: they can change the name, preference for order etc.)
+   2.7. if user A shares a list propagated with tasks with user B, user B can create, delete, and edit all of those tasks. 
+   2.8. Shared lists will appear secondary on the navbar and will appear a different color than lists that the user owns.
+   2.9. If user A shares a list with user B, user B does not need to accept or decline it. The accept of decline would just come in the form of them choosing to keep or remove themselves from the list of people the list is shared with. 
+   2.10 A user cannot share a list with themselves. 
+
+3. we decided to show the sharing bar as a dialogue which opens when the user clicks "share list" in the menu bar (this is only displayed if the user is the owner of the list). From there the user can enter an email into a text input, and share with the email by pressing "enter" or the small plus button on the right. 
+
+4. We decided to display the list of users the list is shared with directly below the input box in the form of a chip with the users name and a delete button. We decided on this interface because it's the most similar to how you might share a google document, and thus will be familiar to users. We attempted to mimic the google sharing interface as closely as possible in order to make it intuitive for users. Users can remove shared people from the list by clicking the X button next to the persons email (displayed on the same). 
+
+5. We provided error checking for email sharing for the following cases 
+   5.1. if the email is not a legitimate email 
+   5.2. if the user is not a registered user (however they can be unverified)
+   5.3. if the list is already currently shared with the user  
+
+6. As stated in part 2, if user A shares a list with user B, user B cannot share the list with user C, however they can remove themselves from people who the list is shared with. We chose to display this by replacing the option for "delete list" in the navbar with a new option "remove list", which when clicked, opens a dialogue which informs the user that they are not deleting the list, merely removing themselves from the shared list. The user can then conform or deny, updating the shared list. 
+
+7. We decided to make the share dialogue sticky (once opened, it remains open during reloads and interactions until the user clicks the "close" button). We chose this because the users will often share a list with multiple emails at a time, and we wanted them to be able to see the real time update of the user they are sharing with being added to the chip list, without having to reopen the dialogue. We received positive feedback about this choice during user testing, however it came at the cost of users potentially closing the dialogue on an email that has been entered into the box but not actually shared. We attempted to combat this problem by adding both a button to share an email, and to have emails automatically share when the user presses "enter" on the input box. 
+
+8. We chose to display the user and title in a top tier navbar so the user can always see their authentication status, current logged in email, and the opportunity to log out. We displayed the authentication status next to the title in the form of a dropdown bar, which has the users first letter of their email as an icon. We thought this would be an good prompt to log out, but would prevent users from accidentally clicking the log-out button and then needing to re-authenticate. 
+
+9. We noticed that in order to authenticate a HMC email, you need to use the extension "@g.hmc.edu" as opposed to "@hmc.edu" (this was not true for gmail). We are not confident as to why this is the case, but decided not to change it as generally we wanted to maintain emails as they are inputted without making assumptions as to if they should be changed.  
+
+10. user testing: We did user testing with user A B and C. user B had the most to say, reporting the problem with the @hmc.edu extension sign on. User B also reported that they had accidentally closed the share dialogue without actually sharing the list. We fixed this by changing the button text from "Done" to "close". User B also reported that the "resend verification email" link did not respond when clicked, so we updated this as well as added error checking for if the email does actually send or if it catches on an error. User C had no complaints, but liked the interface and is now a regular user. User A reported that the sign on worked well, but they wold like more keyboard shortcuts as notifications when a user updates a shared list. We delegated this for future work.  
+
 # Design decisions for Lab4
 
 Video demo link for using a screen reader and keyboard: https://www.loom.com/share/7312c0484ccd47fd8014af885df10ebc
@@ -20,9 +56,6 @@ For the "Start a New List" button, when the screen width is smaller than 230 px,
 
 7. User testing.
 We did user testing with user A and user B by asking them to use the app 1) normally on their devices 2) with resizing of the screen(allow inspect mode responsive dimensions) and 3) entirely with only keyboard and a screen reader. Both users reported that using only keyboard and screen readers is kind of a new experience to them but the app is still easy to navigation and all functionalities are clear to them. User B had a suggestion that it would be great if the screen reader could also say the task name when the focus moves to the edit icon and the delete icon so that she would know which task the icons were referring to without going back and listen to the task name again. We thanked her and incorporated that information in our app. We also included similar information of list name in dialog windows for renaming and deleting the current list. For example, "Please enter the new name of the current list named 'grocery'" and "Please enter the name of the current list 'grocery' to confirm deletion". We felt that this would be more convenient to the user.
-
-
-
 
 
 
