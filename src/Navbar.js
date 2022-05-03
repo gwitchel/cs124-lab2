@@ -154,9 +154,8 @@ export default function Navbar(props) {
             setDeleteName("")
         }
     }
-    function onSubmitRemoveList(){
+    const onSubmitRemoveList = () => {
         props.removeFromSharelist(user.email)
-        window.location.reload(false);
     }
 
     const handleRenameDialogClose = () => {
@@ -177,6 +176,8 @@ export default function Navbar(props) {
     const onSubmitShareList = () => {
         if (props.list.sharedWith.includes(shareWith)){
             setShowAlertInvalidEmail([true,"list is already shared with user"])
+        } else if (shareWith === user.email) {
+            setShowAlertInvalidEmail([true,"user cannot share list with themselves"])
         } else {
             fetchSignInMethodsForEmail(auth,shareWith).then((methods) => {
                 if(methods.length > 0){

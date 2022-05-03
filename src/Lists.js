@@ -70,9 +70,9 @@ export default function Lists(props) {
         }
     }
 
-    function submitNewList(){
+    async function submitNewList(){
         const listId = generateUniqueID()
-        setDoc(doc(db, "listsLab5", listId), {
+        await setDoc(doc(db, "listsLab5", listId), {
             id: listId,
             name: listName,
             showCompleted: true,
@@ -82,9 +82,9 @@ export default function Lists(props) {
             sharedWith: [],
             created: serverTimestamp(),
         })
-        if (lists.length===0) {
-            setTabId(listId)
-        }
+        await window.location.reload(false)
+        setTabId(listId)
+        
     }
 
     function onSubmitNewList(e) {

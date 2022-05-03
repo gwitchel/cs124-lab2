@@ -1,8 +1,8 @@
 # Design decisions for Lab5
 
-1. we decided that a user cannot use their account until they have verified it using the email verification link. If the user cannot verify their email then we saw no reason why they should have access to any usability, othern than the opportunity to log out. 
+1. we decided that a user cannot use their account until they have verified it using the email verification link. If the user cannot verify their email then we saw no reason why they should have access to any usability, other than the opportunity to log out. 
 
-2. For sharing pourposes, we developed the following rules 
+2. For sharing purposes, we developed the following rules 
    2.1. If user A shares their list with user B, user B cannot share it with user C
    2.2. If user A shared their list with user B, user B can remove themselves from the 
    list of people the list is shared with but no one else. 
@@ -13,6 +13,7 @@
    2.7. if user A shares a list propagated with tasks with user B, user B can create, delete, and edit all of those tasks. 
    2.8. Shared lists will appear secondary on the navbar and will appear a different color than lists that the user owns.
    2.9. If user A shares a list with user B, user B does not need to accept or decline it. The accept of decline would just come in the form of them choosing to keep or remove themselves from the list of people the list is shared with. 
+   2.10 A user cannot share a list with themselves. 
 
 3. we decided to show the sharing bar as a dialogue which opens when the user clicks "share list" in the menu bar (this is only displayed if the user is the owner of the list). From there the user can enter an email into a text input, and share with the email by pressing "enter" or the small plus button on the right. 
 
